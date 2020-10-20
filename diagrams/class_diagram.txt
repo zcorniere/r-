@@ -2,11 +2,19 @@
 
 package "Game Engine" #DDDDDD {
     class Game {
-        __ private data __
+        __ private __
         -string m_name
-        __ public data __
+        -vector<IModule> modules
+        __ public __
         +Game(string name)
+        +void addModule(IModule module)
+        +void run()
     }
+    interface IModule {
+        __ public __
+        +void update()
+    }
+    Game *-- IModule
 }
 
 @enduml
