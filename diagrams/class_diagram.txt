@@ -1,0 +1,10 @@
+@startuml
+
+package "Game Engine" #DDDDDD {
+    class Game {
+        __ private data __
+        string name
+    }
+}
+
+@enduml
