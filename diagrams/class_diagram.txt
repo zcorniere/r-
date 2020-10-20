@@ -3,7 +3,9 @@
 package "Game Engine" #DDDDDD {
     class Game {
         __ private data __
-        string name
+        -string m_name
+        __ public data __
+        +Game(string name)
     }
 }
 
