@@ -4,17 +4,46 @@ package "Game Engine" #DDDDDD {
     class Game {
         __ private __
         -string m_name
-        -vector<IModule> modules
+        -map<string, IModule> m_modules
+        __ public __
+        +StateMachine stateMachine
         __ public __
         +Game(string name)
-        +void addModule(IModule module)
-        +void run()
+        +addModule(string name, IModule module)
+        +optional<IModule> module(string name)
+        +run()
     }
+
     interface IModule {
         __ public __
-        +void update()
+        +update()
+        +~IModule()
     }
     Game *-- IModule
+
+    class StateMachine {
+        __ private __
+        -map<string, IState> states
+        -string defaultState
+        __ public __
+        +StateMachine()
+        +addState(string name, IState &state)
+        +setDefaultState(string name)
+        +changeState(string name)
+        +stackState(string name)
+        +leaveState()
+    }
+    Game o-- StateMachine
+
+    interface IState {
+        __ public __
+        +on_start()
+        +on_pause()
+        +on_resume()
+        +tick()
+        +on_stop()
+    }
+    StateMachine *-- IState
 }
 
 @enduml
