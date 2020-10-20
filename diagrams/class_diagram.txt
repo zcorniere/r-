@@ -7,6 +7,7 @@ package "Game Engine" #DDDDDD {
         -map<string, IModule> m_modules
         __ public __
         +StateMachine stateMachine
+        +ComponentStorage componentStorage
         __ public __
         +Game(string name)
         +addModule(string name, IModule module)
@@ -34,6 +35,20 @@ package "Game Engine" #DDDDDD {
         +leaveState()
     }
     Game o-- StateMachine
+
+    class ComponentStorage {
+        __ private __
+        -vector<bool> dead
+        -typemap<type<T>,vector<optional<T>>> m_storage
+        __ public __
+        +ComponentStorage()
+        +registerComponent(type<T>) component)
+        +size_t createEntity(typemap<type<T>, T> components)
+        +destroyEntity(size_t id)
+        +vector<vector<T>> getComponents(vector<type<T>> components)
+        +~ComponentStorage()
+    }
+    Game o-- ComponentStorage
 
     interface IState {
         __ public __
