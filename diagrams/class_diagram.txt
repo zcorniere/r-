@@ -46,4 +46,25 @@ package "Game Engine" #DDDDDD {
     StateMachine *-- IState
 }
 
+package "Server" #DDDDDD {
+    interface IServerModule {
+        __ public __
+        +long initInstance(unsigned maxPlayers)
+        +optional<Instance> getInstance()
+        +~IServerModule()
+    }
+    IModule <|-- IServerModule
+
+    class Instance {
+        __ private __
+        -long m_id
+        __ public __
+        +long getId()
+        +bool isFull()
+        +unsigned getClientsCount()
+        +close()
+    }
+    IServerModule *-- Instance
+}
+
 @enduml
