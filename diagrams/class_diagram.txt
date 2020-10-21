@@ -24,15 +24,13 @@ package "Game Engine" #DDDDDD {
 
     class StateMachine {
         __ private __
-        -map<string, IState> m_states
-        -string m_defaultState
+        -stack<IState> m_statesStack
+        +unique_ptr<IState> currentState
         __ public __
         +StateMachine()
-        +addState(string name, IState &state)
-        +setDefaultState(string name)
-        +changeState(string name)
-        +stackState(string name)
-        +leaveState()
+        +setState(IState state)
+        +stackState(IState state)
+        +leaveCurrentState()
     }
     Game o-- StateMachine
 
