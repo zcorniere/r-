@@ -24,8 +24,8 @@ package "Game Engine" #DDDDDD {
 
     class StateMachine {
         __ private __
-        -map<string, IState> states
-        -string defaultState
+        -map<string, IState> m_states
+        -string m_defaultState
         __ public __
         +StateMachine()
         +addState(string name, IState &state)
@@ -38,17 +38,30 @@ package "Game Engine" #DDDDDD {
 
     class ComponentStorage {
         __ private __
-        -vector<bool> dead
-        -typemap<type<T>,vector<optional<T>>> m_storage
+        -vector<bool> m_dead
+        -map<string, any> m_storage
+        -unsigned m_entityCount
+        friend EntityBuilder
+        -EntityBuilder m_builder
         __ public __
         +ComponentStorage()
-        +registerComponent(type<T>) component)
-        +size_t createEntity(typemap<type<T>, T> components)
+        +registerComponent<T>()
+        +vector<vector<any>> getComponents(vector<string> components)
+        +EntityBuilder &buildEntity()
         +destroyEntity(size_t id)
-        +vector<vector<T>> getComponents(vector<type<T>> components)
         +~ComponentStorage()
     }
     Game o-- ComponentStorage
+
+    class EntityBuilder {
+        __ private __
+        -map<string, any> m_components
+        -unique_ptr<ComponentStorage> m_dest
+        __ public __
+        +EntityBuilder &withComponent<T>(T component)
+        +size_t build()
+    }
+    ComponentStorage *-- EntityBuilder
 
     interface IState {
         __ public __
