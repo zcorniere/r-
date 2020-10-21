@@ -24,12 +24,12 @@ package "Game Engine" #DDDDDD {
 
     class StateMachine {
         __ private __
-        -stack<IState> m_statesStack
-        +unique_ptr<IState> currentState
+        -stack<AState> m_statesStack
+        +unique_ptr<AState> currentState
         __ public __
         +StateMachine()
-        +setState(IState state)
-        +stackState(IState state)
+        +setState(AState state)
+        +stackState(AState state)
         +leaveCurrentState()
     }
     Game o-- StateMachine
@@ -38,6 +38,7 @@ package "Game Engine" #DDDDDD {
         __ private __
         -vector<bool> m_dead
         -map<string, any> m_storage
+        -vector<short> m_parentStates
         -unsigned m_entityCount
         friend EntityBuilder
         -EntityBuilder m_builder
@@ -61,15 +62,18 @@ package "Game Engine" #DDDDDD {
     }
     ComponentStorage *-- EntityBuilder
 
-    interface IState {
+    abstract AState {
+        __ private __
+        -short id
         __ public __
+        +short getId()
         +on_start()
         +on_pause()
         +on_resume()
         +tick()
         +on_stop()
     }
-    StateMachine *-- IState
+    StateMachine *-- AState
 }
 
 package "Server" #DDDDDD {
