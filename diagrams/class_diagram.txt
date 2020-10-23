@@ -26,11 +26,11 @@ package "Game Engine" #DDDDDD {
     class StateMachine {
         __ private __
         -stack<AState> m_statesStack
-        +unique_ptr<AState> currentState
         __ public __
         +StateMachine()
         +setState(AState state)
         +stackState(AState state)
+        +AState &getCurrentState()
         +leaveCurrentState()
     }
     Game o-- StateMachine
@@ -66,14 +66,14 @@ package "Game Engine" #DDDDDD {
 
     abstract AState {
         __ private __
-        -short id
+        -short m_id
         __ public __
         +short getId()
-        +on_start()
-        +on_pause()
-        +on_resume()
-        +tick()
-        +on_stop()
+        +onStart()
+        +onPause()
+        +onResume()
+        +onTick()
+        +onStop()
     }
     StateMachine *-- AState
 
