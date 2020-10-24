@@ -94,7 +94,7 @@ class Client: public IClient<T> {
         }
         virtual void writeBody()final {
             boost::asio::async_write(socket,
-                boost::asio::buffer(&q_out.front().head, sizeof(MessageHeader<T>)),
+                boost::asio::buffer(q_out.front().body.data(), q_out.front().body.size()),
                 [this](std::error_code ec, std::size_t len) {
                     if (!ec) {
                         q_out.pop_front();
