@@ -1,7 +1,8 @@
+#include <iostream>
 #include "Game.hpp"
 #include "states/DebugState.hpp"
 #include "Modules.hpp"
-#include <iostream>
+#include "TcpServer.hpp"
 
 int main(void) {
     Game rtype("rtype 0.1");
