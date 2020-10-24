@@ -5,6 +5,8 @@
 #ifndef _CLIENT_HPP_
 #define _CLIENT_HPP_
 
+namespace ecs {
+
 template<typename T>
 class IClient: public std::enable_shared_from_this<IClient<T>> {
     public:
@@ -28,5 +30,7 @@ class IClient: public std::enable_shared_from_this<IClient<T>> {
         virtual void addToMsgQueue() = 0;
 
 };
+
+}
 
 #endif //_CLIENT_HPP_

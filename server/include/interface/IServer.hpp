@@ -6,6 +6,8 @@
 #ifndef _ISERVER_HPP_
 #define _ISERVER_HPP_
 
+namespace ecs {
+
 template<typename T>
 class IServer {
     public:
@@ -13,7 +15,7 @@ class IServer {
         virtual ~IServer() { this->stop(); };
         virtual bool start() = 0;
         virtual bool stop() = 0;
-        virtual void update(const size_t maxMessage = -1) = 0;
+        virtual void update(const size_t maxMessage = -1, const bool wait = false) = 0;
 
     protected:
         virtual void onClientDisconnect(std::shared_ptr<IClient<T>> &cli) {}
@@ -24,4 +26,5 @@ class IServer {
         virtual void onMessage(Message<T> msg) = 0;
 };
 
+}
 #endif //_ISERVER_HPP_

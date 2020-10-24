@@ -5,6 +5,7 @@
 #ifndef _TCPSERVER_HPP_
 #define _TCPSERVER_HPP_
 
+namespace ecs {
 namespace tcp {
 
 template<typename T>
@@ -31,7 +32,8 @@ class Server: public IServer<T> {
             if (context_thread.joinable()) { context_thread.join(); }
             std::cout << "[SERVER]: Stopped..." << std::endl;
         }
-        virtual void update(const size_t maxMessage = -1) {
+        virtual void update(const size_t maxMessage = -1, const bool wait = false) {
+            if (wait) q_in.wait();
             for (size_t i = 0; i < maxMessage && !q_in.empty(); i++) {
                 auto msg = q_in.pop_front();
                 this->onMessage(msg);
@@ -92,5 +94,6 @@ class Server: public IServer<T> {
         uint32_t base_id = 10000;
 };
 
+}
 }
 #endif //_TCPSERVER_HPP_
