@@ -5,10 +5,9 @@
 ** R-type
 */
 
-#include <iostream>
 #include "helloworld.hpp"
 
-int main() {
-    std::cout << ret_helloworld() << std::endl;
-    return 0;
+std::string ret_helloworld()
+{
+    return "hello world";
 }

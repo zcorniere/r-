@@ -18,5 +18,7 @@
 <h2>Docs</h2>
 
 - SFML :  https://www.sfml-dev.org/documentation/2.5.1/
+- BOOST TEST : https://www.boost.org/doc/libs/1_46_0/libs/test/doc/html/index.html
+- BOOST TEST example : https://github.com/WillBrennan/boost-test-example
 
 </p>

@@ -1,19 +1,22 @@
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(r-type_client)
+add_executable(r-type_client ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
+add_library(r-type_client_lib STATIC)
 
-target_include_directories(r-type_client PRIVATE
+target_include_directories(r-type_client_lib PUBLIC
 ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-target_sources(r-type_client PRIVATE
-${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
+target_sources(r-type_client_lib PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/helloworld.cpp
 )
 
-target_link_libraries(r-type_client
+target_link_libraries(r-type_client_lib
 ${CONAN_LIBS_BOOST}
 ${CONAN_LIBS_SFML}
 )
+
+target_link_libraries(r-type_client r-type_client_lib)
 
 # Linking assets client folder
 if (WIN32)
@@ -33,3 +36,6 @@ if(MSVC)
 else()
     target_compile_options(r-type_client PRIVATE ${GCC_FLAGS})
 endif()
+
+# Unit Tests
+add_subdirectory(test)
