@@ -11,9 +11,14 @@ endif()
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-# Build the server and the client
+# link_libraries(${CONAN_LIBS})
+# The target_link_libraries() command should be preferred whenever possible
+# https://cmake.org/cmake/help/v3.1/command/link_libraries.html
 
-link_libraries(${CONAN_LIBS})
+# contains include of the conan libs:
+include_directories(${CMAKE_INCLUDE_PATH})
+
+# Build the server and the client
 add_subdirectory(server)
 add_subdirectory(client)
 

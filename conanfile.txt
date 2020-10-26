@@ -13,3 +13,6 @@ sfml:network=True
 [generators]
 cmake
 
+[imports]
+bin, *.dll -> ./bin
+lib, *.dylib* -> ./bin
