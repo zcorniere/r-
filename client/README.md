@@ -13,3 +13,10 @@
 - https://bintray.com/bincrafters/public-conan
 
 </p>
+
+<p>
+<h2>Docs</h2>
+
+- SFML :  https://www.sfml-dev.org/documentation/2.5.1/
+
+</p>
