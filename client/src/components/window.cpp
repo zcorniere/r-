@@ -54,6 +54,7 @@ void Window::update()
             view->onCreateView();
         }
         event.update();
+        network.update();
         sf_win.display();
     }
 }

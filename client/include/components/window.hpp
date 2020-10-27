@@ -13,6 +13,7 @@
 #include <SFML/Graphics.hpp>
 #include "components/interfaces/Iview.hpp"
 #include "components/event.hpp"
+#include "components/network.hpp"
 
 class Window {
     std::string target_view;
@@ -20,6 +21,7 @@ class Window {
     std::unordered_map<std::string, Iview *> views;
     sf::RenderWindow sf_win;
     Event event;
+    Network network;
     sf::Clock clock;
     static constexpr unsigned time_per_tick = 1000 / 60;
 public:

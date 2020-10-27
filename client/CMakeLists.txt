@@ -13,6 +13,7 @@ target_sources(r-type_client_lib PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/views/loading.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/components/interfaces/Iview.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/components/event.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/components/network.cpp
 )
 
 #target_link_libraries(r-type_client_lib
