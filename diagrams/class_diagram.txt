@@ -25,13 +25,13 @@ package "Game Engine" #DDDDDD {
 
     class StateMachine {
         __ private __
-        -stack<AState> m_statesStack
+        -stack<unique_ptr<AState>> m_statesStack
         __ public __
         +StateMachine()
-        +setState(AState state)
-        +stackState(AState state)
-        +AState &getCurrentState()
-        +leaveCurrentState()
+        +void setState(unique_ptr<AState> state)
+        +void stackState(unique_ptr<AState> state)
+        +optional<reference_wrapper<AState>> getCurrentState() const
+        +void leaveCurrentState()
     }
     Game o-- StateMachine
 
