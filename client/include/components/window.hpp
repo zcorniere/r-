@@ -12,12 +12,14 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 #include "components/interfaces/Iview.hpp"
+#include "components/event.hpp"
 
 class Window {
     std::string target_view;
     Iview *view = nullptr;
     std::unordered_map<std::string, Iview *> views;
     sf::RenderWindow sf_win;
+    Event event;
     sf::Clock clock;
     static constexpr unsigned time_per_tick = 1000 / 60;
 public:
