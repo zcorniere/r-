@@ -22,6 +22,7 @@ protected:
     float height = 100;
     float x = 0;
     float y = 0;
+    unsigned z_index = 0;
     virtual void onCreateView() = 0;
     virtual void onUpdateView() = 0;
     virtual void onFinishView() = 0;
@@ -36,7 +37,7 @@ protected:
      */
     template<typename T>
     void add_fragment() {
-        static_assert(std::is_base_of<T, Ifragment>::value);
+        static_assert(std::is_base_of<Ifragment, T>::value, "T doesn't derive from Ifragment");
         auto fragment = new T(intent, window);
         fragments.push_back(fragment);
     }
