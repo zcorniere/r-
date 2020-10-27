@@ -10,18 +10,20 @@
 
 #include <unordered_map>
 #include <string>
+#include <SFML/Graphics.hpp>
 #include "components/interfaces/Iview.hpp"
 
 class Window {
     std::string target_view;
     Iview *view = nullptr;
     std::unordered_map<std::string, Iview *> views;
+    sf::RenderWindow sf_win;
 public:
     /**
      * Window Ctor
      * @param default_view is the first view used by the client
      */
-    explicit Window(std::unordered_map<std::string, Iview *> &all_views, std::string default_view = "loading");
+    explicit Window(std::string default_view = "loading");
     ~Window();
 
     /**

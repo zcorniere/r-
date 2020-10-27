@@ -11,6 +11,9 @@
 #include "components/interfaces/Iview.hpp"
 
 class LoadingView : public Iview {
+public:
+    explicit LoadingView(sf::RenderWindow &window) : Iview(window) {};
+private:
     void onCreateView() final;
     void onUpdateView() final;
     void onFinishView() final;

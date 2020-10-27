@@ -9,16 +9,19 @@
 #define _IVIEW_HPP_
 
 #include <optional>
+#include <SFML/Graphics.hpp>
 
 class Iview {
     std::optional<std::string> intent = std::nullopt;
 protected:
+    sf::RenderWindow &window;
     /**
      * To change to another view
      * @param view is the target view
      */
     void set_intent(const std::string &view);
 public:
+    explicit Iview(sf::RenderWindow &main_window) : window(main_window) {};
     virtual void onCreateView() = 0;
     virtual void onUpdateView() = 0;
     virtual void onFinishView() = 0;
