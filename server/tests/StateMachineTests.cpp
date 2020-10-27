@@ -25,7 +25,7 @@ int main(void)
     }
 
     machine.getCurrentState();
-    machine.setState(state3);
+    machine.setState(std::move(state3));
     machine.getCurrentState();
     if (machine.getCurrentState().value().get().getId() != 2) {
         std::cerr << std::endl << "Something is wrong with setState method" << std::endl;

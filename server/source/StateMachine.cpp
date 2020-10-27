@@ -17,13 +17,13 @@ short AState::getId()
 StateMachine::StateMachine()
 {}
 
-void StateMachine::setState(std::unique_ptr<AState> &state)
+void StateMachine::setState(std::unique_ptr<AState> state)
 {
     leaveCurrentState();
-    stackState(state);
+    stackState(std::move(state));
 }
 
-void StateMachine::stackState(std::unique_ptr<AState> &state)
+void StateMachine::stackState(std::unique_ptr<AState> state)
 {
     m_statesStack.push(std::move(state));
 }

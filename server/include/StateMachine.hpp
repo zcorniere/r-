@@ -26,8 +26,8 @@ private:
     std::stack<std::unique_ptr<AState>> m_statesStack;
 public:
     StateMachine();
-    void setState(std::unique_ptr<AState> &state);
-    void stackState(std::unique_ptr<AState> &state);
+    void setState(std::unique_ptr<AState> state);
+    void stackState(std::unique_ptr<AState> state);
     std::optional<std::reference_wrapper<AState>> getCurrentState() const;
     void leaveCurrentState();
 };
