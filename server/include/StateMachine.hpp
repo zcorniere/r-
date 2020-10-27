@@ -28,7 +28,7 @@ public:
     StateMachine();
     void setState(std::unique_ptr<AState> &state);
     void stackState(std::unique_ptr<AState> &state);
-    std::optional<std::reference_wrapper<AState>> getCurrentState();
+    std::optional<std::reference_wrapper<AState>> getCurrentState() const;
     void leaveCurrentState();
 };
 

@@ -28,7 +28,7 @@ void StateMachine::stackState(std::unique_ptr<AState> &state)
     m_statesStack.push(std::move(state));
 }
 
-std::optional<std::reference_wrapper<AState>> StateMachine::getCurrentState()
+std::optional<std::reference_wrapper<AState>> StateMachine::getCurrentState() const
 {
     if (!m_statesStack.empty())
         return *(m_statesStack.top());
