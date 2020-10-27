@@ -37,17 +37,20 @@ void Window::update()
 {
     sf::Event event = {};
     while (sf_win.isOpen()) {
-        sf_win.clear();
-        view->onUpdateView();
-        const auto intent = view->get_intent();
-        if (intent != std::nullopt) {
-            view->onFinishView();
-            target_view = intent.value();
-            view = views[target_view];
-            view->onCreateView();
+        auto elapsed = clock.getElapsedTime().asMilliseconds();
+        if (elapsed >= time_per_tick) {
+            clock.restart();
+            sf_win.clear();
+            view->onUpdateView();
+            const auto intent = view->get_intent();
+            if (intent != std::nullopt) {
+                view->onFinishView();
+                target_view = intent.value();
+                view = views[target_view];
+                view->onCreateView();
+            }
         }
-        // TODO
-        // Event handling
+        // TODO Event handling
         while (sf_win.pollEvent(event)) {
             // Close window: exit
             if (event.type == sf::Event::Closed) {

@@ -11,14 +11,22 @@
 void HomeView::onCreateView()
 {
     std::cout << "create home" << std::endl;
+    helvetica.loadFromFile("assets/fonts/helvetica/helvetica.ttf");
+    text.setFont(helvetica);
+    text.setCharacterSize(12);
+    text.setFillColor(sf::Color::Yellow);
+    clock.restart();
 }
 
 void HomeView::onUpdateView()
 {
-    sf::CircleShape shape(20);
-    shape.setFillColor(sf::Color(250, 100, 50));
-    shape.setPosition(300, 300);
-    window.draw(shape);
+    fps++;
+    if (clock.getElapsedTime().asSeconds() >= 1) {
+        text.setString("fps:" + std::to_string(fps));
+        fps = 0;
+        clock.restart();
+    }
+    window.draw(text);
 }
 
 void HomeView::onFinishView()

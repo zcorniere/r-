@@ -15,10 +15,14 @@ target_sources(r-type_client_lib PRIVATE
 
 )
 
-target_link_libraries(r-type_client_lib
-        ${CONAN_LIBS_BOOST}
-        ${CONAN_LIBS_SFML}
-)
+#target_link_libraries(r-type_client_lib
+#        ${CONAN_LIBS_BOOST}
+#        ${CONAN_LIBS_SFML}
+#)
+# prefer conan_target_link_libraries() insteal of target_link_libraries()
+# because : https://stackoverflow.com/questions/63290538/how-to-use-conan-to-handle-imgui-sfml-dependency-in-a-cmake-gcc-project-in-linux
+
+conan_target_link_libraries(r-type_client_lib)
 
 target_link_libraries(r-type_client r-type_client_lib)
 

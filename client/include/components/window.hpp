@@ -18,6 +18,8 @@ class Window {
     Iview *view = nullptr;
     std::unordered_map<std::string, Iview *> views;
     sf::RenderWindow sf_win;
+    sf::Clock clock;
+    static constexpr unsigned time_per_tick = 1000 / 60;
 public:
     /**
      * Window Ctor
