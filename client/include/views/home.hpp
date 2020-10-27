@@ -9,10 +9,13 @@
 #define _HOME_HPP_
 
 #include "components/interfaces/Iview.hpp"
+#include "views/fragments/topbar.hpp"
 
 class HomeView : public Iview {
 public:
-    explicit HomeView(sf::RenderWindow &window) : Iview(window) {};
+    explicit HomeView(sf::RenderWindow &window) : Iview(window) {
+        add_fragment<TopBarFragment>();
+    };
 private:
     void onCreateView() final;
     void onUpdateView() final;

@@ -28,12 +28,12 @@ Window::Window(std::string default_view) : target_view(std::move(default_view)),
     views = generate_views(sf_win);
     // set the active view
     view = views[target_view];
-    view->onCreateView();
+    view->runCreate();
 }
 
 Window::~Window()
 {
-    view->onFinishView();
+    view->runFinish();
 }
 
 void Window::update()
@@ -45,13 +45,13 @@ void Window::update()
         }
         clock.restart();
         sf_win.clear();
-        view->onUpdateView();
+        view->runUpdate();
         const auto intent = view->get_intent();
         if (intent != std::nullopt) {
-            view->onFinishView();
+            view->runFinish();
             target_view = intent.value();
             view = views[target_view];
-            view->onCreateView();
+            view->runCreate();
         }
         event.update();
         network.update();

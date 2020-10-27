@@ -14,6 +14,8 @@ target_sources(r-type_client_lib PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/components/interfaces/Iview.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/components/event.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/components/network.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/components/interfaces/Ifragment.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/views/fragments/topbar.cpp
 )
 
 #target_link_libraries(r-type_client_lib

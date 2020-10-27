@@ -5,19 +5,23 @@
 ** R-type
 */
 
-#ifndef _IVIEW_HPP_
-#define _IVIEW_HPP_
+#ifndef _IFRAGMENT_HPP_
+#define _IFRAGMENT_HPP_
 
 #include <optional>
-#include <type_traits>
+#include <string>
+#include <vector>
 #include <SFML/Graphics.hpp>
-#include "components/interfaces/Ifragment.hpp"
 
-class Iview {
-    std::optional<std::string> intent = std::nullopt;
+class Ifragment {
+    std::optional<std::string> &intent;
     std::vector<Ifragment *> fragments;
 protected:
     sf::RenderWindow &window;
+    float width = 100;
+    float height = 100;
+    float x = 0;
+    float y = 0;
     virtual void onCreateView() = 0;
     virtual void onUpdateView() = 0;
     virtual void onFinishView() = 0;
@@ -27,21 +31,20 @@ protected:
      */
     void set_intent(const std::string &view);
     /**
-     * Must be use only in a View Ctor
+     * Must be use only in a fragment Ctor
      * @tparam T => fragment is a sub part of the View
      */
     template<typename T>
     void add_fragment() {
-        static_assert(std::is_base_of<Ifragment, T>::value, "T doesn't derive from Ifragment");
+        static_assert(std::is_base_of<T, Ifragment>::value);
         auto fragment = new T(intent, window);
         fragments.push_back(fragment);
     }
 public:
-    explicit Iview(sf::RenderWindow &main_window) : window(main_window) {};
+    Ifragment(std::optional<std::string> &view_intent, sf::RenderWindow &main_window);
     void runCreate();
     void runUpdate();
     void runFinish();
-    [[nodiscard]] std::optional<std::string> get_intent();
 };
 
-#endif // _IVIEW_HPP_
+#endif // _HOME_HPP_

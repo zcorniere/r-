@@ -5,21 +5,18 @@
 ** R-type
 */
 
-#include "components/interfaces/Iview.hpp"
+#include "components/interfaces/Ifragment.hpp"
 
-void Iview::set_intent(const std::string &view)
+void Ifragment::set_intent(const std::string &view)
 {
     intent.emplace(view);
 }
 
-std::optional<std::string> Iview::get_intent()
-{
-    auto ret = intent;
-    intent.reset();
-    return ret;
-}
+Ifragment::Ifragment(std::optional<std::string> &view_intent, sf::RenderWindow &main_window) :
+        intent(view_intent), window(main_window)
+{}
 
-void Iview::runCreate()
+void Ifragment::runCreate()
 {
     onCreateView();
     for (auto &fragment : fragments) {
@@ -27,7 +24,7 @@ void Iview::runCreate()
     }
 }
 
-void Iview::runUpdate()
+void Ifragment::runUpdate()
 {
     onUpdateView();
     for (auto &fragment : fragments) {
@@ -35,7 +32,7 @@ void Iview::runUpdate()
     }
 }
 
-void Iview::runFinish()
+void Ifragment::runFinish()
 {
     for (auto &fragment : fragments) {
         fragment->runFinish();
