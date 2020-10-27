@@ -21,7 +21,7 @@ public:
      * Window Ctor
      * @param default_view is the first view used by the client
      */
-    explicit Window(std::string default_view = "loading");
+    explicit Window(std::unordered_map<std::string, Iview *> &all_views, std::string default_view = "loading");
     ~Window();
 
     /**

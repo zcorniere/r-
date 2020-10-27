@@ -10,11 +10,8 @@
 #include "views/home.hpp"
 #include "views/loading.hpp"
 
-Window::Window(std::string default_view) : target_view(std::move(default_view))
+Window::Window(std::unordered_map<std::string, Iview *> &all_views, std::string default_view) : views(all_views), target_view(std::move(default_view))
 {
-    // list all views
-    views.emplace("loading", new LoadingView);
-    views.emplace("home", new HomeView);
     // set the active view
     view = views[target_view];
     view->onCreateView();
