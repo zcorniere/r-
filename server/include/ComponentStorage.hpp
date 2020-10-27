@@ -14,7 +14,7 @@ private:
 public:
     ComponentStorage();
     template<typename T>
-    void registerComponent(T &sample)
+    void registerComponent()
     {
         std::vector<T> new_row;
 

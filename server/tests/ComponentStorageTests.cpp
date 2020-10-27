@@ -16,8 +16,8 @@ int main(void) {
     int five = 5;
     FiveHandler handler;
 
-    storage.registerComponent<FiveHandler>(handler);
-    storage.registerComponent<int>(five);
+    storage.registerComponent<FiveHandler>();
+    storage.registerComponent<int>();
 
     std::cout << "Done !" << std::endl;
 }
