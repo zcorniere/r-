@@ -6,9 +6,10 @@
 */
 
 #include <iostream>
-#include "helloworld.hpp"
+#include "components/window.hpp"
 
 int main() {
-    std::cout << ret_helloworld() << std::endl;
+    Window win;
+    win.update();
     return 0;
 }

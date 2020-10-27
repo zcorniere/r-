@@ -8,7 +8,11 @@ target_include_directories(r-type_client_lib PUBLIC
 )
 
 target_sources(r-type_client_lib PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/helloworld.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/components/window.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/views/home.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/views/loading.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/components/interfaces/Iview.cpp
+
 )
 
 target_link_libraries(r-type_client_lib
