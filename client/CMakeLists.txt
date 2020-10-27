@@ -4,7 +4,7 @@ add_executable(r-type_client ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
 add_library(r-type_client_lib STATIC)
 
 target_include_directories(r-type_client_lib PUBLIC
-${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 target_sources(r-type_client_lib PRIVATE
@@ -12,8 +12,8 @@ target_sources(r-type_client_lib PRIVATE
 )
 
 target_link_libraries(r-type_client_lib
-${CONAN_LIBS_BOOST}
-${CONAN_LIBS_SFML}
+        ${CONAN_LIBS_BOOST}
+        ${CONAN_LIBS_SFML}
 )
 
 target_link_libraries(r-type_client r-type_client_lib)
