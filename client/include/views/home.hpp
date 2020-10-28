@@ -14,10 +14,7 @@
 
 class HomeView : public Iview {
 public:
-    explicit HomeView(sf::RenderWindow &window) : Iview(window) {
-        add_fragment<TopBarFragment>();
-        add_fragment<BottomBarFragment>();
-    };
+    explicit HomeView(sf::RenderWindow &window);
 private:
     void onCreateView() final;
     void onUpdateView() final;

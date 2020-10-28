@@ -13,15 +13,15 @@ InnerBottomBarFragment::InnerBottomBarFragment(std::optional<std::string> &view_
 {
     width = 200;
     height = 200;
-    x = -20;
-    y = 250;
+    x = 10;
+    y = 10;
     z_index = 9;
     background_color = sf::Color::Green;
 }
 
 void InnerBottomBarFragment::onCreateView()
 {
-    std::cout << "Create Bottombar" << std::endl;
+    std::cout << "Create Inner Bottombar" << std::endl;
 }
 
 void InnerBottomBarFragment::onUpdateView()
@@ -34,5 +34,5 @@ void InnerBottomBarFragment::onUpdateView()
 
 void InnerBottomBarFragment::onFinishView()
 {
-    std::cout << "Finish Bottombar" << std::endl;
+    std::cout << "Finish Inner Bottombar" << std::endl;
 }

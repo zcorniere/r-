@@ -8,6 +8,12 @@
 #include <iostream>
 #include "views/home.hpp"
 
+HomeView::HomeView(sf::RenderWindow &window) : Iview(window)
+{
+        add_fragment<TopBarFragment>();
+        add_fragment<BottomBarFragment>();
+}
+
 void HomeView::onCreateView()
 {
     std::cout << "create home" << std::endl;
