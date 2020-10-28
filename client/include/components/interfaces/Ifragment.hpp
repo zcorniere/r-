@@ -38,10 +38,6 @@ protected:
     /**
      * Must be set in the fragment ctor
      */
-    unsigned z_index = 0;
-    /**
-     * Must be set in the fragment ctor
-     */
     sf::Color background_color = sf::Color::White;
     sf::View content;
     virtual void onCreateView() = 0;
@@ -63,6 +59,10 @@ protected:
         fragments.push_back(fragment);
     }
 public:
+    /**
+     * Must be set in the fragment ctor
+     */
+    unsigned z_index = 0;
     Ifragment(std::optional<std::string> &view_intent, sf::RenderWindow &main_window);
     virtual ~Ifragment();
     void runCreate();

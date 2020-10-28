@@ -10,11 +10,13 @@
 
 #include "components/interfaces/Iview.hpp"
 #include "views/fragments/topbar.hpp"
+#include "views/fragments/bottombar.hpp"
 
 class HomeView : public Iview {
 public:
     explicit HomeView(sf::RenderWindow &window) : Iview(window) {
         add_fragment<TopBarFragment>();
+        add_fragment<BottomBarFragment>();
     };
 private:
     void onCreateView() final;

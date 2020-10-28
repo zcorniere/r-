@@ -37,11 +37,14 @@ void Ifragment::runCreate()
     background.setFillColor(background_color);
     background.setSize(sf::Vector2f(width, height));
     background.setPosition(0, 0);
+    // sort z_index
+    std::sort(fragments.begin(), fragments.end(), [](const auto &left, const auto &right) {
+        return left->z_index < right->z_index;
+    });
     onCreateView();
     for (auto &fragment : fragments) {
         fragment->runCreate();
     }
-    // TODO sort fragments by z-index
 }
 
 void Ifragment::runUpdate()

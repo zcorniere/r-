@@ -32,11 +32,14 @@ Iview::~Iview()
 
 void Iview::runCreate()
 {
+    // sort z_index
+    std::sort(fragments.begin(), fragments.end(), [](const auto &left, const auto &right) {
+        return left->z_index < right->z_index;
+    });
     onCreateView();
     for (auto &fragment : fragments) {
         fragment->runCreate();
     }
-    // TODO sort fragments by z-index
 }
 
 void Iview::runUpdate()
