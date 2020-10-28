@@ -17,6 +17,8 @@ target_sources(r-type_client_lib PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/components/interfaces/Ifragment.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/views/fragments/topbar.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/views/fragments/bottombar.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/views/fragments/inner/innertopbar.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/views/fragments/inner/innerbottombar.cpp
 )
 
 #target_link_libraries(r-type_client_lib

@@ -26,12 +26,27 @@ Ifragment::~Ifragment()
 
 void Ifragment::runCreate()
 {
-    content.setCenter(width / 2, height / 2);
+    auto center = sf::Vector2<float>(width / 2, height / 2);
+    const auto parent_view = window.getView();
+    const auto parent_viewport = parent_view.getViewport();
+    const auto child_relative_x = 1 / (window::WIDTH / x);
+    const auto child_relative_y = 1 / (window::HEIGHT / y);
+    auto posx_percent = parent_viewport.left;
+    auto posy_percent = parent_viewport.top;
+    auto width_percent = 1 / (window::WIDTH / width);                  // TODO parent_offset.width
+    auto height_percent = 1 / (window::HEIGHT / height);               // TODO parent_offset.height
+    if (child_relative_x < 0) {
+        center.x += std::abs(x);
+    } else {
+        posx_percent += child_relative_x;
+    }
+    if (child_relative_y < 0) {
+        center.y += std::abs(y);
+    } else {
+        posy_percent += child_relative_y;
+    }
+    content.setCenter(center);
     content.setSize(width, height);
-    const auto posx_percent = 1 / (window::WIDTH / x);
-    const auto posy_percent = 1 / (window::HEIGHT / y);
-    const auto width_percent = 1 / (window::WIDTH / width);
-    const auto height_percent = 1 / (window::HEIGHT / height);
     content.setViewport(sf::FloatRect(posx_percent, posy_percent, width_percent, height_percent));
     // background
     background.setFillColor(background_color);
@@ -42,9 +57,11 @@ void Ifragment::runCreate()
         return left->z_index < right->z_index;
     });
     onCreateView();
+    window.setView(content);
     for (auto &fragment : fragments) {
         fragment->runCreate();
     }
+    window.setView(parent_view);
 }
 
 void Ifragment::runUpdate()
