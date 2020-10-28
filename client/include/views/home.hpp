@@ -9,8 +9,6 @@
 #define _HOME_HPP_
 
 #include "components/interfaces/Iview.hpp"
-#include "views/fragments/blue.hpp"
-#include "views/fragments/red.hpp"
 
 class HomeView : public Iview {
 public:

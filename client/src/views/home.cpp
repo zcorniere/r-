@@ -9,10 +9,7 @@
 #include "views/home.hpp"
 
 HomeView::HomeView(sf::RenderWindow &window) : Iview(window)
-{
-        add_fragment<Blue>("Blue");
-        add_fragment<Red>("Red");
-}
+{}
 
 void HomeView::onCreateView()
 {
