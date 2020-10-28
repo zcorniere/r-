@@ -26,7 +26,7 @@ Window::Window(std::string default_view) : target_view(std::move(default_view)),
     event(sf_win)
 {
     // TODO sf_win.setIcon()
-    // TODO sf_win.setFramerateLimit()
+    sf_win.setFramerateLimit(window::FRAMERATE);
     views = generate_views(sf_win);
     // set the active view
     view = views[target_view];
@@ -44,11 +44,6 @@ Window::~Window()
 void Window::update()
 {
     while (sf_win.isOpen()) {
-        const auto elapsed = clock.getElapsedTime().asMilliseconds();
-        if (elapsed < window::FRAMERATE) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(window::FRAMERATE - elapsed));
-        }
-        clock.restart();
         sf_win.clear();
         view->runUpdate();
         const auto intent = view->get_intent();

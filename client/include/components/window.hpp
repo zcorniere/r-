@@ -18,7 +18,7 @@
 namespace window {
     constexpr auto WIDTH = 1200;
     constexpr auto HEIGHT = 800;
-    constexpr auto FRAMERATE = 1000 / 60;
+    constexpr auto FRAMERATE = 60;
 }
 
 class Window {
@@ -28,7 +28,6 @@ class Window {
     sf::RenderWindow sf_win;
     Event event;
     Network network;
-    sf::Clock clock;
 public:
     /**
      * Window Ctor
