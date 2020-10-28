@@ -19,8 +19,8 @@ Blue::Blue(std::optional<std::string> &view_intent, bidimensional::Transform &pa
     transform.position.y = -50;
     z_index = 10;
     background_color = sf::Color::Blue;
-    add_fragment<Magenta>("innerTop");
-    add_fragment<Green>("innerBot");
+    add_fragment<Magenta>("magenta");
+    add_fragment<Green>("green");
 }
 
 void Blue::onCreateView()

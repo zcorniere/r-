@@ -10,8 +10,8 @@
 
 HomeView::HomeView(sf::RenderWindow &window) : Iview(window)
 {
-        add_fragment<Blue>("Topbar");
-        add_fragment<Red>("BottomBar");
+        add_fragment<Blue>("Blue");
+        add_fragment<Red>("Red");
 }
 
 void HomeView::onCreateView()

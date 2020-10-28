@@ -75,64 +75,27 @@ void Ifragment::runFinish()
 void Ifragment::compute_content()   // TODO function to long, make it clean
 {
     auto center = sf::Vector2<float>(transform.scale.x / 2, transform.scale.y / 2);
-    const auto parent_view = window.getView();
-    const auto parent_viewport = parent_view.getViewport();
-    const auto parent_size = parent_view.getSize();
-    // POSITION
-
-//    const auto child_relative_x = 1 / (parent_size.x / x);
-//    const auto child_relative_y = 1 / (parent_size.y / y);
-//    auto posx_percent = parent_viewport.left;
-//    auto posy_percent = parent_viewport.top;
-//    if (child_relative_x < 0)
-//        center.x += std::abs(x);
-//    else
-//        posx_percent += child_relative_x;
-//    if (child_relative_y < 0)
-//        center.y += std::abs(y);
-//    else
-//        posy_percent += child_relative_y;
-
-    auto rel_x = transform.position.x;
-    auto rel_y = transform.position.y;
-    const auto abs_width = transform.scale.x;
-    const auto abs_height = transform.scale.y;
-    // final vars
-    auto net_width = abs_width;
-    auto net_height = abs_height;
-
-    if (rel_x < 0) {
-        const auto diff = std::abs(rel_x);
-        rel_x = 0;
-        net_width -= diff;
-        center.x += diff;
+    if (transform.position.x < 0) {
+        transform.position.x = 0;
     }
-    if (rel_y < 0) {
-        const auto diff = std::abs(rel_y);
-        rel_y = 0;
-        net_height -= diff;
-        center.y += diff;
+    if (transform.position.y < 0) {
+        transform.position.y = 0;
     }
-    const auto abs_x = parent_viewport.left * window::WIDTH + rel_x;
-    const auto abs_y = parent_viewport.top * window::HEIGHT + rel_y;
-    // SIZE
-    if (transform.position.x + net_width > parent_size.x) {
-        const auto diff = transform.position.x + net_width - parent_size.x;
-        net_width -= diff;
-        center.x -= diff;
+    if (transform.position.x + transform.scale.x > parent_transform.scale.x) {
+        transform.position.x = parent_transform.scale.x - transform.scale.x;
     }
-    if (transform.position.y + net_height > parent_size.y) {
-        const auto diff = transform.position.y + net_height - parent_size.y;
-        net_height -= diff;
-        center.y -= diff;
+    if (transform.position.y + transform.scale.y > parent_transform.scale.y) {
+        transform.position.y = parent_transform.scale.y - transform.scale.y;
     }
-    const auto abs_width_percent = net_width / window::WIDTH;
-    const auto abs_height_percent = net_height / window::HEIGHT;
+    const auto abs_x = parent_transform.position.x + transform.position.x;
+    const auto abs_y = parent_transform.position.y + transform.position.y;
+    const auto abs_width_percent = transform.scale.x / window::WIDTH;
+    const auto abs_height_percent = transform.scale.y / window::HEIGHT;
     const auto abs_posx_percent = abs_x / window::WIDTH;
     const auto abs_posy_percent = abs_y / window::HEIGHT;
     // BUILD VIEW
     content.setCenter(center);
-    content.setSize(net_width, net_height);
+    content.setSize(transform.scale.x, transform.scale.y);
     content.setViewport(sf::FloatRect(abs_posx_percent, abs_posy_percent, abs_width_percent, abs_height_percent));
 }
 
