@@ -6,9 +6,9 @@
 */
 
 #include <iostream>
-#include "views/fragments/bottombar.hpp"
+#include "views/fragments/red.hpp"
 
-BottomBarFragment::BottomBarFragment(std::optional<std::string> &view_intent, sf::RenderWindow &main_window)
+Red::Red(std::optional<std::string> &view_intent, sf::RenderWindow &main_window)
         : Ifragment(view_intent, main_window)
 {
     width = 600;
@@ -19,12 +19,12 @@ BottomBarFragment::BottomBarFragment(std::optional<std::string> &view_intent, sf
     background_color = sf::Color::Red;
 }
 
-void BottomBarFragment::onCreateView()
+void Red::onCreateView()
 {
     std::cout << "Create Bottombar" << std::endl;
 }
 
-void BottomBarFragment::onUpdateView()
+void Red::onUpdateView()
 {
     sf::CircleShape shape(50);
     shape.setFillColor(sf::Color::White);
@@ -32,7 +32,7 @@ void BottomBarFragment::onUpdateView()
     window.draw(shape);
 }
 
-void BottomBarFragment::onFinishView()
+void Red::onFinishView()
 {
     std::cout << "Finish Bottombar" << std::endl;
 }

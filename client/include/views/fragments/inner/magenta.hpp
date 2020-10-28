@@ -10,9 +10,9 @@
 
 #include "components/interfaces/Ifragment.hpp"
 
-class InnerTopBarFragment : public Ifragment {
+class Magenta : public Ifragment {
 public:
-    InnerTopBarFragment(std::optional<std::string> &view_intent, sf::RenderWindow &main_window);
+    Magenta(std::optional<std::string> &view_intent, sf::RenderWindow &main_window);
 private:
     void onCreateView() final;
     void onUpdateView() final;

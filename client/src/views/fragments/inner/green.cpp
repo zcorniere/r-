@@ -6,9 +6,9 @@
 */
 
 #include <iostream>
-#include "views/fragments/inner/innerbottombar.hpp"
+#include "views/fragments/inner/green.hpp"
 
-InnerBottomBarFragment::InnerBottomBarFragment(std::optional<std::string> &view_intent, sf::RenderWindow &main_window)
+Green::Green(std::optional<std::string> &view_intent, sf::RenderWindow &main_window)
         : Ifragment(view_intent, main_window)
 {
     width = 200;
@@ -19,12 +19,12 @@ InnerBottomBarFragment::InnerBottomBarFragment(std::optional<std::string> &view_
     background_color = sf::Color::Green;
 }
 
-void InnerBottomBarFragment::onCreateView()
+void Green::onCreateView()
 {
     std::cout << "Create Inner Bottombar" << std::endl;
 }
 
-void InnerBottomBarFragment::onUpdateView()
+void Green::onUpdateView()
 {
     sf::CircleShape shape(50);
     shape.setFillColor(sf::Color::White);
@@ -32,7 +32,7 @@ void InnerBottomBarFragment::onUpdateView()
     window.draw(shape);
 }
 
-void InnerBottomBarFragment::onFinishView()
+void Green::onFinishView()
 {
     std::cout << "Finish Inner Bottombar" << std::endl;
 }

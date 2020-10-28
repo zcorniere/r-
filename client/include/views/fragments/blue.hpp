@@ -5,18 +5,18 @@
 ** R-type
 */
 
-#ifndef _BOTTOMBAR_HPP_
-#define _BOTTOMBAR_HPP_
+#ifndef _TOPBAR_HPP_
+#define _TOPBAR_HPP_
 
 #include "components/interfaces/Ifragment.hpp"
 
-class BottomBarFragment : public Ifragment {
+class Blue : public Ifragment {
 public:
-    BottomBarFragment(std::optional<std::string> &view_intent, sf::RenderWindow &main_window);
+    Blue(std::optional<std::string> &view_intent, sf::RenderWindow &main_window);
 private:
     void onCreateView() final;
     void onUpdateView() final;
     void onFinishView() final;
 };
 
-#endif // _BOTTOMBAR_HPP_
+#endif // _TOPBAR_HPP_

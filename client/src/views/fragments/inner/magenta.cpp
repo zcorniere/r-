@@ -6,9 +6,9 @@
 */
 
 #include <iostream>
-#include "views/fragments/inner/innertopbar.hpp"
+#include "views/fragments/inner/magenta.hpp"
 
-InnerTopBarFragment::InnerTopBarFragment(std::optional<std::string> &view_intent, sf::RenderWindow &main_window) : Ifragment(view_intent, main_window)
+Magenta::Magenta(std::optional<std::string> &view_intent, sf::RenderWindow &main_window) : Ifragment(view_intent, main_window)
 {
     width = 200;
     height = 200;
@@ -18,12 +18,12 @@ InnerTopBarFragment::InnerTopBarFragment(std::optional<std::string> &view_intent
     background_color = sf::Color::Magenta;
 }
 
-void InnerTopBarFragment::onCreateView()
+void Magenta::onCreateView()
 {
     std::cout << "Create Inner TopBar" << std::endl;
 }
 
-void InnerTopBarFragment::onUpdateView()
+void Magenta::onUpdateView()
 {
     sf::CircleShape shape(10);
     shape.setFillColor(sf::Color::Yellow);
@@ -31,7 +31,7 @@ void InnerTopBarFragment::onUpdateView()
     window.draw(shape);
 }
 
-void InnerTopBarFragment::onFinishView()
+void Magenta::onFinishView()
 {
     std::cout << "Finish Inner TopBar" << std::endl;
 }
