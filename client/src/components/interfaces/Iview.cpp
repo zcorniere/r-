@@ -5,11 +5,22 @@
 ** R-type
 */
 
+#include <algorithm>
 #include "components/interfaces/Iview.hpp"
 
 void Iview::set_intent(const std::string &view)
 {
     intent.emplace(view);
+}
+
+Ifragment *Iview::get_fragment(const std::string &key)
+{
+    auto item = std::find_if(fragments.begin(), fragments.end(), [&](const auto &pair){
+        return pair.first == key;
+    });
+    if (item == fragments.end())
+        return nullptr;
+    return item->second;
 }
 
 std::optional<std::string> Iview::get_intent()
@@ -26,7 +37,7 @@ Iview::Iview(sf::RenderWindow &main_window) :
 Iview::~Iview()
 {
     for (auto &fragment : fragments) {
-        delete fragment;
+        delete fragment.second;
     }
 }
 
@@ -34,10 +45,10 @@ void Iview::runCreate()
 {
     // sort z_index
     std::sort(fragments.begin(), fragments.end(), [](const auto &left, const auto &right) {
-        return left->z_index < right->z_index;
+        return left.second->z_index < right.second->z_index;
     });
     for (auto &fragment : fragments) {
-        fragment->runCreate();
+        fragment.second->runCreate();
     }
     onCreateView();
 }
@@ -46,7 +57,7 @@ void Iview::runUpdate()
 {
     onUpdateView();
     for (auto &fragment : fragments) {
-        fragment->runUpdate();
+        fragment.second->runUpdate();
     }
     // the fragments edit the window view so after i need to reset it to default
     window.setView(window.getDefaultView());
@@ -55,8 +66,9 @@ void Iview::runUpdate()
 void Iview::runFinish()
 {
     for (auto &fragment : fragments) {
-        fragment->runFinish();
+        fragment.second->runFinish();
     }
     onFinishView();
 }
+
 

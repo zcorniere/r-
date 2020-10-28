@@ -22,9 +22,11 @@ static std::unordered_map<std::string, Iview *> generate_views(sf::RenderWindow 
 }
 
 Window::Window(std::string default_view) : target_view(std::move(default_view)),
-    sf_win(sf::VideoMode(window::WIDTH, window::HEIGHT), "R-type"),
+    sf_win(sf::VideoMode(window::WIDTH, window::HEIGHT), "R-type", sf::Style::Titlebar | sf::Style::Close),
     event(sf_win)
 {
+    // TODO sf_win.setIcon()
+    // TODO sf_win.setFramerateLimit()
     views = generate_views(sf_win);
     // set the active view
     view = views[target_view];

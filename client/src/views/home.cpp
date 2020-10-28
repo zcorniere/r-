@@ -10,8 +10,8 @@
 
 HomeView::HomeView(sf::RenderWindow &window) : Iview(window)
 {
-        add_fragment<TopBarFragment>();
-        add_fragment<BottomBarFragment>();
+        add_fragment<TopBarFragment>("Topbar");
+        add_fragment<BottomBarFragment>("BottomBar");
 }
 
 void HomeView::onCreateView()
@@ -22,6 +22,14 @@ void HomeView::onCreateView()
     text.setCharacterSize(12);
     text.setFillColor(sf::Color::Yellow);
     clock.restart();
+
+    auto frag = get_fragment("Topbar");
+    if (frag == nullptr) {
+        std::cout << "Topbar fragment not founded" << std::endl;
+    } else {
+        std::cout << "Topbar fragment founded" << std::endl;
+    }
+    frag->move(700, 200, 10000);
 }
 
 void HomeView::onUpdateView()

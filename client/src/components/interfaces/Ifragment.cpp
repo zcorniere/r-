@@ -101,3 +101,8 @@ void Ifragment::compute_content()   // TODO function to long, make it clean
     content.setSize(final_width, final_height);
     content.setViewport(sf::FloatRect(posx_percent, posy_percent, width_percent, height_percent));
 }
+
+void Ifragment::move(float x, float y, unsigned milliseconds)
+{
+    // TODO
+}

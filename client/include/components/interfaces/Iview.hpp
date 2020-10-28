@@ -10,12 +10,15 @@
 
 #include <optional>
 #include <type_traits>
+#include <vector>
+#include <utility>
+#include <string>
 #include <SFML/Graphics.hpp>
 #include "components/interfaces/Ifragment.hpp"
 
 class Iview {
     std::optional<std::string> intent = std::nullopt;
-    std::vector<Ifragment *> fragments;
+    std::vector<std::pair<std::string, Ifragment *>> fragments;
 protected:
     sf::RenderWindow &window;
     virtual void onCreateView() = 0;
@@ -26,16 +29,24 @@ protected:
      * @param view is the target view
      */
     void set_intent(const std::string &view);
+
     /**
      * Must be use only in a View Ctor
-     * @tparam T => fragment is a sub part of the View
+     * @tparam T fragment is a sub part of the View
+     * @param key unique name of the fragment
      */
     template<typename T>
-    void add_fragment() {
+    void add_fragment(const std::string &key) {
         static_assert(std::is_base_of<Ifragment, T>::value, "T doesn't derive from Ifragment");
         auto fragment = new T(intent, window);
-        fragments.push_back(fragment);
+        fragments.emplace_back(key, fragment);
     }
+    /**
+     * Get a fragment from the local list
+     * @param key unique name of the fragment
+     * @return founded fragment or nullptr
+     */
+    [[nodiscard]] Ifragment *get_fragment(const std::string &key);
 public:
     explicit Iview(sf::RenderWindow &main_window);
     virtual ~Iview();

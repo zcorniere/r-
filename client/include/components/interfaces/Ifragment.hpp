@@ -15,7 +15,7 @@
 
 class Ifragment {
     std::optional<std::string> &intent;
-    std::vector<Ifragment *> fragments;
+    std::vector<Ifragment *> fragments; // TODO refactor look at Iview
     sf::RectangleShape background;
     void compute_content();
 protected:
@@ -69,6 +69,13 @@ public:
     void runCreate();
     void runUpdate();
     void runFinish();
+    /**
+     * Move fragment with an interpolation
+     * @param x
+     * @param y
+     * @param milliseconds
+     */
+    void move(float x, float y, unsigned milliseconds);
 };
 
 #endif // _IFRAGMENT_HPP_
