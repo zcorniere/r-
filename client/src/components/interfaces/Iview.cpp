@@ -19,12 +19,24 @@ std::optional<std::string> Iview::get_intent()
     return ret;
 }
 
+Iview::Iview(sf::RenderWindow &main_window) :
+    window(main_window)
+{}
+
+Iview::~Iview()
+{
+    for (auto &fragment : fragments) {
+        delete fragment;
+    }
+}
+
 void Iview::runCreate()
 {
     onCreateView();
     for (auto &fragment : fragments) {
         fragment->runCreate();
     }
+    // TODO sort fragments by z-index
 }
 
 void Iview::runUpdate()
@@ -33,6 +45,8 @@ void Iview::runUpdate()
     for (auto &fragment : fragments) {
         fragment->runUpdate();
     }
+    // the fragment edit the view so after i need to reset it to defau
+    window.setView(window.getDefaultView());
 }
 
 void Iview::runFinish()
@@ -42,3 +56,4 @@ void Iview::runFinish()
     }
     onFinishView();
 }
+

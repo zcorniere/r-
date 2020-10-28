@@ -37,7 +37,8 @@ protected:
         fragments.push_back(fragment);
     }
 public:
-    explicit Iview(sf::RenderWindow &main_window) : window(main_window) {};
+    explicit Iview(sf::RenderWindow &main_window);
+    virtual ~Iview();
     void runCreate();
     void runUpdate();
     void runFinish();

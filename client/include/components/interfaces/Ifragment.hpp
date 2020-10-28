@@ -16,13 +16,34 @@
 class Ifragment {
     std::optional<std::string> &intent;
     std::vector<Ifragment *> fragments;
+    sf::RectangleShape background;
 protected:
     sf::RenderWindow &window;
+    /**
+     * Must be set in the fragment ctor
+     */
     float width = 100;
+    /**
+     * Must be set in the fragment ctor
+     */
     float height = 100;
+    /**
+     * Must be set in the fragment ctor
+     */
     float x = 0;
+    /**
+     * Must be set in the fragment ctor
+     */
     float y = 0;
+    /**
+     * Must be set in the fragment ctor
+     */
     unsigned z_index = 0;
+    /**
+     * Must be set in the fragment ctor
+     */
+    sf::Color background_color = sf::Color::White;
+    sf::View content;
     virtual void onCreateView() = 0;
     virtual void onUpdateView() = 0;
     virtual void onFinishView() = 0;
@@ -43,9 +64,10 @@ protected:
     }
 public:
     Ifragment(std::optional<std::string> &view_intent, sf::RenderWindow &main_window);
+    virtual ~Ifragment();
     void runCreate();
     void runUpdate();
     void runFinish();
 };
 
-#endif // _HOME_HPP_
+#endif // _IFRAGMENT_HPP_

@@ -22,7 +22,7 @@ static std::unordered_map<std::string, Iview *> generate_views(sf::RenderWindow 
 }
 
 Window::Window(std::string default_view) : target_view(std::move(default_view)),
-    sf_win(sf::VideoMode(1200, 800), "R-type"),
+    sf_win(sf::VideoMode(window::WIDTH, window::HEIGHT), "R-type"),
     event(sf_win)
 {
     views = generate_views(sf_win);
@@ -34,14 +34,17 @@ Window::Window(std::string default_view) : target_view(std::move(default_view)),
 Window::~Window()
 {
     view->runFinish();
+    for (auto &itemview : views) {
+        delete itemview.second;
+    }
 }
 
 void Window::update()
 {
     while (sf_win.isOpen()) {
         const auto elapsed = clock.getElapsedTime().asMilliseconds();
-        if (elapsed < time_per_tick) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(time_per_tick - elapsed));
+        if (elapsed < window::FRAMERATE) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(window::FRAMERATE - elapsed));
         }
         clock.restart();
         sf_win.clear();

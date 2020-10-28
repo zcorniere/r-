@@ -12,8 +12,7 @@
 
 class TopBarFragment : public Ifragment {
 public:
-    TopBarFragment(std::optional<std::string> &view_intent, sf::RenderWindow &main_window) : Ifragment(view_intent, main_window)
-    {};
+    TopBarFragment(std::optional<std::string> &view_intent, sf::RenderWindow &main_window);
 private:
     void onCreateView() final;
     void onUpdateView() final;

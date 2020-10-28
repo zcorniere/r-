@@ -15,6 +15,12 @@
 #include "components/event.hpp"
 #include "components/network.hpp"
 
+namespace window {
+    constexpr auto WIDTH = 1200;
+    constexpr auto HEIGHT = 800;
+    constexpr auto FRAMERATE = 1000 / 60;
+}
+
 class Window {
     std::string target_view;
     Iview *view = nullptr;
@@ -23,7 +29,6 @@ class Window {
     Event event;
     Network network;
     sf::Clock clock;
-    static constexpr unsigned time_per_tick = 1000 / 60;
 public:
     /**
      * Window Ctor
