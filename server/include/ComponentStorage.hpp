@@ -32,10 +32,10 @@ public:
 
 private:
     template<typename T>
-    void storeComponent(std::type_index type, T componenent, unsigned index)
+    void storeComponent(T componenent, unsigned index)
     {
         for (auto &[storage_type, storage] : m_storage) {
-            if (storage_type == type) {
+            if (storage_type == typeid(T)) {
                 auto vector = std::any_cast<std::vector<T>>(storage);
                 vector.insert(vector.begin() + index, componenent);
                 return;
@@ -59,7 +59,7 @@ private:
         template<typename T>
         EntityBuilder &withComponent(T component)
         {
-            m_dest.storeComponent<T>(typeid(T), component, m_id);
+            m_dest.storeComponent<T>(component, m_id);
             return *this;
         }
         unsigned build();
