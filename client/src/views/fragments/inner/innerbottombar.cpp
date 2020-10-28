@@ -13,8 +13,8 @@ InnerBottomBarFragment::InnerBottomBarFragment(std::optional<std::string> &view_
 {
     width = 200;
     height = 200;
-    x = 10;
-    y = 10;
+    x = -10;
+    y = -10;
     z_index = 9;
     background_color = sf::Color::Green;
 }

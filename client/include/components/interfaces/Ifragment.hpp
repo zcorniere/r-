@@ -17,6 +17,7 @@ class Ifragment {
     std::optional<std::string> &intent;
     std::vector<Ifragment *> fragments;
     sf::RectangleShape background;
+    void compute_content();
 protected:
     sf::RenderWindow &window;
     /**

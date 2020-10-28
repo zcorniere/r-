@@ -36,10 +36,10 @@ void Iview::runCreate()
     std::sort(fragments.begin(), fragments.end(), [](const auto &left, const auto &right) {
         return left->z_index < right->z_index;
     });
-    onCreateView();
     for (auto &fragment : fragments) {
         fragment->runCreate();
     }
+    onCreateView();
 }
 
 void Iview::runUpdate()
@@ -48,7 +48,7 @@ void Iview::runUpdate()
     for (auto &fragment : fragments) {
         fragment->runUpdate();
     }
-    // the fragment edit the view so after i need to reset it to defau
+    // the fragments edit the window view so after i need to reset it to default
     window.setView(window.getDefaultView());
 }
 

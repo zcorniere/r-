@@ -26,6 +26,44 @@ Ifragment::~Ifragment()
 
 void Ifragment::runCreate()
 {
+    const auto parent_view = window.getView();
+    compute_content();
+    // background
+    background.setFillColor(background_color);
+    background.setSize(sf::Vector2f(width, height));
+    background.setPosition(0, 0);
+    // sort z_index
+    std::sort(fragments.begin(), fragments.end(), [](const auto &left, const auto &right) {
+        return left->z_index < right->z_index;
+    });
+    window.setView(content);
+    for (auto &fragment : fragments) {
+        fragment->runCreate();
+    }
+    onCreateView();
+    window.setView(parent_view);
+}
+
+void Ifragment::runUpdate()
+{
+    window.setView(content);
+    window.draw(background);
+    onUpdateView();
+    for (auto &fragment : fragments) {
+        fragment->runUpdate();
+    }
+}
+
+void Ifragment::runFinish()
+{
+    for (auto &fragment : fragments) {
+        fragment->runFinish();
+    }
+    onFinishView();
+}
+
+void Ifragment::compute_content()   // TODO function to long, make it clean
+{
     auto center = sf::Vector2<float>(width / 2, height / 2);
     const auto parent_view = window.getView();
     const auto parent_viewport = parent_view.getViewport();
@@ -56,43 +94,10 @@ void Ifragment::runCreate()
         final_height -= diff;
         center.y -= diff;
     }
-    auto width_percent = 1 / (window::WIDTH / final_width);                  // TODO parent_offset.width
-    auto height_percent = 1 / (window::HEIGHT / final_height);               // TODO parent_offset.height
+    auto width_percent = 1 / (window::WIDTH / final_width);
+    auto height_percent = 1 / (window::HEIGHT / final_height);
     // BUILD VIEW
     content.setCenter(center);
     content.setSize(final_width, final_height);
     content.setViewport(sf::FloatRect(posx_percent, posy_percent, width_percent, height_percent));
-
-    // background
-    background.setFillColor(background_color);
-    background.setSize(sf::Vector2f(width, height));
-    background.setPosition(0, 0);
-    // sort z_index
-    std::sort(fragments.begin(), fragments.end(), [](const auto &left, const auto &right) {
-        return left->z_index < right->z_index;
-    });
-    onCreateView();
-    window.setView(content);
-    for (auto &fragment : fragments) {
-        fragment->runCreate();
-    }
-    window.setView(parent_view);
-}
-
-void Ifragment::runUpdate()
-{
-    window.setView(content);
-    window.draw(background);
-    onUpdateView();
-    for (auto &fragment : fragments) {
-        fragment->runUpdate();
-    }
-}
-
-void Ifragment::runFinish()
-{
-    for (auto &fragment : fragments) {
-        fragment->runFinish();
-    }
-    onFinishView();
 }

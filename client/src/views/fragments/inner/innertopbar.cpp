@@ -13,9 +13,9 @@ InnerTopBarFragment::InnerTopBarFragment(std::optional<std::string> &view_intent
     width = 100;
     height = 100;
     x = 550;
-    y = 50;
+    y = 350;
     z_index = 10;
-    background_color = sf::Color::Black;
+    background_color = sf::Color::Magenta;
 }
 
 void InnerTopBarFragment::onCreateView()
