@@ -14,8 +14,8 @@ TopBarFragment::TopBarFragment(std::optional<std::string> &view_intent, sf::Rend
 {
     width = 600;
     height = 400;
-    x = 700;
-    y = 200;
+    x = -50;
+    y = -50;
     z_index = 10;
     background_color = sf::Color::Blue;
     add_fragment<InnerTopBarFragment>("innerTop");

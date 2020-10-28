@@ -10,10 +10,10 @@
 
 InnerTopBarFragment::InnerTopBarFragment(std::optional<std::string> &view_intent, sf::RenderWindow &main_window) : Ifragment(view_intent, main_window)
 {
-    width = 100;
-    height = 100;
-    x = 550;
-    y = 350;
+    width = 200;
+    height = 200;
+    x = 450;
+    y = 250;
     z_index = 10;
     background_color = sf::Color::Magenta;
 }
