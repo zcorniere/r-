@@ -4,11 +4,11 @@
 #include "Snitch.hpp"
 
 #include <any>
-#include <unordered_map>
+#include <map>
 #include <memory>
 #include <string>
 #include <optional>
-#include <vector>
+#include <tuple>
 #include <functional>
 #include <typeindex>
 
@@ -23,16 +23,16 @@ public:
     template<typename T>
     void registerComponent()
     {
-        std::unordered_map<unsigned, T> new_row;
+        std::map<unsigned, T> new_row;
 
         m_storage.emplace(typeid(T), std::move(new_row));
     }
     template<typename T>
-    std::unordered_map<unsigned, T> getComponents()
+    std::map<unsigned, T> getComponents()
     {
         for (auto &[storage_type, storage] : m_storage) {
             if (storage_type == typeid(T)) {
-                return std::any_cast<std::unordered_map<unsigned, T>>(storage);
+                return std::any_cast<std::map<unsigned, T>>(storage);
             }
         }
         Snitch::warn() << "Trying to find unregistered components '" << typeid(T).name() << "'" << Snitch::endl;
@@ -47,7 +47,7 @@ private:
     {
         for (auto &[storage_type, storage] : m_storage) {
             if (storage_type == typeid(T)) {
-                std::unordered_map<unsigned, T> &map = std::any_cast<std::unordered_map<unsigned, T>&>(storage);
+                std::map<unsigned, T> &map = std::any_cast<std::map<unsigned, T>&>(storage);
                 map.emplace(index, componenent);
                 return;
             }
@@ -78,4 +78,12 @@ private:
     };
 };
 
+/*template<typename T1, T2>
+std:unordered_map<unsigned, std::tuple<T1, T2>> join_components
+(std::unordered_map<unsigned, T1>, std::unordered_map<unsigned, T2>)
+{
+
+}
+*/
 #endif
+

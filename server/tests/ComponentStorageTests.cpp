@@ -45,7 +45,7 @@ int main(void)
         return 1;
     }
 
-    std::unordered_map<unsigned, int> ints = storage.getComponents<int>();
+    std::map<unsigned, int> ints = storage.getComponents<int>();
 
     if (ints.size() != 2) {
         std::cerr << "Invalid int components number, expected 2, found " << ints.size() << std::endl;
