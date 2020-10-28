@@ -10,12 +10,13 @@
 #include "views/fragments/inner/magenta.hpp"
 #include "views/fragments/inner/green.hpp"
 
-Blue::Blue(std::optional<std::string> &view_intent, sf::RenderWindow &main_window) : Ifragment(view_intent, main_window)
+Blue::Blue(std::optional<std::string> &view_intent, bidimensional::Transform &parent_trans, sf::RenderWindow &main_window) :
+    Ifragment(view_intent, parent_trans, main_window)
 {
-    width = 600;
-    height = 400;
-    x = -50;
-    y = -50;
+    transform.scale.x = 600;
+    transform.scale.y = 400;
+    transform.position.x = -50;
+    transform.position.y = -50;
     z_index = 10;
     background_color = sf::Color::Blue;
     add_fragment<Magenta>("innerTop");

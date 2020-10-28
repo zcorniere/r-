@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include "components/interfaces/Iview.hpp"
+#include "components/window.hpp"
 
 void Iview::set_intent(const std::string &view)
 {
@@ -32,7 +33,12 @@ std::optional<std::string> Iview::get_intent()
 
 Iview::Iview(sf::RenderWindow &main_window) :
     window(main_window)
-{}
+{
+    transform.scale.x = window::WIDTH;
+    transform.scale.y = window::HEIGHT;
+    transform.position.x = 0;
+    transform.position.y = 0;
+}
 
 Iview::~Iview()
 {

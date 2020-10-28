@@ -23,8 +23,8 @@ Ifragment *Ifragment::get_fragment(const std::string &key)
     return item->second;
 }
 
-Ifragment::Ifragment(std::optional<std::string> &view_intent, sf::RenderWindow &main_window) :
-        intent(view_intent), window(main_window)
+Ifragment::Ifragment(std::optional<std::string> &view_intent, bidimensional::Transform &parent_trans, sf::RenderWindow &main_window) :
+        intent(view_intent), parent_transform(parent_trans), window(main_window)
 {}
 
 Ifragment::~Ifragment()
@@ -40,7 +40,7 @@ void Ifragment::runCreate()
     compute_content();
     // background
     background.setFillColor(background_color);
-    background.setSize(sf::Vector2f(width, height));
+    background.setSize(transform.scale);
     background.setPosition(0, 0);
     // sort z_index
     std::sort(fragments.begin(), fragments.end(), [](const auto &left, const auto &right) {
@@ -74,7 +74,7 @@ void Ifragment::runFinish()
 
 void Ifragment::compute_content()   // TODO function to long, make it clean
 {
-    auto center = sf::Vector2<float>(width / 2, height / 2);
+    auto center = sf::Vector2<float>(transform.scale.x / 2, transform.scale.y / 2);
     const auto parent_view = window.getView();
     const auto parent_viewport = parent_view.getViewport();
     const auto parent_size = parent_view.getSize();
@@ -93,10 +93,10 @@ void Ifragment::compute_content()   // TODO function to long, make it clean
 //    else
 //        posy_percent += child_relative_y;
 
-    auto rel_x = x;
-    auto rel_y = y;
-    const auto abs_width = width;
-    const auto abs_height = height;
+    auto rel_x = transform.position.x;
+    auto rel_y = transform.position.y;
+    const auto abs_width = transform.scale.x;
+    const auto abs_height = transform.scale.y;
     // final vars
     auto net_width = abs_width;
     auto net_height = abs_height;
@@ -116,13 +116,13 @@ void Ifragment::compute_content()   // TODO function to long, make it clean
     const auto abs_x = parent_viewport.left * window::WIDTH + rel_x;
     const auto abs_y = parent_viewport.top * window::HEIGHT + rel_y;
     // SIZE
-    if (x + net_width > parent_size.x) {
-        const auto diff = x + net_width - parent_size.x;
+    if (transform.position.x + net_width > parent_size.x) {
+        const auto diff = transform.position.x + net_width - parent_size.x;
         net_width -= diff;
         center.x -= diff;
     }
-    if (y + net_height > parent_size.y) {
-        const auto diff = y + net_height - parent_size.y;
+    if (transform.position.y + net_height > parent_size.y) {
+        const auto diff = transform.position.y + net_height - parent_size.y;
         net_height -= diff;
         center.y -= diff;
     }

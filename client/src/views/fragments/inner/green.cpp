@@ -8,13 +8,13 @@
 #include <iostream>
 #include "views/fragments/inner/green.hpp"
 
-Green::Green(std::optional<std::string> &view_intent, sf::RenderWindow &main_window)
-        : Ifragment(view_intent, main_window)
+Green::Green(std::optional<std::string> &view_intent, bidimensional::Transform &parent_trans, sf::RenderWindow &main_window)
+        : Ifragment(view_intent, parent_trans, main_window)
 {
-    width = 200;
-    height = 200;
-    x = 0;
-    y = 0;
+    transform.scale.x = 200;
+    transform.scale.y = 200;
+    transform.position.x = 0;
+    transform.position.y = 0;
     z_index = 9;
     background_color = sf::Color::Green;
 }

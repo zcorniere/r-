@@ -13,30 +13,22 @@
 #include <vector>
 #include <utility>
 #include <SFML/Graphics.hpp>
+#include "components/structures/bidimensional.hpp"
 
 class Ifragment {
     std::optional<std::string> &intent;
+    bidimensional::Transform &parent_transform;
+
     std::vector<std::pair<std::string, Ifragment *>> fragments;
     sf::RectangleShape background;
     void compute_content();
 protected:
     sf::RenderWindow &window;
     /**
-     * Must be set in the fragment ctor
+     * Must be set in fragment Ctor
      */
-    float width = 100;
-    /**
-     * Must be set in the fragment ctor
-     */
-    float height = 100;
-    /**
-     * Must be set in the fragment ctor
-     */
-    float x = 0;
-    /**
-     * Must be set in the fragment ctor
-     */
-    float y = 0;
+    bidimensional::Transform transform;
+
     /**
      * Must be set in the fragment ctor
      */
@@ -57,7 +49,7 @@ protected:
     template<typename T>
     void add_fragment(const std::string &key) {
         static_assert(std::is_base_of<Ifragment, T>::value, "T doesn't derive from Ifragment");
-        auto fragment = new T(intent, window);
+        auto fragment = new T(intent, transform, window);
         fragments.emplace_back(key, fragment);
     }
     /**
@@ -71,7 +63,7 @@ public:
      * Must be set in the fragment ctor
      */
     unsigned z_index = 0;
-    Ifragment(std::optional<std::string> &view_intent, sf::RenderWindow &main_window);
+    Ifragment(std::optional<std::string> &view_intent, bidimensional::Transform &parent_trans, sf::RenderWindow &main_window);
     virtual ~Ifragment();
     void runCreate();
     void runUpdate();
