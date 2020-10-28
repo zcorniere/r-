@@ -8,6 +8,7 @@ add_executable(r-type_server
                             source/main.cpp
                             source/StateMachine.cpp
                             source/ComponentStorage.cpp
+                            source/Snitch.cpp
 )
 
 add_executable(tests_StateMachine
@@ -17,5 +18,6 @@ add_executable(tests_StateMachine
 
 add_executable(tests_ComponentStorage
                             source/ComponentStorage.cpp
+                            source/Snitch.cpp
                             tests/ComponentStorageTests.cpp
 )

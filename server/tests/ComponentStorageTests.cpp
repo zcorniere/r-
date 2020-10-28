@@ -9,7 +9,8 @@ class FiveHandler {
     }
 };
 
-int main(void) {
+int main(void)
+{
     std::cout << "ComponentStorage tests...";
 
     ComponentStorage storage;
@@ -18,6 +19,11 @@ int main(void) {
 
     storage.registerComponent<FiveHandler>();
     storage.registerComponent<int>();
+
+    storage.buildEntity()
+    .withComponent(handler)
+    .withComponent(5)
+    .build();
 
     std::cout << "Done !" << std::endl;
 }
