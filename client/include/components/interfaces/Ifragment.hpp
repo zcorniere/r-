@@ -11,11 +11,12 @@
 #include <optional>
 #include <string>
 #include <vector>
+#include <utility>
 #include <SFML/Graphics.hpp>
 
 class Ifragment {
     std::optional<std::string> &intent;
-    std::vector<Ifragment *> fragments; // TODO refactor look at Iview
+    std::vector<std::pair<std::string, Ifragment *>> fragments;
     sf::RectangleShape background;
     void compute_content();
 protected:
@@ -54,11 +55,17 @@ protected:
      * @tparam T => fragment is a sub part of the View
      */
     template<typename T>
-    void add_fragment() {
+    void add_fragment(const std::string &key) {
         static_assert(std::is_base_of<Ifragment, T>::value, "T doesn't derive from Ifragment");
         auto fragment = new T(intent, window);
-        fragments.push_back(fragment);
+        fragments.emplace_back(key, fragment);
     }
+    /**
+     * Get a fragment from the local list
+     * @param key unique name of the fragment
+     * @return founded fragment or nullptr
+     */
+    [[nodiscard]] Ifragment *get_fragment(const std::string &key);
 public:
     /**
      * Must be set in the fragment ctor

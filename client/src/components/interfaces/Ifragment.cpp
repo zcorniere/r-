@@ -13,6 +13,16 @@ void Ifragment::set_intent(const std::string &view)
     intent.emplace(view);
 }
 
+Ifragment *Ifragment::get_fragment(const std::string &key)
+{
+    auto item = std::find_if(fragments.begin(), fragments.end(), [&](const auto &pair){
+        return pair.first == key;
+    });
+    if (item == fragments.end())
+        return nullptr;
+    return item->second;
+}
+
 Ifragment::Ifragment(std::optional<std::string> &view_intent, sf::RenderWindow &main_window) :
         intent(view_intent), window(main_window)
 {}
@@ -20,7 +30,7 @@ Ifragment::Ifragment(std::optional<std::string> &view_intent, sf::RenderWindow &
 Ifragment::~Ifragment()
 {
     for (auto &fragment : fragments) {
-        delete fragment;
+        delete fragment.second;
     }
 }
 
@@ -34,11 +44,11 @@ void Ifragment::runCreate()
     background.setPosition(0, 0);
     // sort z_index
     std::sort(fragments.begin(), fragments.end(), [](const auto &left, const auto &right) {
-        return left->z_index < right->z_index;
+        return left.second->z_index < right.second->z_index;
     });
     window.setView(content);
     for (auto &fragment : fragments) {
-        fragment->runCreate();
+        fragment.second->runCreate();
     }
     onCreateView();
     window.setView(parent_view);
@@ -50,14 +60,14 @@ void Ifragment::runUpdate()
     window.draw(background);
     onUpdateView();
     for (auto &fragment : fragments) {
-        fragment->runUpdate();
+        fragment.second->runUpdate();
     }
 }
 
 void Ifragment::runFinish()
 {
     for (auto &fragment : fragments) {
-        fragment->runFinish();
+        fragment.second->runFinish();
     }
     onFinishView();
 }
@@ -106,3 +116,4 @@ void Ifragment::move(float x, float y, unsigned milliseconds)
 {
     // TODO
 }
+

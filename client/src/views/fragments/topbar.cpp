@@ -18,8 +18,8 @@ TopBarFragment::TopBarFragment(std::optional<std::string> &view_intent, sf::Rend
     y = 200;
     z_index = 10;
     background_color = sf::Color::Blue;
-    add_fragment<InnerTopBarFragment>();
-    add_fragment<InnerBottomBarFragment>();
+    add_fragment<InnerTopBarFragment>("innerTop");
+    add_fragment<InnerBottomBarFragment>("innerBot");
 }
 
 void TopBarFragment::onCreateView()
