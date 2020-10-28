@@ -23,9 +23,20 @@ public:
     template<typename T>
     void registerComponent()
     {
-        std::vector<T> new_row;
+        std::unordered_map<unsigned, T> new_row;
 
         m_storage.emplace(typeid(T), std::move(new_row));
+    }
+    template<typename T>
+    std::unordered_map<unsigned, T> getComponents()
+    {
+        for (auto &[storage_type, storage] : m_storage) {
+            if (storage_type == typeid(T)) {
+                return std::any_cast<std::unordered_map<unsigned, T>>(storage);
+            }
+        }
+        Snitch::warn() << "Trying to find unregistered components '" << typeid(T).name() << "'" << Snitch::endl;
+        return {};
     }
     EntityBuilder buildEntity();
     ~ComponentStorage();
@@ -36,12 +47,12 @@ private:
     {
         for (auto &[storage_type, storage] : m_storage) {
             if (storage_type == typeid(T)) {
-                auto vector = std::any_cast<std::vector<T>>(storage);
-                vector.insert(vector.begin() + index, componenent);
+                std::unordered_map<unsigned, T> &map = std::any_cast<std::unordered_map<unsigned, T>&>(storage);
+                map.emplace(index, componenent);
                 return;
             }
         }
-        Snitch::warn() << "Couldn't store unregistered componenent '" << typeid(T).name() << "'" << Snitch::endl;;
+        Snitch::warn() << "Couldn't store unregistered component '" << typeid(T).name() << "'" << Snitch::endl;;
     }
     unsigned getNextFreeId() const;
 

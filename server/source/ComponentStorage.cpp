@@ -34,6 +34,8 @@ ComponentStorage::EntityBuilder::EntityBuilder(ComponentStorage::EntityBuilder &
 
 unsigned ComponentStorage::EntityBuilder::build()
 {
+    m_dest.m_entityCount++;
+
     return m_id;
 }
 
