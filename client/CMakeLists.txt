@@ -1,4 +1,14 @@
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
+
+# SFML static link fix
+add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
+add_compile_options(
+        $<$<CONFIG:>:/MD> #---------|
+        $<$<CONFIG:Debug>:/MD> #----|-- Statically link the runtime libraries (sfml fix)
+        $<$<CONFIG:Release>:/MD> #--|
+)
+
+link_directories(${CMAKE_BINARY_DIR}/bin)
 
 add_executable(r-type_client ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
 add_library(r-type_client_lib STATIC)
@@ -8,25 +18,26 @@ target_include_directories(r-type_client_lib PUBLIC
 )
 
 target_sources(r-type_client_lib PRIVATE
-        src/app/window.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/event.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/network.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/interfaces/Iview.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/interfaces/Ifragment.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/interfaces/Icolors.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/interfaces/Istring.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/app/window.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/app/res/colors.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/app/res/strings/common.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/app/res/strings/fr.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/app/res/strings/en.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/app/views/home.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/app/views/loading.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/app/res/colors.cpp
 )
 
+conan_target_link_libraries(r-type_client_lib)
 #target_link_libraries(r-type_client_lib
 #        ${CONAN_LIBS_BOOST}
 #        ${CONAN_LIBS_SFML}
 #)
-# prefer conan_target_link_libraries() insteal of target_link_libraries()
-# because : https://stackoverflow.com/questions/63290538/how-to-use-conan-to-handle-imgui-sfml-dependency-in-a-cmake-gcc-project-in-linux
-
-conan_target_link_libraries(r-type_client_lib)
 
 target_link_libraries(r-type_client r-type_client_lib)
 

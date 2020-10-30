@@ -10,13 +10,14 @@
 
 #include <map>
 #include <string>
+#include <optional>
 #include <SFML/Graphics.hpp>
 
 class Icolors {
 protected:
     std::map<std::string, sf::Color> list;
 public:
-    std::optional<sf::Color> get(const std::string &key);
+    [[nodiscard]] std::optional<sf::Color> get(const std::string &key);
 };
 
 #endif

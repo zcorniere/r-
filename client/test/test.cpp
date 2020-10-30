@@ -7,11 +7,13 @@
 
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
-
 #include <array>
-#include <list>
-#include <vector>
-//#include "helloworld.hpp"
+
+BOOST_AUTO_TEST_CASE(test) {
+    BOOST_CHECK_EQUAL("hello world", "hello world");
+    BOOST_CHECK_NE("hello world", "hallo worl");
+}
+
 //
 //BOOST_AUTO_TEST_CASE(test_helloword) {
 //    BOOST_CHECK_EQUAL(ret_helloworld(), "hello world");

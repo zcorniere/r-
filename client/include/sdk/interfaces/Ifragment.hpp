@@ -5,8 +5,8 @@
 ** R-type
 */
 
-#ifndef _SDK_INTERFACE_IFRAGMENT_HPP_
-#define _SDK_INTERFACE_IFRAGMENT_HPP_
+#ifndef _SDK_INTERFACES_IFRAGMENT_HPP_
+#define _SDK_INTERFACES_IFRAGMENT_HPP_
 
 #include <optional>
 #include <string>

@@ -1,15 +1,10 @@
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.11.2)
 project(r-type)
 
-
-if(CMAKE_VERSION VERSION_LESS "3.7.0")
-  set(CMAKE_INCLUDE_CURRENT_DIR ON)
-endif()
-
 # Conan configuration
-
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
+conan_basic_setup(TARGETS)
+# https://stackoverflow.com/questions/63290538/how-to-use-conan-to-handle-imgui-sfml-dependency-in-a-cmake-gcc-project-in-linux
 
 # link_libraries(${CONAN_LIBS})
 # The target_link_libraries() command should be preferred whenever possible

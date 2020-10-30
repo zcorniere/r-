@@ -7,14 +7,19 @@
 
 #include <iostream>
 #include "app/views/home.hpp"
+#include "app/res/string.hpp"
 
 HomeView::HomeView(sf::RenderWindow &window) : Iview(window)
 {}
 
+#include "app/res/string.hpp"
+
 void HomeView::onCreateView()
 {
+    String string;
+    std::cout << string.get("full_path").value() << std::endl;
     std::cout << "create home" << std::endl;
-    helvetica.loadFromFile("assets/fonts/helvetica/helvetica.ttf");
+    helvetica.loadFromFile(ABS_PATH + "/assets/fonts/helvetica/helvetica.ttf");
     text.setFont(helvetica);
     text.setCharacterSize(12);
     text.setFillColor(sf::Color::Yellow);
