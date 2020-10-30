@@ -8,4 +8,5 @@ target_sources (Client_Units_Tests PRIVATE
 
 target_link_libraries(Client_Units_Tests r-type_client_lib)
 
-target_link_libraries(Client_Units_Tests ${CONAN_LIBS_BOOST})
+# target_link_libraries(Client_Units_Tests ${CONAN_LIBS_BOOST})
+conan_target_link_libraries(Client_Units_Tests)

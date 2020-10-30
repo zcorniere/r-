@@ -1,12 +1,14 @@
 set(CMAKE_CXX_STANDARD 17)
 
-# SFML static link fix
-add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
-add_compile_options(
-        $<$<CONFIG:>:/MD> #---------|
-        $<$<CONFIG:Debug>:/MD> #----|-- Statically link the runtime libraries (sfml fix)
-        $<$<CONFIG:Release>:/MD> #--|
-)
+if (WIN32)
+    # SFML static link fix
+    add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
+    add_compile_options(
+            $<$<CONFIG:>:/MD> #---------|
+            $<$<CONFIG:Debug>:/MD> #----|-- Statically link the runtime libraries (sfml fix)
+            $<$<CONFIG:Release>:/MD> #--|
+    )
+endif()
 
 link_directories(${CMAKE_BINARY_DIR}/bin)
 

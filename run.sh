@@ -4,4 +4,8 @@
 
 BUILDPATH=cmake-build-debug
 
-mkdir -p $BUILDPATH && cd $BUILDPATH && conan install .. -b missing && cmake .. && cmake --build .;
+mkdir -p $BUILDPATH &&
+cd $BUILDPATH &&
+conan install .. -b missing &&
+cmake .. -G "Unix Makefiles" &&
+cmake --build .;

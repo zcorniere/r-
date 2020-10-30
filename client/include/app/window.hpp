@@ -16,8 +16,8 @@
 #include "sdk/network.hpp"
 
 namespace window {
-    constexpr auto WIDTH = 1200;
-    constexpr auto HEIGHT = 800;
+    constexpr auto WIDTH = 1000;
+    constexpr auto HEIGHT = 600;
     constexpr auto FRAMERATE = 60;
 }
 
