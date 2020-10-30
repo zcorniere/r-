@@ -11,12 +11,12 @@
 #include <array>
 #include <list>
 #include <vector>
-#include "helloworld.hpp"
-
-BOOST_AUTO_TEST_CASE(test_helloword) {
-    BOOST_CHECK_EQUAL(ret_helloworld(), "hello world");
-    BOOST_CHECK_NE(ret_helloworld(), "hallo worl");
-}
+//#include "helloworld.hpp"
+//
+//BOOST_AUTO_TEST_CASE(test_helloword) {
+//    BOOST_CHECK_EQUAL(ret_helloworld(), "hello world");
+//    BOOST_CHECK_NE(ret_helloworld(), "hallo worl");
+//}
 //
 //BOOST_AUTO_TEST_CASE(test_equal) {
 //    BOOST_CHECK_EQUAL(1, 1);

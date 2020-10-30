@@ -8,13 +8,15 @@ target_include_directories(r-type_client_lib PUBLIC
 )
 
 target_sources(r-type_client_lib PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/components/window.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/views/home.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/views/loading.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/components/interfaces/Iview.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/components/event.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/components/network.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/components/interfaces/Ifragment.cpp
+        src/app/window.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/event.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/network.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/interfaces/Iview.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/interfaces/Ifragment.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/interfaces/Icolors.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/app/views/home.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/app/views/loading.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/app/res/colors.cpp
 )
 
 #target_link_libraries(r-type_client_lib

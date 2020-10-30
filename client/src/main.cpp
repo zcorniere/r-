@@ -6,7 +6,7 @@
 */
 
 #include <iostream>
-#include "components/window.hpp"
+#include "app/window.hpp"
 
 int main() {
     Window win;
