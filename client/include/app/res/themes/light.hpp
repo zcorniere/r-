@@ -13,7 +13,9 @@
 
 class LightTheme : public Itheme<Colors> {
 public:
-    LightTheme() : Itheme("", "", "") {};       // TODO set colors
+    LightTheme() : Itheme("Glace Vanille",
+                          "Vomi d'Alexis",
+                          "White") {};
 };
 
 #endif

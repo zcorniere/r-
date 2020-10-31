@@ -13,7 +13,9 @@
 
 class DarkTheme : public Itheme<Colors> {
 public:
-    DarkTheme() : Itheme("", "", "") {};        // TODO set colors
+    DarkTheme() : Itheme("Discord : Sombre, mais pas noir",
+                         "Background du Babel trop classe de Hugo",
+                         "Discord : Bleu-violet") {};
 };
 
 #endif

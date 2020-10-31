@@ -18,4 +18,11 @@ Colors::Colors() : Icolors()
     list.emplace("Magenta", sf::Color::Magenta);
     list.emplace("Cyan", sf::Color::Cyan);
     list.emplace("Transparent", sf::Color::Transparent);
+    list.emplace("Glace Vanille", sf::Color(240, 229, 182));
+    list.emplace("Vomi d'Alexis", sf::Color(204, 198, 182));
+    list.emplace("Background du Babel trop classe de Hugo", sf::Color(34, 40, 64));
+    list.emplace("Discord : Bleu-violet", sf::Color(114, 137, 218));
+    list.emplace("Discord : Gris-violet", sf::Color(153, 170, 181));
+    list.emplace("Discord : Sombre, mais pas noir", sf::Color(44, 47, 51));
+    list.emplace("Discord : Pas noir mais presque", sf::Color(35, 39, 42));
 }
