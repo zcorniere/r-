@@ -20,12 +20,13 @@ target_include_directories(r-type_client_lib PUBLIC
 )
 
 target_sources(r-type_client_lib PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/event.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/network.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/interfaces/Iview.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/interfaces/Ifragment.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/interfaces/Icolors.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/interfaces/Istring.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/managers/event.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/managers/inputs.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/app/window.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/app/res/colors.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/app/res/strings/common.cpp

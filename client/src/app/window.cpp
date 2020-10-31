@@ -9,6 +9,7 @@
 #include <SFML/Graphics.hpp>
 #include <chrono>
 #include <thread>
+#include "sdk/managers/inputs.hpp"
 #include "app/window.hpp"
 #include "app/views/home.hpp"
 #include "app/views/loading.hpp"
@@ -27,6 +28,7 @@ Window::Window(std::string default_view) : target_view(std::move(default_view)),
 {
     // TODO sf_win.setIcon()
     sf_win.setFramerateLimit(window::FRAMERATE);
+    Input().init(&event);
     views = generate_views(sf_win);
     // set the active view
     view = views[target_view];

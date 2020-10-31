@@ -12,7 +12,7 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 #include "sdk/interfaces/Iview.hpp"
-#include "sdk/event.hpp"
+#include "sdk/managers/event.hpp"
 #include "sdk/network.hpp"
 
 namespace window {
