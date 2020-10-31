@@ -12,12 +12,8 @@
 HomeView::HomeView(sf::RenderWindow &window) : Iview(window)
 {}
 
-#include "app/res/string.hpp"
-
 void HomeView::onCreateView()
 {
-    String string;
-    std::cout << string.get("full_path").value() << std::endl;
     std::cout << "create home" << std::endl;
     helvetica.loadFromFile(ABS_PATH + "/assets/fonts/helvetica/helvetica.ttf");
     text.setFont(helvetica);

@@ -10,6 +10,8 @@
 #include <chrono>
 #include <thread>
 #include "sdk/managers/inputs.hpp"
+#include "app/res/theme.hpp"
+#include "app/res/string.hpp"
 #include "app/window.hpp"
 #include "app/views/home.hpp"
 #include "app/views/loading.hpp"
@@ -26,7 +28,9 @@ Window::Window(std::string default_view) : target_view(std::move(default_view)),
     sf_win(sf::VideoMode(window::WIDTH, window::HEIGHT), "R-type", sf::Style::Titlebar | sf::Style::Close),
     event(sf_win)
 {
-    // TODO sf_win.setIcon()
+    sf::Image icon;
+    icon.loadFromFile(ABS_PATH + "/assets/icon/foxy_eye.png");
+    sf_win.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     sf_win.setFramerateLimit(window::FRAMERATE);
     Input().init(&event);
     views = generate_views(sf_win);
@@ -42,8 +46,6 @@ Window::~Window()
         delete itemview.second;
     }
 }
-
-#include "app/res/theme.hpp"
 
 void Window::update()
 {
