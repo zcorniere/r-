@@ -15,6 +15,7 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 #include "sdk/interfaces/Ifragment.hpp"
+#include "sdk/interfaces/Itheme.hpp"
 
 class Iview {
     std::optional<std::string> intent = std::nullopt;
@@ -40,6 +41,12 @@ protected:
     void add_fragment(const std::string &key) {
         static_assert(std::is_base_of<Ifragment, T>::value, "T doesn't derive from Ifragment");
         auto fragment = new T(intent, transform, window);
+        fragments.emplace_back(key, fragment);
+    }
+    template<typename T>
+    void add_fragment(const std::string &key, Itheme<Icolors *> *theme) {
+        static_assert(std::is_base_of<Ifragment, T>::value, "T doesn't derive from Ifragment");
+        auto fragment = new T(intent, transform, window, theme);
         fragments.emplace_back(key, fragment);
     }
     /**

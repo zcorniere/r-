@@ -14,6 +14,7 @@
 #include <utility>
 #include <SFML/Graphics.hpp>
 #include "sdk/structures/bidimensional.hpp"
+#include "sdk/interfaces/Itheme.hpp"
 
 class Ifragment {
     std::optional<std::string> &intent;
@@ -50,6 +51,12 @@ protected:
     void add_fragment(const std::string &key) {
         static_assert(std::is_base_of<Ifragment, T>::value, "T doesn't derive from Ifragment");
         auto fragment = new T(intent, transform, window);
+        fragments.emplace_back(key, fragment);
+    }
+    template<typename T>
+    void add_fragment(const std::string &key, Itheme<Icolors *> *theme) {
+        static_assert(std::is_base_of<Ifragment, T>::value, "T doesn't derive from Ifragment");
+        auto fragment = new T(intent, transform, window, theme);
         fragments.emplace_back(key, fragment);
     }
     /**

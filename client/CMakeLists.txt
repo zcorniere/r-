@@ -25,8 +25,10 @@ target_sources(r-type_client_lib PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/interfaces/Ifragment.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/interfaces/Icolors.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/interfaces/Istring.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/interfaces/Iwidget.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/managers/event.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/managers/inputs.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/widgets/image.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/app/window.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/app/res/colors.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/app/res/strings/common.cpp
