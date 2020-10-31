@@ -43,10 +43,12 @@ Window::~Window()
     }
 }
 
+#include "app/res/theme.hpp"
+
 void Window::update()
 {
     while (sf_win.isOpen()) {
-        sf_win.clear();
+        sf_win.clear(Theme().getPrimary().value());
         view->runUpdate();
         const auto intent = view->get_intent();
         if (intent != std::nullopt) {
