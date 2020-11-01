@@ -55,6 +55,17 @@ protected:
      * @return founded fragment or nullptr
      */
     [[nodiscard]] Ifragment *get_fragment(const std::string &key);
+    /**
+     * Same as get_fragment() but return the specified type
+     * @tparam T fragment type
+     * @param key unique name of the fragment
+     * @return founded fragment or nullptr
+     */
+    template<typename T>
+    [[nodiscard]] T *get_fragment(const std::string &key) {
+        Ifragment *ret = get_fragment(key);
+        return reinterpret_cast<T *>(ret);
+    }
 public:
     explicit Iview(sf::RenderWindow &main_window);
     virtual ~Iview();

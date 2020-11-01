@@ -127,8 +127,17 @@ void Ifragment::compute_content()
     content.setViewport(sf::FloatRect(abs_posx_percent, abs_posy_percent, abs_width_percent, abs_height_percent));
 }
 
-void Ifragment::move(float x, float y, unsigned milliseconds)
+void Ifragment::move(sf::Vector2<float> pos)
 {
+    transform.position = pos;
+}
+
+void Ifragment::rotate(float angle)
+{
+    const auto actual = content.getRotation();
+    content.setRotation(actual + angle);
     // TODO
 }
+
+
 

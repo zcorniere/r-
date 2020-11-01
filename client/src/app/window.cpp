@@ -29,7 +29,7 @@ Window::Window(std::string default_view) : target_view(std::move(default_view)),
     event(sf_win)
 {
     sf::Image icon;
-    icon.loadFromFile(ABS_PATH + "/assets/icon/foxy_eye.png");
+    icon.loadFromFile(STRING("foxy_red_eye"));
     sf_win.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     sf_win.setFramerateLimit(window::FRAMERATE);
     Input().init(&event);

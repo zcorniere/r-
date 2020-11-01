@@ -16,6 +16,6 @@
  */
 using String = EnString;
 
-#define ABS_PATH (std::string(String().get("full_path").value()))
+#define STRING(key) (std::string(String().get(key).value()))
 
 #endif

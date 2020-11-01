@@ -45,7 +45,8 @@ protected:
     void set_intent(const std::string &view);
     /**
      * Must be use only in a fragment Ctor
-     * @tparam T => fragment is a sub part of the View
+     * @tparam T T => fragment is a sub part of the View
+     * @param key name
      */
     template<typename T>
     void add_fragment(const std::string &key) {
@@ -53,6 +54,12 @@ protected:
         auto fragment = new T(intent, transform, window);
         fragments.emplace_back(key, fragment);
     }
+    /**
+     * Must be use only in a fragment Ctor
+     * @tparam T => fragment is a sub part of the View
+     * @param key name
+     * @param theme use reinterpret_cast<Itheme<Icolors *> *>(std::make_unique<Theme>().get())
+     */
     template<typename T>
     void add_fragment(const std::string &key, Itheme<Icolors *> *theme) {
         static_assert(std::is_base_of<Ifragment, T>::value, "T doesn't derive from Ifragment");
@@ -65,6 +72,17 @@ protected:
      * @return founded fragment or nullptr
      */
     [[nodiscard]] Ifragment *get_fragment(const std::string &key);
+    /**
+     * Same as get_fragment() but return the specified type
+     * @tparam T fragment type
+     * @param key unique name of the fragment
+     * @return founded fragment or nullptr
+     */
+    template<typename T>
+    [[nodiscard]] T *get_fragment(const std::string &key) {
+        Ifragment *ret = get_fragment(key);
+        return reinterpret_cast<T *>(ret);
+    }
 public:
     /**
      * Must be set in the fragment ctor
@@ -76,12 +94,16 @@ public:
     void runUpdate();
     void runFinish();
     /**
-     * Move fragment with an interpolation
+     * Move fragment to a new position
      * @param x
      * @param y
-     * @param milliseconds
      */
-    void move(float x, float y, unsigned milliseconds);
+    void move(sf::Vector2<float> pos);
+    /**
+     * Rotate the fragment
+     * @param angle in degrees
+     */
+    void rotate(float angle);
 };
 
 #endif
