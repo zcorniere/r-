@@ -13,13 +13,20 @@ endif()
 link_directories(${CMAKE_BINARY_DIR}/bin)
 
 add_executable(r-type_client ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
-add_library(r-type_client_lib STATIC)
+add_library(r-type_client_sdk STATIC)
+add_library(r-type_client_app STATIC)
 
-target_include_directories(r-type_client_lib PUBLIC
+target_include_directories(r-type_client PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        )
+target_include_directories(r-type_client_sdk PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+target_include_directories(r-type_client_app PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-target_sources(r-type_client_lib PRIVATE
+target_sources(r-type_client_sdk PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/network.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/interfaces/Iview.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/interfaces/Ifragment.cpp
@@ -29,6 +36,10 @@ target_sources(r-type_client_lib PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/managers/event.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/managers/inputs.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/widgets/image.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/widgets/loader.cpp
+)
+
+target_sources(r-type_client_app PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/app/window.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/app/res/colors.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/app/res/strings/common.cpp
@@ -38,13 +49,13 @@ target_sources(r-type_client_lib PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/app/views/loading.cpp
 )
 
-conan_target_link_libraries(r-type_client_lib)
-#target_link_libraries(r-type_client_lib
-#        ${CONAN_LIBS_BOOST}
-#        ${CONAN_LIBS_SFML}
-#)
+conan_target_link_libraries(r-type_client_sdk)
+conan_target_link_libraries(r-type_client_app)
 
-target_link_libraries(r-type_client r-type_client_lib)
+target_link_libraries(r-type_client
+        r-type_client_sdk
+        r-type_client_app
+)
 
 # Linking assets client folder
 if (WIN32)

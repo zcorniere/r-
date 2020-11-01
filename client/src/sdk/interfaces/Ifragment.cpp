@@ -132,12 +132,5 @@ void Ifragment::move(sf::Vector2<float> pos)
     transform.position = pos;
 }
 
-void Ifragment::rotate(float angle)
-{
-    const auto actual = content.getRotation();
-    content.setRotation(actual + angle);
-    // TODO
-}
-
 
 

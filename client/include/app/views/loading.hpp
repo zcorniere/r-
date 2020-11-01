@@ -8,15 +8,16 @@
 #ifndef _LOADING_HPP_
 #define _LOADING_HPP_
 
+#include <SFML/Graphics.hpp>
 #include "sdk/interfaces/Iview.hpp"
 
 class LoadingView : public Iview {
-public:
-    explicit LoadingView(sf::RenderWindow &window) : Iview(window) {};
-private:
     void onCreateView() final;
     void onUpdateView() final;
     void onFinishView() final;
+    sf::Clock clock;
+public:
+    explicit LoadingView(sf::RenderWindow &window);
 };
 
-#endif // _LOADING_HPP_
+#endif

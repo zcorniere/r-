@@ -11,9 +11,6 @@
 #include "sdk/interfaces/Iview.hpp"
 
 class HomeView : public Iview {
-public:
-    explicit HomeView(sf::RenderWindow &window);
-private:
     void onCreateView() final;
     void onUpdateView() final;
     void onFinishView() final;
@@ -21,6 +18,8 @@ private:
     sf::Text text;
     sf::Clock clock;
     unsigned fps = 0;
+public:
+    explicit HomeView(sf::RenderWindow &window);
 };
 
-#endif // _HOME_HPP_
+#endif

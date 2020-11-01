@@ -18,6 +18,11 @@ class Iwidget : public Ifragment {
 public:
     Iwidget(std::optional<std::string> &view_intent, bidimensional::Transform &parent_trans, sf::RenderWindow &main_window);
     virtual void onClick();
+    /**
+     * Rotate the widget
+     * @param angle in degrees
+     */
+    void rotate(float angle);
 };
 
 

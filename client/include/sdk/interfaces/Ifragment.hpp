@@ -99,11 +99,6 @@ public:
      * @param y
      */
     void move(sf::Vector2<float> pos);
-    /**
-     * Rotate the fragment
-     * @param angle in degrees
-     */
-    void rotate(float angle);
 };
 
 #endif

@@ -18,4 +18,6 @@ CommonString::CommonString()
     list.emplace("foxy_head_trans_coffe", path + "/assets/icon/foxy_head_trans_coffe.png");
     list.emplace("helvetica_font", path + "/assets/fonts/helvetica/helvetica.ttf");
     list.emplace("foxy_red_eye", path + "/assets/icon/foxy_red_eye.png");
+    list.emplace("Loader_Blue", path + "/assets/loader/blue.png");
+    list.emplace("Loader_Green", path + "/assets/loader/green.png");
 }

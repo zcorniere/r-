@@ -11,5 +11,13 @@ Iwidget::Iwidget(std::optional<std::string> &view_intent, bidimensional::Transfo
     Ifragment(view_intent, parent_trans, main_window)
 {}
 
+void Iwidget::rotate(float angle)
+{
+    const auto actual = content.getRotation();
+    content.setRotation(actual + angle);
+}
+
 void Iwidget::onClick()
 {}
+
+

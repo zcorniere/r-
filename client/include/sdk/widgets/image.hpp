@@ -18,13 +18,11 @@ class WidgetImage : public Iwidget {
     sf::Sprite sprite;
     bool use_default_size = true;
     sf::Vector2<float> default_size;
-public:
-    WidgetImage(std::optional<std::string> &view_intent, bidimensional::Transform &parent_trans, sf::RenderWindow &main_window, Itheme<Icolors *> *theme);
-private:
     void onCreateView() final;
     void onUpdateView() final;
     void onFinishView() final;
 public:
+    WidgetImage(std::optional<std::string> &view_intent, bidimensional::Transform &parent_trans, sf::RenderWindow &main_window, Itheme<Icolors *> *theme);
     /**
      * reload the image
      */
