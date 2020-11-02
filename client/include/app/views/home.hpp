@@ -9,13 +9,13 @@
 #define _HOME_HPP_
 
 #include "sdk/interfaces/Iview.hpp"
+#include "sdk/widgets/text.hpp"
 
 class HomeView : public Iview {
     void onCreateView() final;
     void onUpdateView() final;
     void onFinishView() final;
-    sf::Font helvetica;
-    sf::Text text;
+    WidgetText *text;
     sf::Clock clock;
     unsigned fps = 0;
 public:

@@ -130,6 +130,19 @@ void Ifragment::compute_content()
 void Ifragment::move(sf::Vector2<float> pos)
 {
     transform.position = pos;
+    reload();
+}
+
+void Ifragment::scale(sf::Vector2<float> scale)
+{
+    transform.scale = scale;
+    reload();
+}
+
+void Ifragment::reload()
+{
+    background.setSize(transform.scale);
+    compute_content();
 }
 
 

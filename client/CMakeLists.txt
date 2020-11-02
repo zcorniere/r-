@@ -37,6 +37,7 @@ target_sources(r-type_client_sdk PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/managers/inputs.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/widgets/image.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/widgets/loader.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/widgets/text.cpp
 )
 
 target_sources(r-type_client_app PRIVATE

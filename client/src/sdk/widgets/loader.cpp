@@ -11,7 +11,7 @@ WidgetLoader::WidgetLoader(std::optional<std::string> &view_intent, bidimensiona
         Iwidget(view_intent, parent_trans, main_window)
 {
     background_color = theme->getColor("Transparent").value();
-    add_fragment<WidgetImage>("Loader_img", theme);
+    add_widget<WidgetImage>("Loader_img", theme);
     img = get_fragment<WidgetImage>("Loader_img");
     clock.restart();
 }

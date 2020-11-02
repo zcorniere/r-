@@ -17,19 +17,16 @@ class WidgetImage : public Iwidget {
     sf::Texture texture;
     sf::Sprite sprite;
     bool use_default_size = true;
-    sf::Vector2<float> default_size;
+    sf::Vector2<float> size;
     void onCreateView() final;
     void onUpdateView() final;
     void onFinishView() final;
+    void reload();
 public:
     WidgetImage(std::optional<std::string> &view_intent, bidimensional::Transform &parent_trans, sf::RenderWindow &main_window, Itheme<Icolors *> *theme);
-    /**
-     * reload the image
-     */
-    void reload();
     void set_img(const std::string &path);
-    void set_size(sf::Vector2<float> new_size);
-    void set_scale(sf::Vector2<float> new_scale);
+    void set_size(sf::Vector2<float> newsize);
+    void set_scale(sf::Vector2<float> newscale);
     void set_scale_bysize(sf::Vector2<float> size);
     void set_background(sf::Color);
 };

@@ -17,7 +17,3 @@ void Iwidget::rotate(float angle)
     content.setRotation(actual + angle);
 }
 
-void Iwidget::onClick()
-{}
-
-

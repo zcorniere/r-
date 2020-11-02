@@ -6,16 +6,18 @@
 */
 
 #include <iostream>
+#include "app/res/theme.hpp"
 #include "app/views/home.hpp"
 #include "app/res/string.hpp"
 #include "app/window.hpp"
 
 HomeView::HomeView(sf::RenderWindow &window) : Iview(window, {window::WIDTH, window::HEIGHT})
 {
-    helvetica.loadFromFile(STRING("helvetica_font"));
-    text.setFont(helvetica);
-    text.setCharacterSize(12);
-    text.setFillColor(sf::Color::Yellow);
+    add_widget<WidgetText>("text fps", reinterpret_cast<Itheme<Icolors *> *>(std::make_unique<Theme>().get()));
+    text = get_fragment<WidgetText>("text fps");
+    text->set_font(STRING("helvetica_font"));
+    text->set_fontsize(15);
+    text->set_color(sf::Color::Yellow);
     clock.restart();
 }
 
@@ -28,11 +30,10 @@ void HomeView::onUpdateView()
 {
     fps++;
     if (clock.getElapsedTime().asSeconds() >= 1) {
-        text.setString("fps:" + std::to_string(fps));
+        text->set_text("fps:" + std::to_string(fps));
         fps = 0;
         clock.restart();
     }
-    window.draw(text);
 }
 
 void HomeView::onFinishView()

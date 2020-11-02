@@ -72,7 +72,7 @@ protected:
      * @param theme use reinterpret_cast<Itheme<Icolors *> *>(std::make_unique<Theme>().get())
      */
     template<typename T>
-    void add_fragment(const std::string &key, Itheme<Icolors *> *theme) {
+    void add_widget(const std::string &key, Itheme<Icolors *> *theme) {
         static_assert(std::is_base_of<Ifragment, T>::value, "T doesn't derive from Ifragment");
         auto fragment = new T(intent_ref, transform, window, theme);
         fragments.emplace_back(key, fragment);
@@ -84,7 +84,7 @@ protected:
      */
     [[nodiscard]] Ifragment *get_fragment(const std::string &key);
     /**
-     * Same as get_fragment() but return the specified type
+     * Same as get_fragment() but return direct the specified type
      * @tparam T fragment type
      * @param key unique name of the fragment
      * @return founded fragment or nullptr
@@ -112,10 +112,17 @@ public:
     virtual void runFinish();
     /**
      * Move fragment to a new position
-     * @param x
-     * @param y
+     * @param pos
      */
     virtual void move(sf::Vector2<float> pos);
+    /**
+     * Scale fragment to a new scale
+     * @param scale
+     */
+    virtual void scale(sf::Vector2<float> scale);
+
+private:
+    void reload();
 };
 
 #endif

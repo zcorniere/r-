@@ -28,9 +28,9 @@ void WidgetImage::reload()
 {
     if (!image_path.empty()) {
         texture.loadFromFile(image_path);
-        default_size = {static_cast<float>(texture.getSize().x), static_cast<float>(texture.getSize().y)};
+        size = {static_cast<float>(texture.getSize().x), static_cast<float>(texture.getSize().y)};
         if (use_default_size)
-            transform.scale = default_size;
+            transform.scale = size;
         sprite.setTexture(texture);
     }
 }
@@ -41,25 +41,25 @@ void WidgetImage::set_img(const std::string &path)
     reload();
 }
 
-void WidgetImage::set_size(sf::Vector2<float> new_size)
+void WidgetImage::set_size(sf::Vector2<float> newsize)
 {
     use_default_size = false;
-    transform.scale = new_size;
+    transform.scale = newsize;
     reload();
 }
 
-void WidgetImage::set_scale(sf::Vector2<float> new_scale)
+void WidgetImage::set_scale(sf::Vector2<float> newscale)
 {
-    sprite.scale(new_scale);
+    sprite.scale(newscale);
     reload();
 }
 
-void WidgetImage::set_scale_bysize(sf::Vector2<float> size)
+void WidgetImage::set_scale_bysize(sf::Vector2<float> newsize)
 {
-    const auto x = size.x / default_size.x;
-    const auto y = size.y / default_size.y;
+    const auto x = newsize.x / size.x;
+    const auto y = newsize.y / size.y;
     set_scale({x, y});
-    set_size(size);
+    set_size(newsize);
 }
 
 void WidgetImage::set_background(sf::Color color)
