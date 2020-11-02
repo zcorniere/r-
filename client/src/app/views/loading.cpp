@@ -14,7 +14,7 @@
 #include "app/window.hpp"
 #include "app/views/loading.hpp"
 
-LoadingView::LoadingView(sf::RenderWindow &window) : Iview(window)
+LoadingView::LoadingView(sf::RenderWindow &window) : Iview(window, {window::WIDTH, window::HEIGHT})
 {
 //    auto theme = std::make_unique<Theme>().get();
     auto theme = std::make_unique<Theme>();

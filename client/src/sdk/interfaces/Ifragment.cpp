@@ -10,7 +10,7 @@
 
 void Ifragment::set_intent(const std::string &view)
 {
-    intent.emplace(view);
+    intent_ref.emplace(view);
 }
 
 Ifragment *Ifragment::get_fragment(const std::string &key)
@@ -24,7 +24,7 @@ Ifragment *Ifragment::get_fragment(const std::string &key)
 }
 
 Ifragment::Ifragment(std::optional<std::string> &view_intent, bidimensional::Transform &parent_trans, sf::RenderWindow &main_window) :
-        intent(view_intent), parent_transform(parent_trans), window(main_window)
+        intent_ref(view_intent), parent_transform(parent_trans), window(main_window)
 {}
 
 Ifragment::~Ifragment()
@@ -38,15 +38,15 @@ void Ifragment::runCreate()
 {
     compute_content();
     const auto parent_view = window.getView();
+    window.setView(content);
     // background
     background.setFillColor(background_color);
     background.setSize(transform.scale);
     background.setPosition(0, 0);
-    // sort z_index
+    // sort by z_index
     std::sort(fragments.begin(), fragments.end(), [](const auto &left, const auto &right) {
         return left.second->z_index < right.second->z_index;
     });
-    window.setView(content);
     for (auto &fragment : fragments) {
         fragment.second->runCreate();
     }

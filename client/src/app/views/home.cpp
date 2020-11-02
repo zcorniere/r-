@@ -8,8 +8,9 @@
 #include <iostream>
 #include "app/views/home.hpp"
 #include "app/res/string.hpp"
+#include "app/window.hpp"
 
-HomeView::HomeView(sf::RenderWindow &window) : Iview(window)
+HomeView::HomeView(sf::RenderWindow &window) : Iview(window, {window::WIDTH, window::HEIGHT})
 {
     helvetica.loadFromFile(STRING("helvetica_font"));
     text.setFont(helvetica);

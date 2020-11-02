@@ -17,62 +17,17 @@
 #include "sdk/interfaces/Ifragment.hpp"
 #include "sdk/interfaces/Itheme.hpp"
 
-class Iview {
+class Iview : public Ifragment {
+    bidimensional::Transform absolute;
     std::optional<std::string> intent = std::nullopt;
-    std::vector<std::pair<std::string, Ifragment *>> fragments;
-    bidimensional::Transform transform;
+    using Ifragment::move;  // make inherited public function move private
 protected:
     sf::RenderWindow &window;
-    virtual void onCreateView() = 0;
-    virtual void onUpdateView() = 0;
-    virtual void onFinishView() = 0;
-    /**
-     * To change to another view
-     * @param view is the target view
-     */
-    void set_intent(const std::string &view);
-
-    /**
-     * Must be use only in a View Ctor
-     * @tparam T fragment is a sub part of the View
-     * @param key unique name of the fragment
-     */
-    template<typename T>
-    void add_fragment(const std::string &key) {
-        static_assert(std::is_base_of<Ifragment, T>::value, "T doesn't derive from Ifragment");
-        auto fragment = new T(intent, transform, window);
-        fragments.emplace_back(key, fragment);
-    }
-    template<typename T>
-    void add_fragment(const std::string &key, Itheme<Icolors *> *theme) {
-        static_assert(std::is_base_of<Ifragment, T>::value, "T doesn't derive from Ifragment");
-        auto fragment = new T(intent, transform, window, theme);
-        fragments.emplace_back(key, fragment);
-    }
-    /**
-     * Get a fragment from the local list
-     * @param key unique name of the fragment
-     * @return founded fragment or nullptr
-     */
-    [[nodiscard]] Ifragment *get_fragment(const std::string &key);
-    /**
-     * Same as get_fragment() but return the specified type
-     * @tparam T fragment type
-     * @param key unique name of the fragment
-     * @return founded fragment or nullptr
-     */
-    template<typename T>
-    [[nodiscard]] T *get_fragment(const std::string &key) {
-        Ifragment *ret = get_fragment(key);
-        return reinterpret_cast<T *>(ret);
-    }
 public:
-    explicit Iview(sf::RenderWindow &main_window);
-    virtual ~Iview();
-    void runCreate();
-    void runUpdate();
-    void runFinish();
+    Iview(sf::RenderWindow &main_window, sf::Vector2<float> size);
     [[nodiscard]] std::optional<std::string> get_intent();
+    void runCreate() override;
+    void runUpdate() override;
 };
 
 #endif

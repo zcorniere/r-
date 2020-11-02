@@ -17,10 +17,12 @@
 #include "sdk/interfaces/Itheme.hpp"
 
 class Ifragment {
-    std::optional<std::string> &intent;
+    std::optional<std::string> &intent_ref;
     bidimensional::Transform &parent_transform;
 
+protected:
     std::vector<std::pair<std::string, Ifragment *>> fragments;
+private:
     sf::RectangleShape background;
     void compute_content();
 protected:
@@ -35,8 +37,17 @@ protected:
      */
     sf::Color background_color = sf::Color::White;
     sf::View content;
+    /**
+     * this function is run at the fragment creation
+     */
     virtual void onCreateView() = 0;
+    /**
+     * this function is call at each tick
+     */
     virtual void onUpdateView() = 0;
+    /**
+    * this function is run at the fragment deletion
+    */
     virtual void onFinishView() = 0;
     /**
      * To change to another view
@@ -51,7 +62,7 @@ protected:
     template<typename T>
     void add_fragment(const std::string &key) {
         static_assert(std::is_base_of<Ifragment, T>::value, "T doesn't derive from Ifragment");
-        auto fragment = new T(intent, transform, window);
+        auto fragment = new T(intent_ref, transform, window);
         fragments.emplace_back(key, fragment);
     }
     /**
@@ -63,7 +74,7 @@ protected:
     template<typename T>
     void add_fragment(const std::string &key, Itheme<Icolors *> *theme) {
         static_assert(std::is_base_of<Ifragment, T>::value, "T doesn't derive from Ifragment");
-        auto fragment = new T(intent, transform, window, theme);
+        auto fragment = new T(intent_ref, transform, window, theme);
         fragments.emplace_back(key, fragment);
     }
     /**
@@ -88,17 +99,23 @@ public:
      * Must be set in the fragment ctor
      */
     unsigned z_index = 0;
+    /**
+     * All sub-fragments of the inherited class must be set in their Ctor
+     * @param view_intent reference to the view intent
+     * @param parent_trans transform of the parent fragment
+     * @param main_window the main sf::RenderWindow
+     */
     Ifragment(std::optional<std::string> &view_intent, bidimensional::Transform &parent_trans, sf::RenderWindow &main_window);
     virtual ~Ifragment();
-    void runCreate();
-    void runUpdate();
-    void runFinish();
+    virtual void runCreate();
+    virtual void runUpdate();
+    virtual void runFinish();
     /**
      * Move fragment to a new position
      * @param x
      * @param y
      */
-    void move(sf::Vector2<float> pos);
+    virtual void move(sf::Vector2<float> pos);
 };
 
 #endif
