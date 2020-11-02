@@ -9,7 +9,6 @@
 #include "app/views/home.hpp"
 #include "app/res/string.hpp"
 
-
 HomeView::HomeView(sf::RenderWindow &window) : Iview(window)
 {
     helvetica.loadFromFile(STRING("helvetica_font"));
