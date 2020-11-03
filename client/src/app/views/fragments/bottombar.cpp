@@ -6,16 +6,15 @@
 */
 
 #include <iostream>
-#include "app/views/fragments/bottombar.hpp"
-#include "app/window.hpp"
 #include "app/res/theme.hpp"
+#include "app/window.hpp"
+#include "app/views/fragments/bottombar.hpp"
 
 BottomBar::BottomBar(std::optional<std::string> &intent_ref, bidimensional::Transform &parent_trans, sf::RenderWindow &window) :
         Ifragment(intent_ref, parent_trans, window)
 {
-    constexpr auto barheight = 30;
-    transform.position = {0, window::HEIGHT - barheight};
-    transform.scale = {window::WIDTH, barheight};
+    transform.position = {0, window::HEIGHT - BARHEIGHT};
+    transform.scale = {window::WIDTH, BARHEIGHT};
     background_color = Theme().getSecondary().value();
 }
 
@@ -25,9 +24,7 @@ void BottomBar::onCreateView()
 }
 
 void BottomBar::onUpdateView()
-{
-
-}
+{}
 
 void BottomBar::onFinishView()
 {

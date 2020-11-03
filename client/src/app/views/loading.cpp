@@ -53,7 +53,7 @@ void LoadingView::onCreateView()
 
 void LoadingView::onUpdateView()
 {
-    if (clock.getElapsedTime().asSeconds() >= 1) {
+    if (clock.getElapsedTime().asSeconds() >= LOADING_TIME) {
         set_intent("home");
     }
 }

@@ -6,23 +6,27 @@
 */
 
 #include <iostream>
-#include "app/window.hpp"
-#include "app/res/theme.hpp"
+#include "sdk/widgets/image.hpp"
 #include "app/res/string.hpp"
+#include "app/res/theme.hpp"
+#include "app/window.hpp"
 #include "app/views/home.hpp"
 #include "app/views/fragments/topbar.hpp"
 #include "app/views/fragments/bottombar.hpp"
+#include "app/views/fragments/game.hpp"
 
 HomeView::HomeView(sf::RenderWindow &window) : Iview(window, {window::WIDTH, window::HEIGHT})
 {
     add_fragment<TopBar>("Topbar");
     add_fragment<BottomBar>("BottomBar");
-    add_widget<WidgetText>("text fps", reinterpret_cast<Itheme<Icolors *> *>(std::make_unique<Theme>().get()));
-    text = get_fragment<WidgetText>("text fps");
-    text->set_font(STRING("helvetica_font"));
-    text->set_fontsize(15);
-    text->set_color(sf::Color::Yellow);
-    clock.restart();
+    add_fragment<Game>("GameScreen");
+    // Adding foxy
+    add_widget<WidgetImage>("foxy", reinterpret_cast<Itheme<Icolors *> *>(std::make_unique<Theme>().get()));
+    auto foxy = get_fragment<WidgetImage>("foxy");
+    foxy->set_img(STRING("foxy_head_trans_gray"));
+    foxy->set_scale_bysize({200, 200});
+    foxy->move({window::WIDTH / 2 - 100, window::HEIGHT / 2 - 150});
+    foxy->z_index = 0;
 }
 
 void HomeView::onCreateView()
@@ -31,14 +35,7 @@ void HomeView::onCreateView()
 }
 
 void HomeView::onUpdateView()
-{
-    fps++;
-    if (clock.getElapsedTime().asSeconds() >= 1) {
-        text->set_text("fps:" + std::to_string(fps));
-        fps = 0;
-        clock.restart();
-    }
-}
+{}
 
 void HomeView::onFinishView()
 {
