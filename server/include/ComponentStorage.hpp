@@ -78,12 +78,36 @@ private:
     };
 };
 
-/*template<typename T1, T2>
-std:unordered_map<unsigned, std::tuple<T1, T2>> join_components
-(std::unordered_map<unsigned, T1>, std::unordered_map<unsigned, T2>)
+template<typename T1, typename T2>
+std::map<unsigned, std::tuple<T1&, T2&>> join_components
+(std::map<unsigned, T1>& map1, std::map<unsigned, T2>& map2)
+{
+    std::map<unsigned, std::tuple<T1&, T2&>> output;
+
+    auto i1 = map1.begin();
+    auto i2 = map2.begin();
+
+    while (i1 != map1.end() && i2 != map2.end()) {
+        if (i1->first > i2->first) {
+            i2++;
+            continue;
+        } else if (i1->first < i2->first) {
+            i1++;
+            continue;
+        }
+        output.emplace(i1->first, std::tuple<T1&, T2&>{i1->second, i2->second});
+        i1++;
+        i2++;
+    }
+    return output;
+}
+
+/*template<typename... Ts>
+std::map<unsigned, std::tuple<Ts...>> join_components
+(std::map<unsigned, Ts...> maps...)
 {
 
-}
-*/
+}*/
+
 #endif
 
