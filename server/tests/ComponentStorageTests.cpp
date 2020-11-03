@@ -6,28 +6,32 @@ static bool test_component_join()
     std::cout << "component_join tests...";
     std::map<unsigned, char> chars;
     std::map<unsigned, short> shorts;
+    std::map<unsigned, std::string> strings;
 
     chars.emplace(0, 'z'); chars.emplace(1, 'a'); chars.emplace(3, 'b');
-    chars.emplace(4, 'z'); chars.emplace(5, 'c'); chars.emplace(6, 'd');
+    chars.emplace(4, 'z'); chars.emplace(5, 'c'); chars.emplace(6, 'z');
     shorts.emplace(1, 1); shorts.emplace(2, -1); shorts.emplace(3, 2);
-    shorts.emplace(5, 3); shorts.emplace(6, 4); shorts.emplace(7, -1);
+    shorts.emplace(5, 3); shorts.emplace(6, -1); shorts.emplace(7, -1);
+    strings.emplace(0, "__");strings.emplace(1, "first");strings.emplace(2, "__");
+    strings.emplace(3, "second");strings.emplace(5, "third");strings.emplace(7, "__");
 
-    std::map<unsigned, std::tuple<char&, short&>> result = join_components(chars, shorts);
-    std::map<unsigned, std::tuple<char, short>> model;
+    std::map<unsigned, std::tuple<char&, short&, std::string&>> result = join_components(chars, shorts, strings);
+    std::map<unsigned, std::tuple<char, short, std::string>> model;
 
-    model.emplace(1, std::tuple<char, short>{'a', 1}); model.emplace(3, std::tuple<char, short>{'b', 2});
-    model.emplace(5, std::tuple<char, short>{'c', 3}); model.emplace(6, std::tuple<char, short>{'d', 4});
+    model.emplace(1, std::tuple<char, short, std::string>{'a', 1, "first"});
+    model.emplace(3, std::tuple<char, short, std::string>{'b', 2, "second"});
+    model.emplace(5, std::tuple<char, short,std::string>{'c', 3, "third"});
 
-    if (result.size() != 4) {
+    if (result.size() != 3) {
         std::cerr << "Wrong result size, expected 4, got " << result.size() << std::endl;
         return false;
     }
 
     for (const auto& [key, value] : result) {
-        const auto& [ra, rb] = value;
-        const auto& [ma, mb] = model[key];
+        const auto& [ra, rb, rc] = value;
+        const auto& [ma, mb, mc] = model[key];
 
-        if (ra != ma || rb != mb) {
+        if (ra != ma || rb != mb || rc != mc) {
             std::cerr << "Wrong content, at" << key;
             std::cerr << " expected {" << ma << ", " << mb;
             std::cerr << "} got {" << ra << ", " << rb << std::endl;

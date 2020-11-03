@@ -11,6 +11,7 @@
 #include <tuple>
 #include <functional>
 #include <typeindex>
+#include <vector>
 
 class ComponentStorage {
 class EntityBuilder;
@@ -78,36 +79,18 @@ private:
     };
 };
 
-template<typename T1, typename T2>
-std::map<unsigned, std::tuple<T1&, T2&>> join_components
-(std::map<unsigned, T1>& map1, std::map<unsigned, T2>& map2)
+template<typename First, typename... Rest>
+std::map<unsigned int, std::tuple<First&, Rest&...>> join_components
+(std::map<unsigned int, First>& first, std::map<unsigned int, Rest>&... rest)
 {
-    std::map<unsigned, std::tuple<T1&, T2&>> output;
+    std::map<unsigned int, std::tuple<First&, Rest&...>> result;
 
-    auto i1 = map1.begin();
-    auto i2 = map2.begin();
+    for (auto& [key, value]: first)
+        if (((rest.find(key) != rest.end()) && ...))
+            result.emplace(key, std::tuple<First&, Rest&...>{value, rest.at(key)...});
 
-    while (i1 != map1.end() && i2 != map2.end()) {
-        if (i1->first > i2->first) {
-            i2++;
-            continue;
-        } else if (i1->first < i2->first) {
-            i1++;
-            continue;
-        }
-        output.emplace(i1->first, std::tuple<T1&, T2&>{i1->second, i2->second});
-        i1++;
-        i2++;
-    }
-    return output;
+    return result;
 }
-
-/*template<typename... Ts>
-std::map<unsigned, std::tuple<Ts...>> join_components
-(std::map<unsigned, Ts...> maps...)
-{
-
-}*/
 
 #endif
 
