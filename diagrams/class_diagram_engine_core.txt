@@ -1,5 +1,7 @@
 @startuml
 
+scale 1920 width // 1080 height
+
 package "Game Engine" #DDDDDD {
     class Game {
         __ private __
@@ -104,60 +106,6 @@ package "Game Engine" #DDDDDD {
         gameStop()
     }
     SystemManager *-- ISystem
-}
-
-package "Modules" #DDDDDD {
-    interface INetworkModule {
-        __ public __
-        +long initInstance(unsigned maxPlayers)
-        +optional<Instance> getInstance()
-        +~IServerModule()
-    }
-    IModule <|-- IServerModule
-
-    class Instance {
-        __ private __
-        -long m_id
-        __ public __
-        +long getId()
-        +bool isFull()
-        +unsigned getClientsCount()
-        +close()
-    }
-    IServerModule *-- Instance
-
-        interface IInputModule {
-        __ public __
-        +vector<Input> getInputEvents()
-    }
-    IModule <|-- IInputModule
-
-    enum Input {
-    }
-    Input o-- IInputModule
-
-    interface IDisplayModule {
-        __ public __
-        +setAssetPath(const string& path);
-        +drawSprite(const string& name, Transform const& transform, unsigned id);
-    }
-    IModule <|-- IInputModule
-
-    interface IAudioModule {
-        __ public __
-        +setAssetPath(const string& path);
-        +playSound(const string& name, float volume, float volume);
-    }
-    IModule <|-- IAudioModule
-}
-
-package "Server" #DDDDDD {
-    class Server {
-    }
-    INetworkModule <|-- Server
-    IAudioModule <|-- Server
-    IInputModule <|-- Server
-    IDisplayModule <|-- Server
 }
 
 @enduml
