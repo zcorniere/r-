@@ -1,3 +1,8 @@
+#include "Game.hpp"
+#include <iostream>
+
 int main(void) {
-    return 0;
+    Game rtype("rtype 0.1");
+
+    rtype.run();
 }
