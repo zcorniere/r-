@@ -6,6 +6,7 @@
 */
 
 #include <iostream>
+#include "app/res/theme.hpp"
 #include "app/views/fragments/topbar.hpp"
 #include "app/views/fragments/bottombar.hpp"
 #include "app/views/fragments/game.hpp"
@@ -16,7 +17,8 @@ Game::Game(std::optional<std::string> &intent_ref, bidimensional::Transform &par
 {
     transform.position = {0, TopBar::BARHEIGHT};
     transform.scale = {window::WIDTH, window::HEIGHT - TopBar::BARHEIGHT - BottomBar::BARHEIGHT};
-    background_color = sf::Color::Black;
+    background_color = Theme().getColor("Transparent").value(); ;
+    z_index = 1;
 }
 
 void Game::onCreateView()
