@@ -1,21 +1,31 @@
 #ifndef BABEL_SYSTEM_IMPL_
 #define BABEL_SYSTEM_IMPL_
 
-#include <concepts>
 #include <functional>
 #include <tuple>
 
 #include "System.hpp"
 
-template <typename... Components>
-System::System(std::function<void(Components...)> system)
-    : m_call_wrapper([system](ComponentStorage &storage) {
-          auto components_map =
-              join_components(storage.getComponents<Components>()...);
+template <typename T>
+struct wrapper : public wrapper<decltype(&T::operator())> {
+};
 
-          for (auto &[_, components] : components_map)
-              std::apply(system, components);
-      })
+template <typename Fn, typename ReturnType, typename... Components>
+struct wrapper<ReturnType (Fn::*)(Components...) const> {
+    static std::function<void(ComponentStorage &)> wrap_system(Fn system)
+    {
+        return [system](ComponentStorage &storage) {
+            auto components_map =
+                join_components(storage.getComponents<Components>()...);
+
+            for (auto &[_, components] : components_map)
+                std::apply(system, components);
+        };
+    }
+};
+
+template <typename F>
+System::System(F system) : m_call_wrapper(wrapper<F>::wrap_system(system))
 {
 }
 
