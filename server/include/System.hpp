@@ -3,17 +3,18 @@
 
 #include "ComponentStorage.hpp"
 #include <functional>
+#include <concepts>
 
-template <typename... Components>
 class System
 {
   public:
-    System(std::function<void(Components...)>);
+    template <typename... Components>
+    System(std::function<void(Components...)> system);
 
     void call(ComponentStorage &) const;
 
   private:
-    std::function<void(Components...)> m_system;
+    std::function<void(ComponentStorage &)> m_call_wrapper;
 };
 
 #include "System.tpp"
