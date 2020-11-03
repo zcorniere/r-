@@ -12,6 +12,7 @@
 #include <functional>
 #include <typeindex>
 #include <vector>
+#include <stdexcept>
 
 class ComponentStorage {
 class EntityBuilder;
@@ -30,15 +31,17 @@ public:
         m_storage.emplace(typeid(T), std::move(new_row));
     }
     template<typename T>
-    std::map<unsigned, T> getComponents()
+    std::map<unsigned, T> &getComponents()
     {
         for (auto &[storage_type, storage] : m_storage) {
             if (storage_type == typeid(T)) {
-                return std::any_cast<std::map<unsigned, T>>(storage);
+                auto &output = std::any_cast<std::map<unsigned, T>&>(storage);
+                clearZombies(output);
+                return output;
             }
         }
         Snitch::warn() << "Trying to find unregistered components '" << typeid(T).name() << "'" << Snitch::endl;
-        return {};
+        throw std::runtime_error("Couldn't read given storage");
     }
     EntityBuilder buildEntity();
     void destroyEntity(unsigned id);
@@ -56,6 +59,14 @@ private:
             }
         }
         Snitch::warn() << "Couldn't store unregistered component '" << typeid(T).name() << "'" << Snitch::endl;;
+    }
+    template<typename T>
+    void clearZombies(std::map<unsigned, T>& components)
+    {
+        for (const auto&[id, isDead] : m_dead) {
+            if (isDead && components.find(id) != components.end())
+                components.erase(id);
+        }
     }
     unsigned getNextFreeId() const;
 
