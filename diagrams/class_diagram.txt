@@ -37,16 +37,16 @@ package "Game Engine" #DDDDDD {
 
     class ComponentStorage {
         __ private __
-        -vector<bool> m_dead
-        -map<string, any> m_storage
-        -vector<short> m_parentStates
+        -map<unsigned, bool> m_dead
+        -map<typeindex, any> m_storage
+        -map<unsigned, short> m_parentStates
         -unsigned m_entityCount
         friend EntityBuilder
         -EntityBuilder m_builder
         __ public __
         +ComponentStorage()
         +registerComponent<T>()
-        +vector<vector<any>> getComponents(vector<string> components)
+        +map<unsigned, T> getComponents<T>()
         +EntityBuilder buildEntity()
         +destroyEntity(size_t id)
         +~ComponentStorage()
