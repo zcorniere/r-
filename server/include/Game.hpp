@@ -8,8 +8,9 @@
 class Game {
 private:
     std::string m_name;
-    StateMachine m_stateMachine;
-    ComponentStorage m_componentStorage;
+public:
+    StateMachine stateMachine;
+    ComponentStorage componentStorage;
 public:
     Game(std::string name);
     void run();

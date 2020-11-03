@@ -4,7 +4,11 @@ package "Game Engine" #DDDDDD {
     class Game {
         __ private __
         -string m_name
-        -map<string, IModule> m_modules
+        -map<string, unique_ptr<IModule>> m_modules
+        -optional<reference_wrapper<IModule>> displayModule
+        -optional<reference_wrapper<IModule>> audioModule
+        -optional<reference_wrapper<IModule>> inputModule
+        -optional<reference_wrapper<IModule>> networkModule
         __ public __
         +StateMachine stateMachine
         +ComponentStorage componentStorage
@@ -22,6 +26,30 @@ package "Game Engine" #DDDDDD {
         +~IModule()
     }
     Game *-- IModule
+
+    interface IInputModule {
+        __ public __
+        +vector<Input> getInputEvents()
+    }
+    IModule <|-- IInputModule
+
+    enum Input {
+    }
+    Input o-- IInputModule
+
+    interface IDisplayModule {
+        __ public __
+        +setAssetPath(const string& path);
+        +drawSprite(const string& name, Transform const& transform, unsigned id);
+    }
+    IModule <|-- IInputModule
+
+    interface IAudioModule {
+        __ public __
+        +setAssetPath(const string& path);
+        +playSound(const string& name, float volume, float volume);
+    }
+    IModule <|-- IAudioModule
 
     class StateMachine {
         __ private __
@@ -103,7 +131,7 @@ package "Game Engine" #DDDDDD {
 }
 
 package "Server" #DDDDDD {
-    interface IServerModule {
+    interface INetworkModule {
         __ public __
         +long initInstance(unsigned maxPlayers)
         +optional<Instance> getInstance()
@@ -121,6 +149,13 @@ package "Server" #DDDDDD {
         +close()
     }
     IServerModule *-- Instance
+
+    class Server {
+    }
+    INetworkModule <|-- Server
+    IAudioModule <|-- Server
+    IInputModule <|-- Server
+    IDisplayModule <|-- Server
 }
 
 @enduml
