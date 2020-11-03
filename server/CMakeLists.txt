@@ -9,6 +9,7 @@ add_executable(r-type_server
                             source/StateMachine.cpp
                             source/ComponentStorage.cpp
                             source/Snitch.cpp
+                            source/Game.cpp
 )
 
 add_executable(tests_StateMachine
