@@ -27,30 +27,6 @@ package "Game Engine" #DDDDDD {
     }
     Game *-- IModule
 
-    interface IInputModule {
-        __ public __
-        +vector<Input> getInputEvents()
-    }
-    IModule <|-- IInputModule
-
-    enum Input {
-    }
-    Input o-- IInputModule
-
-    interface IDisplayModule {
-        __ public __
-        +setAssetPath(const string& path);
-        +drawSprite(const string& name, Transform const& transform, unsigned id);
-    }
-    IModule <|-- IInputModule
-
-    interface IAudioModule {
-        __ public __
-        +setAssetPath(const string& path);
-        +playSound(const string& name, float volume, float volume);
-    }
-    IModule <|-- IAudioModule
-
     class StateMachine {
         __ private __
         -stack<unique_ptr<AState>> m_statesStack
@@ -130,7 +106,7 @@ package "Game Engine" #DDDDDD {
     SystemManager *-- ISystem
 }
 
-package "Server" #DDDDDD {
+package "Modules" #DDDDDD {
     interface INetworkModule {
         __ public __
         +long initInstance(unsigned maxPlayers)
@@ -150,6 +126,32 @@ package "Server" #DDDDDD {
     }
     IServerModule *-- Instance
 
+        interface IInputModule {
+        __ public __
+        +vector<Input> getInputEvents()
+    }
+    IModule <|-- IInputModule
+
+    enum Input {
+    }
+    Input o-- IInputModule
+
+    interface IDisplayModule {
+        __ public __
+        +setAssetPath(const string& path);
+        +drawSprite(const string& name, Transform const& transform, unsigned id);
+    }
+    IModule <|-- IInputModule
+
+    interface IAudioModule {
+        __ public __
+        +setAssetPath(const string& path);
+        +playSound(const string& name, float volume, float volume);
+    }
+    IModule <|-- IAudioModule
+}
+
+package "Server" #DDDDDD {
     class Server {
     }
     INetworkModule <|-- Server
