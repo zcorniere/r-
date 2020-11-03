@@ -60,7 +60,7 @@ void Window::update()
             view->runCreate();
         }
         event.update();
-        network.update();
+//        network.update();
         sf_win.display();
     }
 }

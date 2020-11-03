@@ -13,7 +13,6 @@
 #include <SFML/Graphics.hpp>
 #include "sdk/interfaces/Iview.hpp"
 #include "sdk/managers/event.hpp"
-#include "sdk/network.hpp"
 
 namespace window {
     constexpr auto WIDTH = 1000;
@@ -27,7 +26,7 @@ class Window {
     std::unordered_map<std::string, Iview *> views;
     sf::RenderWindow sf_win;
     Event event;
-    Network network;
+//    Network network;
 public:
     /**
      * Window Ctor
