@@ -46,7 +46,7 @@ package "Game Engine" #DDDDDD {
         __ public __
         +ComponentStorage()
         +registerComponent<T>()
-        +map<unsigned, T> getComponents<T>()
+        +map<unsigned, T> &getComponents<T>()
         +EntityBuilder buildEntity()
         +destroyEntity(size_t id)
         +~ComponentStorage()
