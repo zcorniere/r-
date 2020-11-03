@@ -24,8 +24,8 @@ struct wrapper<ReturnType (Fn::*)(Components...) const> {
     }
 };
 
-template <typename F>
-System::System(F system) : m_call_wrapper(wrapper<F>::wrap_system(system))
+System::System(SystemFunction auto system)
+    : m_call_wrapper(wrapper<decltype(system)>::wrap_system(system))
 {
 }
 

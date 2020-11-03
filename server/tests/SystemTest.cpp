@@ -28,6 +28,7 @@ int main(void)
 
     s2.call(storage);
 
+    // System s3 = [](){};
     // System s3 = 3;
     return 0;
 }
