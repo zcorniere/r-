@@ -6,13 +6,17 @@
 */
 
 #include <iostream>
-#include "app/res/theme.hpp"
-#include "app/views/home.hpp"
-#include "app/res/string.hpp"
 #include "app/window.hpp"
+#include "app/res/theme.hpp"
+#include "app/res/string.hpp"
+#include "app/views/home.hpp"
+#include "app/views/fragments/topbar.hpp"
+#include "app/views/fragments/bottombar.hpp"
 
 HomeView::HomeView(sf::RenderWindow &window) : Iview(window, {window::WIDTH, window::HEIGHT})
 {
+    add_fragment<TopBar>("Topbar");
+    add_fragment<BottomBar>("BottomBar");
     add_widget<WidgetText>("text fps", reinterpret_cast<Itheme<Icolors *> *>(std::make_unique<Theme>().get()));
     text = get_fragment<WidgetText>("text fps");
     text->set_font(STRING("helvetica_font"));

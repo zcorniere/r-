@@ -5,8 +5,8 @@
 ** R-type
 */
 
-#ifndef _SDK_WINDOW_HPP_
-#define _SDK_WINDOW_HPP_
+#ifndef _APP_WINDOW_HPP_
+#define _APP_WINDOW_HPP_
 
 #include <unordered_map>
 #include <string>
@@ -17,7 +17,7 @@
 
 namespace window {
     constexpr auto WIDTH = 1000;
-    constexpr auto HEIGHT = 600;
+    constexpr auto HEIGHT = 680;
     constexpr auto FRAMERATE = 60;
 }
 

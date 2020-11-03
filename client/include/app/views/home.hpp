@@ -5,8 +5,8 @@
 ** R-type
 */
 
-#ifndef _HOME_HPP_
-#define _HOME_HPP_
+#ifndef _APP_VIEWS_HOME_HPP_
+#define _APP_VIEWS_HOME_HPP_
 
 #include "sdk/interfaces/Iview.hpp"
 #include "sdk/widgets/text.hpp"

@@ -5,8 +5,8 @@
 ** R-type
 */
 
-#ifndef _LOADING_HPP_
-#define _LOADING_HPP_
+#ifndef _APP_VIEWS_LOADING_HPP_
+#define _APP_VIEWS_LOADING_HPP_
 
 #include <SFML/Graphics.hpp>
 #include "sdk/interfaces/Iview.hpp"
