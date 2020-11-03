@@ -27,3 +27,9 @@ add_executable(tests_ComponentStorage
                             source/Snitch.cpp
                             tests/ComponentStorageTests.cpp
 )
+
+add_executable(tests_System
+                            source/ComponentStorage.cpp
+                            source/Snitch.cpp
+                            tests/SystemTest.cpp
+)
