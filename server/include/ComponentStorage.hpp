@@ -18,6 +18,7 @@ class EntityBuilder;
 private:
     std::unordered_map<std::type_index, std::any> m_storage;
     unsigned m_entityCount;
+    std::map<unsigned, bool> m_dead;
 
 public:
     ComponentStorage();
@@ -40,6 +41,7 @@ public:
         return {};
     }
     EntityBuilder buildEntity();
+    void destroyEntity(unsigned id);
     ~ComponentStorage();
 
 private:

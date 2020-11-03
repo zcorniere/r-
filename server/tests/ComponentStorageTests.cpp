@@ -87,7 +87,25 @@ int main(void)
         return 1;
     }
 
+    int parasite_id = storage.buildEntity()
+    .withComponent(666)
+    .build();
+
     std::map<unsigned, int> ints = storage.getComponents<int>();
+
+    std::map<unsigned, std::any> &ints_as_anys = reinterpret_cast<std::map<unsigned, std::any> &>(ints);
+
+    if (ints.find(3) != ints.end())
+        std::cerr << "Found 3 in ints\n";
+
+    if (ints_as_anys.find(3) != ints_as_anys.end())
+        std::cerr << "Found 3 in ints_as_anys\n";
+
+    storage.destroyEntity(parasite_id);
+
+    for (const auto &[id, value] : ints) {
+        std::cerr << id << "{" << value << "}\n";
+    }
 
     if (ints.size() != 2) {
         std::cerr << "Invalid int components number, expected 2, found " << ints.size() << std::endl;
