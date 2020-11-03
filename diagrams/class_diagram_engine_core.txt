@@ -1,7 +1,5 @@
 @startuml
 
-scale 1920 width // 1080 height
-
 package "Game Engine" #DDDDDD {
     class Game {
         __ private __
