@@ -13,3 +13,5 @@ add_executable(r-type_server
 )
 
 target_link_libraries(r-type_server r-type_engine)
+
+target_compile_options(r-type_server PRIVATE -Wall -Wextra)

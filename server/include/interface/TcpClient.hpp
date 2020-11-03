@@ -14,12 +14,12 @@ namespace tcp {
 template<typename T>
 class Client: public IClient<T> {
     public:
-        Client() = delete;
         Client(boost::asio::io_context &io_context,
                boost::asio::ip::tcp::socket _socket,
                MsgQueue<Message<T>> &_q_in) :
                socket(std::move(_socket)), context(io_context), q_in(_q_in)
         {};
+        virtual ~Client()final { this->disconnect(); };
 
         virtual void giveId(const uint32_t _id = 0)final { id = _id; }
         virtual void disconnect()final {
@@ -49,6 +49,7 @@ class Client: public IClient<T> {
             boost::asio::async_read(socket,
                 boost::asio::buffer(&tmp.head, sizeof(MessageHeader<T>)),
                 [this](std::error_code ec, std::size_t len) {
+                    (void)len;
                     if (!ec) {
                         if (tmp.head.size > 0) {
                             tmp.body.resize(tmp.head.size);
@@ -66,6 +67,7 @@ class Client: public IClient<T> {
             boost::asio::async_read(socket,
                 boost::asio::buffer(tmp.body.data(), tmp.head.size),
                 [this](std::error_code ec, std::size_t len) {
+                    (void)len;
                     if (!ec) {
                         addToMsgQueue();
                     } else {
@@ -78,6 +80,7 @@ class Client: public IClient<T> {
             boost::asio::async_write(socket,
                 boost::asio::buffer(&q_out.front().head, sizeof(MessageHeader<T>)),
                 [this](std::error_code ec, std::size_t len) {
+                    (void)len;
                     if (!ec) {
                         if (q_out.front().body.size() > 0) {
                             writeBody();
@@ -96,6 +99,7 @@ class Client: public IClient<T> {
             boost::asio::async_write(socket,
                 boost::asio::buffer(q_out.front().body.data(), q_out.front().body.size()),
                 [this](std::error_code ec, std::size_t len) {
+                    (void)len;
                     if (!ec) {
                         q_out.pop_front();
                         if (!q_out.empty())
@@ -109,7 +113,7 @@ class Client: public IClient<T> {
         virtual void addToMsgQueue()final {
             tmp.remote = this->shared_from_this();
             q_in.push_back(tmp);
-            tmp.clear();
+            tmp.empty();
             readHeader();
         }
 

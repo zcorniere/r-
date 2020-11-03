@@ -11,15 +11,14 @@ namespace ecs {
 template<typename T>
 class IServer {
     public:
-        IServer() = delete;
-        virtual ~IServer() { this->stop(); };
+        virtual ~IServer() {};
         virtual bool start() = 0;
-        virtual bool stop() = 0;
+        virtual void stop() = 0;
         virtual void update(const size_t maxMessage = -1, const bool wait = false) = 0;
 
     protected:
-        virtual void onClientDisconnect(std::shared_ptr<IClient<T>> &cli) {}
-        virtual bool onClientConnect(std::shared_ptr<IClient<T>> &cli) { return true; }
+        virtual void onClientDisconnect(std::shared_ptr<IClient<T>> cli) {}
+        virtual bool onClientConnect(std::shared_ptr<IClient<T>> cli) { return true; }
         virtual void waitForClientConnection() = 0; // ASYNC
         virtual void msgClient(Message<T> msg, std::shared_ptr<IClient<T>> cli) = 0;
         virtual void msgAll(Message<T> msg, std::shared_ptr<IClient<T>> skip = nullptr) = 0;

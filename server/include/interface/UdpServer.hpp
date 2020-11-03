@@ -13,11 +13,12 @@ namespace udp {
 template<typename T, typename E>
 class Server: public IServer<T> {
     public:
-        Server() = delete;
         Server(const unsigned port) :
             asio_acceptor(asio_context,
                           boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port))
         {};
+        virtual ~Server() { this->stop(); };
+
         virtual bool start()final {
             try {
                 waitForClientConnection();

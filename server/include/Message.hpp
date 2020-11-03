@@ -1,11 +1,14 @@
 #include <vector>
 #include <iostream>
 #include <cstring>
+#include <cstddef>
 #include <memory>
 #include <cstdint>
 
 #ifndef _MESSAGE_HPP_
 #define _MESSAGE_HPP_
+
+#include "interface/IClient.hpp"
 
 template<typename T>
 concept isLayoutStd = std::is_standard_layout<T>::value;
@@ -15,6 +18,9 @@ struct MessageHeader {
     T code{};
     uint32_t size = 0;
 };
+
+constexpr uint8_t MAGIC_NB_1 = 0xFA;
+constexpr uint8_t MAGIC_NB_2 = 0xDA;
 
 template<typename T>
 class Message {
@@ -28,6 +34,9 @@ class Message {
         }
         size_t size()const {
             return body.size();
+        }
+        bool validMagic()const {
+            return this->magic1 == MAGIC_NB_1 && this->magic2 == MAGIC_NB_2;
         }
 
         template<isLayoutStd D>
@@ -47,11 +56,12 @@ class Message {
         };
 
     public:
+        std::shared_ptr<ecs::IClient<T>> remote = nullptr;
+        uint8_t magic1 = 0xFA;
+        uint8_t magic2 = 0xDA;
         MessageHeader<T> head{};
-        std::vector<uint8_t> body;
+        std::vector<std::byte> body;
 };
-
-#include "interface/IClient.hpp"
 
 template<typename T>
 struct OwnedMsg {

@@ -2,7 +2,9 @@
 #include "Game.hpp"
 #include "states/DebugState.hpp"
 #include "Modules.hpp"
-#include "TcpServer.hpp"
+#include "interface/TcpServer.hpp"
+#include "interface/UdpServer.hpp"
+#include "AssetsServer.hpp"
 
 int main(void) {
     Game rtype("rtype 0.1");

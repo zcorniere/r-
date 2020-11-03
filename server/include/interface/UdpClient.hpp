@@ -15,7 +15,6 @@ namespace udp {
 template<typename T, typename E>
 class Client: public IClient<E> {
     public:
-        Client() = delete;
         Client(boost::asio::io_context &io_context,
                std::shared_ptr<boost::asio::ip::udp::endpoint> remote_endpoint_,
                boost::asio::ip::udp::socket &_socket) :
@@ -23,6 +22,7 @@ class Client: public IClient<E> {
             remote_endpoint(remote_endpoint_),
             context(io_context)
         {};
+        virtual ~Client()final { this->disconnect(); };
         virtual void gitId(const uint32_t _id = 0)final { id = _id; }
         virtual void disconnect()final {
             if (this->isConnected())

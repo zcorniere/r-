@@ -1,17 +1,17 @@
 #include <memory>
 
-#include "Message.hpp"
-
 #ifndef _CLIENT_HPP_
 #define _CLIENT_HPP_
+
+template<typename T>
+class Message;
 
 namespace ecs {
 
 template<typename T>
 class IClient: public std::enable_shared_from_this<IClient<T>> {
     public:
-        IClient() = delete;
-        virtual ~IClient() { this->disconnect(); };
+        virtual ~IClient() {};
 
         virtual void giveId(const uint32_t id = 0) = 0;
         virtual void disconnect() = 0;
@@ -28,7 +28,6 @@ class IClient: public std::enable_shared_from_this<IClient<T>> {
         virtual void writeHeader() = 0; // ASYNC
         virtual void writeBody() = 0; // ASYNC
         virtual void addToMsgQueue() = 0;
-
 };
 
 }

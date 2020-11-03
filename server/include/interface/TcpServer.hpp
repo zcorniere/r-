@@ -11,10 +11,11 @@ namespace tcp {
 template<typename T>
 class Server: public IServer<T> {
     public:
-        Server() = delete;
         Server(const unsigned port) :
             asio_acceptor(asio_context,
-                          boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)) {}
+                          boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port))
+        {}
+        virtual ~Server() { this->stop(); };
 
         virtual bool start()final {
             try {
