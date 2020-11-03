@@ -17,16 +17,7 @@ ComponentStorage::EntityBuilder ComponentStorage::buildEntity()
 
 void ComponentStorage::destroyEntity(unsigned id)
 {
-    std::cerr << "Destorying entity nb" << id << "\n";
-    for (auto& [type, map] : m_storage) {
-        auto &buf = reinterpret_cast<std::map<unsigned, std::any>&>(map);
-        std::cerr << "Looking of components in " << type.name() << "...\n";
-        if (buf.find(id) != buf.end()) {
-            std::cerr << "Found one !\n";
-            buf.erase(id);
-        }
-    }
-    std::cerr << "Done !\n";
+    m_dead[id] = true;
 }
 
 unsigned ComponentStorage::getNextFreeId() const
