@@ -1,0 +1,63 @@
+@startuml
+
+package "Modules" #DDDDDD {
+    interface IModule {
+        __ public __
+        +update()
+        +~IModule()
+    }
+
+    interface INetworkModule {
+        __ public __
+        +long initInstance(unsigned maxPlayers)
+        +optional<Instance> getInstance()
+        +~IServerModule()
+    }
+    IModule <|-- INetworkModule
+
+    class Instance {
+        __ private __
+        -long m_id
+        __ public __
+        +long getId()
+        +bool isFull()
+        +unsigned getClientsCount()
+        +close()
+    }
+    INetworkModule *-- Instance
+
+        interface IInputModule {
+        __ public __
+        +vector<Input> getInputEvents()
+    }
+    IModule <|-- IInputModule
+
+    enum Input {
+    }
+    Input o-- IInputModule
+
+    interface IDisplayModule {
+        __ public __
+        +setAssetPath(const string& path);
+        +drawSprite(const string& name, Transform const& transform, unsigned id);
+    }
+    IModule <|-- IDisplayModule
+
+    interface IAudioModule {
+        __ public __
+        +setAssetPath(const string& path);
+        +playSound(const string& name, float volume, float pitch);
+    }
+    IModule <|-- IAudioModule
+}
+
+package "Server" #DDDDDD {
+    class Server {
+    }
+    INetworkModule <|-- Server
+    IAudioModule <|-- Server
+    IInputModule <|-- Server
+    IDisplayModule <|-- Server
+}
+
+@enduml

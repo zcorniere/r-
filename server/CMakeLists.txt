@@ -1,4 +1,4 @@
-include_directories(./include/)
+include_directories(./include/ )
 set(CMAKE_BUILD_TYPE Debug)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -11,6 +11,7 @@ add_executable(r-type_server
                             source/Snitch.cpp
                             source/Game.cpp
                             source/states/DebugState.cpp
+                            source/components/Transform.cpp
 )
 
 add_executable(tests_StateMachine

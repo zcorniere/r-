@@ -1,5 +1,6 @@
 #include "Game.hpp"
 #include "states/DebugState.hpp"
+#include "Modules.hpp"
 #include <iostream>
 
 int main(void) {
