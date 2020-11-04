@@ -23,6 +23,8 @@ add_executable(tests_StateMachine
 )
 
 add_executable(tests_ComponentStorage
+                            source/StateMachine.cpp
+                            source/Game.cpp
                             source/ComponentStorage.cpp
                             source/Snitch.cpp
                             tests/ComponentStorageTests.cpp

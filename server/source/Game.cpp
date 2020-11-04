@@ -2,7 +2,8 @@
 #include "Snitch.hpp"
 #include <stdexcept>
 
-Game::Game(std::string name) : m_name(name), stateMachine(*this)
+Game::Game(std::string name)
+: m_name(name), stateMachine(*this), componentStorage(stateMachine)
 {}
 
 void Game::run()

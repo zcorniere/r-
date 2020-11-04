@@ -2,7 +2,8 @@
 
 // ComponentStorage methods
 
-ComponentStorage::ComponentStorage() : m_entityCount(0)
+ComponentStorage::ComponentStorage(StateMachine &stateMachine)
+: m_entityCount(0), m_stateMachine(stateMachine)
 {}
 
 ComponentStorage::~ComponentStorage()
@@ -46,11 +47,21 @@ unsigned ComponentStorage::EntityBuilder::build()
     m_dest.m_entityCount++;
     m_dest.m_dead[m_id] = false;
 
+    if (m_dest.m_stateMachine.getCurrentState())
+        m_dest.m_parentStates[m_id] = \
+    (*m_dest.m_stateMachine.getCurrentState()).get().getId();
+    else
+        m_dest.m_parentStates[m_id] = -1;
+
     return m_id;
 }
 
 unsigned ComponentStorage::EntityBuilder::buildAsOrphan()
 {
-    return build();
+    m_dest.m_entityCount++;
+    m_dest.m_dead[m_id] = false;
+    m_dest.m_parentStates[m_id] = -1;
+
+    return m_id;
 }
 
