@@ -16,6 +16,12 @@ public:
 
 // Specific modules
 
+class IDisplayModule : public IModule {
+public:
+    virtual void setAssetPath(const std::string &path) = 0;
+    virtual void drawSprite(const std::string &name, Transform const &transform, unsigned tile_id) = 0;
+};
+
 class IInputModule : public IModule {
 public:
     //enum Input {}
@@ -27,12 +33,6 @@ class IAudioModule : public IModule {
 public:
     virtual void setAssetPath(const std::string &path) = 0;
     virtual void playSound(const std::string &name, float volume, float pitch) = 0;
-};
-
-class IDisplayModule : public IModule {
-public:
-    virtual void setAssetPath(const std::string &path) = 0;
-    virtual void drawSprite(const std::string &name, Transform const &transform, unsigned tile_id) = 0;
 };
 
 class INetworkModule : public IModule {
