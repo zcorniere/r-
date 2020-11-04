@@ -10,10 +10,13 @@ add_executable(r-type_server
                             source/ComponentStorage.cpp
                             source/Snitch.cpp
                             source/Game.cpp
+                            source/states/DebugState.cpp
 )
 
 add_executable(tests_StateMachine
                             source/StateMachine.cpp
+                            source/Game.cpp
+                            source/ComponentStorage.cpp
                             tests/StateMachineTests.cpp
 )
 
