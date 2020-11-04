@@ -40,6 +40,7 @@ package "Modules" #DDDDDD {
         __ public __
         +setAssetPath(const string& path);
         +drawSprite(const string& name, Transform const& transform, unsigned id);
+        +Dimensional getCursorLoccation();
     }
     IModule <|-- IDisplayModule
 

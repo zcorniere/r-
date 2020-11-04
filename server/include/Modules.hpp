@@ -21,6 +21,7 @@ public:
     //enum Input {}
     //virtual std::vector<Input> getInputEvents() = 0;
     //TODO: Créer l'enum Input et l'implémenter ici
+    virtual Dimensional getCursorLocation() = 0;
 };
 
 class IAudioModule : public IModule {

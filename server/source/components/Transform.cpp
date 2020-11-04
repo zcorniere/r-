@@ -3,8 +3,7 @@
 Transform::Transform()
 {}
 
-Transform::Transform\
-(Transform::Dimensional l, Transform::Dimensional r, Transform::Dimensional s)
+Transform::Transform(Dimensional l, Dimensional r, Dimensional s)
 : location(l), rotation(r), scale(s)
 {}
 
