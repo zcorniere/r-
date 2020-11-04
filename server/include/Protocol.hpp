@@ -1,13 +1,18 @@
 #include <vector>
 #include <array>
 #include <cstddef>
+#include <cstdint>
 
 #ifndef _PROTOCOL_HPP_
 #define _PROTOCOL_HPP_
 
 namespace protocol {
+constexpr uint8_t MAGIC_NB_1 = 0xFA;
+constexpr uint8_t MAGIC_NB_2 = 0xDA;
+
 namespace udp {
     enum class CodeSendClient { Texture, Sound, AssetsList, Disconnect };
+
     struct AssetsList {
         size_t size;
         unsigned port;
@@ -29,7 +34,8 @@ namespace udp {
         };
     }
     struct Sprite {
-        long id;
+        long id_rectangle;
+        long id_assets;
         transform::Rotation rot;
         transform::Position pos;
         transform::Scale scale;
@@ -41,7 +47,7 @@ namespace udp {
         bool isLooping;
     };
 
-    enum class CodeSendServer { Disconnect, Ready, Input };
+    enum class CodeSendServer { Disconnect, Ready, Input, AskAssets };
     namespace keys {
         constexpr short ArraySize = 5;
 
@@ -115,29 +121,35 @@ namespace udp {
             F14,
             F15
         };
-        struct Event {
-            bool pressed: 1;
-            Keys key: 7;
-        };
-        struct MousePos {
-            short y;
-            short x;
-        };
-    }
+    };
+    struct Event {
+        bool pressed: 1;
+        keys::Keys key: 7;
+    };
+    struct MousePos {
+        short y;
+        short x;
+    };
     struct Input {
         short nb_keys = 0;
-        std::array<keys::Event, keys::ArraySize> keys;
+        std::array<Event, keys::ArraySize> keys;
+        MousePos pos;
     };
 }
 
 namespace tcp {
-    enum class AssetsRequest { AskTexture };
+    // Given by client
+    enum class AssetsRequest { AskAssets };
     struct AssetsAsk { long id; };
+
+    // Reply by the server
     struct AssetsPackage {
         enum Type {Sound, Texture} type;
         long id;
-        size_t size;
-        std::vector<std::byte> data;
+        size_t size_config;
+        size_t size_data;
+        std::vector<uint8_t> data;
+        std::vector<uint8_t> config;
     };
 }
 }
