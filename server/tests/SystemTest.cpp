@@ -1,6 +1,6 @@
 #include "System.hpp"
 #include "SystemStorage.hpp"
-#include "ComponentStorage.hpp"
+#include "Game.hpp"
 
 class Id
 {
@@ -16,13 +16,13 @@ void s1_f(Id id, int i)
 
 int main(void)
 {
-    ComponentStorage storage;
+    Game game("game");
 
-    storage.registerComponent<Id>();
-    storage.registerComponent<int>();
+    game.componentStorage.registerComponent<Id>();
+    game.componentStorage.registerComponent<int>();
 
-    storage.buildEntity().withComponent(Id(42)).withComponent(666).build();
-    storage.buildEntity().withComponent(Id(69)).build();
+    game.componentStorage.buildEntity().withComponent(Id(42)).withComponent(666).build();
+    game.componentStorage.buildEntity().withComponent(Id(69)).build();
 
     System s1(s1_f);
 
@@ -33,7 +33,7 @@ int main(void)
 
     systems.addSystem(s1);
     systems.addSystem(s2);
-    systems.runTick(storage);
+    systems.runTick(game.componentStorage);
     // System s3 = [](){};
     // System s3 = 3;
     return 0;

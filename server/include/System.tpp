@@ -17,7 +17,7 @@ struct wrapper<std::tuple<Components...>> {
     {
         return [system](ComponentStorage &storage) {
             auto components_map =
-                join_components(storage.getComponents<Components>()...);
+                storage.join_components(storage.getComponents<Components>()...);
 
             for (auto &[_, components] : components_map)
                 std::apply(system, components);

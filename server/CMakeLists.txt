@@ -31,6 +31,8 @@ add_executable(tests_ComponentStorage
 )
 
 add_executable(tests_System
+                            source/StateMachine.cpp
+                            source/Game.cpp
                             source/ComponentStorage.cpp
                             source/Snitch.cpp
                             source/System.cpp
