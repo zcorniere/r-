@@ -91,26 +91,25 @@ package "Game Engine" #DDDDDD {
     }
     StateMachine *-- AState
 
-    class SystemManager {
+    class SystemStorage {
         __ private __
-        - vector<ISystem> m_systems
+        -vector<System> m_systems
         __ public __
-        addSystem(ISystem system)
-        startSystems()
-        tickSystems()
-        stopSystems()
+        +addSystem(System system)
+        +runTick(ComponentStorage &components)
     }
-    Game o-- SystemManager
+    Game o-- SystemStorage
 
-    note left of SystemManager : Multithreading could be great here
+    note left of SystemStorage : Multithreading could be great here
 
-    interface ISystem {
+    class System {
+        __ private __
+        -std::function<void(ComponentStorage &)> m_call_wrapper
         __ public __
-        gameStart()
-        tick()
-        gameStop()
+        +System(auto system_function)
+        +void call(ComponentStorage &) const
     }
-    SystemManager *-- ISystem
+    SystemStorage *-- System
 }
 
 @enduml
