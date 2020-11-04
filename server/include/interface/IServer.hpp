@@ -17,8 +17,13 @@ class IServer {
         virtual void update(const size_t maxMessage = -1, const bool wait = false) = 0;
 
     protected:
-        virtual void onClientDisconnect(std::shared_ptr<IClient<T>> cli) {}
-        virtual bool onClientConnect(std::shared_ptr<IClient<T>> cli) { return true; }
+        virtual void onClientDisconnect(std::shared_ptr<IClient<T>> cli) {
+            (void)cli;
+        }
+        virtual bool onClientConnect(std::shared_ptr<IClient<T>> cli) {
+            (void)cli;
+            return true;
+        }
         virtual void waitForClientConnection() = 0; // ASYNC
         virtual void msgClient(Message<T> msg, std::shared_ptr<IClient<T>> cli) = 0;
         virtual void msgAll(Message<T> msg, std::shared_ptr<IClient<T>> skip = nullptr) = 0;

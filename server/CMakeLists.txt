@@ -10,6 +10,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(r-type_server
                             source/main.cpp
+                            source/AssetsServer.cpp
+                            source/StateMachine.cpp
+                            source/ComponentStorage.cpp
+                            source/Snitch.cpp
+                            source/Game.cpp
+                            source/components/Transform.cpp
 )
 
 target_link_libraries(r-type_server r-type_engine)

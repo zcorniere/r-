@@ -46,7 +46,6 @@ class Client: public IClient<T> {
             return std::string("Not Connected");
         }
         virtual const uint32_t &getId()const final { return id; }
-        Message<T> getMsg()const { return tmp; }
 
     protected:
         virtual void readHeader()final {

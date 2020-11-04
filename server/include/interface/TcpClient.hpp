@@ -1,6 +1,3 @@
-#include "MsgQueue.hpp"
-#include "interface/IClient.hpp"
-
 #include <iostream>
 #include <boost/asio.hpp>
 #include <boost/asio/ts/buffer.hpp>
@@ -8,6 +5,10 @@
 
 #ifndef _TCPCLIENT_HPP_
 #define _TCPCLIENT_HPP_
+
+#include "MsgQueue.hpp"
+#include "Message.hpp"
+#include "interface/IClient.hpp"
 
 namespace ecs {
 namespace tcp {
@@ -50,6 +51,7 @@ class Client: public IClient<T> {
             boost::asio::async_read(socket,
                 boost::asio::buffer(&tmp.head, sizeof(MessageHeader<T>)),
                 [this](std::error_code ec, std::size_t len) {
+                    (void)len;
                     if (!ec) {
                         if (tmp.head.size > 0) {
                             tmp.body.resize(tmp.head.size);
@@ -67,6 +69,7 @@ class Client: public IClient<T> {
             boost::asio::async_read(socket,
                 boost::asio::buffer(tmp.body.data(), tmp.head.size),
                 [this](std::error_code ec, std::size_t len) {
+                    (void)len;
                     if (!ec) {
                         addToMsgQueue();
                     } else {

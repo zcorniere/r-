@@ -9,6 +9,7 @@
 #define _MESSAGE_HPP_
 
 #include "interface/IClient.hpp"
+#include "Protocol.hpp"
 
 template<typename T>
 concept isLayoutStd = std::is_standard_layout<T>::value;
@@ -19,14 +20,12 @@ struct MessageHeader {
     uint32_t size = 0;
 };
 
-constexpr uint8_t MAGIC_NB_1 = 0xFA;
-constexpr uint8_t MAGIC_NB_2 = 0xDA;
-
 template<typename T>
 class Message {
     public:
         Message() = default;
-        ~Message();
+        Message(const uint8_t m1, const uint8_t m2) : magic1(m1), magic2(m2) {}
+        ~Message() {};
 
         void empty() {
             head = {};
@@ -35,8 +34,11 @@ class Message {
         size_t size()const {
             return body.size();
         }
-        bool validMagic()const {
-            return this->magic1 == MAGIC_NB_1 && this->magic2 == MAGIC_NB_2;
+        bool validMagic(const uint8_t &m1, const uint8_t &m2)const {
+            return this->magic1 == m1 && this->magic2 == m2;
+        }
+        bool validMagic(const std::pair<uint8_t, uint8_t> &p)const {
+            return this->validMagic(p.first, p.second);
         }
 
         template<isLayoutStd D>
@@ -57,8 +59,8 @@ class Message {
 
     public:
         std::shared_ptr<ecs::IClient<T>> remote = nullptr;
-        uint8_t magic1 = 0xFA;
-        uint8_t magic2 = 0xDA;
+        uint8_t magic1;
+        uint8_t magic2;
         MessageHeader<T> head{};
         std::vector<std::byte> body;
 };

@@ -79,11 +79,12 @@ class Server: public IServer<T>, public IClient<T> {
         virtual void writeHeader()final {};
         virtual void writeBody()final {};
         virtual void addToMsgQueue()final {
-            if (!client_list.contains(tmp_end))
+            if (!client_list.contains(tmp_end)) {
                 client_list.insert(tmp_end, std::make_shared<Client<T>>(asio_context, tmp_end, asio_acceptor));
+                this->onClientConnect(client_list.at(tmp_end));
+            }
             tmp.remote = client_list.at(tmp_end);
             msg_in[tmp_end].push_back(tmp);
-            tmp_end.reset();
             tmp_end = std::make_shared<boost::asio::ip::udp::endpoint>();
         }
 
