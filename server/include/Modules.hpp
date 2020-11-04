@@ -11,7 +11,7 @@
 class IModule {
 public:
     virtual void update() = 0;
-    virtual ~IModule() = 0;
+    virtual ~IModule() {};
 };
 
 // Specific modules
