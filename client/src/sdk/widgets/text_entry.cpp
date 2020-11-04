@@ -13,6 +13,13 @@ WidgetText_entry::WidgetText_entry(std::optional<std::string> &view_intent, bidi
     add_widget<WidgetText>("text", theme);
     text = get_fragment<WidgetText>("text");
     scale({100, 12});
+    arrow_curs->loadFromSystem(sf::Cursor::Arrow);
+    text_curs->loadFromSystem(sf::Cursor::Text);
+    arrow_curs.unlock();
+    text_curs.unlock();
+    cursor->setSize({2, 20});
+    cursor.unlock();
+    cursor->setFillColor(sf::Color::Black);
     cursor_clock.restart();
     reload();
 }
@@ -37,6 +44,20 @@ void WidgetText_entry::onCreateView()
 
 void WidgetText_entry::onUpdateView()
 {
+    if (is_hover()) {
+        if (text_curs) {
+            window.setMouseCursor(text_curs.value());
+            arrow_curs.unlock();
+            text_curs.lock();
+        }
+    } else {
+        if (arrow_curs) {
+            window.setMouseCursor(arrow_curs.value());
+            text_curs.unlock();
+            arrow_curs.lock();
+        }
+    }
+
     if (is_clicked())
         isfocus = true;
     else if (!is_hover() && Input::getKeys(keyboard::LeftClick) == keyboard::KeyStatus::PRESSED)
@@ -73,20 +94,20 @@ void WidgetText_entry::onUpdateView()
                 }
             }
         }
-        // draw cursor
+    }
+    if (isfocus) {
         if (cursor_clock.getElapsedTime().asMilliseconds() >= cursor_timeout) {
             cursor_clock.restart();
-            iscursor = !iscursor;
-            cursor = iscursor ? "|" : " ";
+            if (cursor) {
+                cursor.lock();
+            } else {
+                cursor.unlock();
+            }
         }
-    } else {
-        if (iscursor) {
-            iscursor = false;
-            cursor.clear();
-        }
+        if (cursor) window.draw(cursor.value());
     }
-    if (!cursor.empty() && !data.empty())
-        text->set_text(data + cursor);
+    if (!data.empty())
+        text->set_text(data);
     if (data.empty() && !is_placeholdermode) {
         is_placeholdermode = true;
         reload();
@@ -109,6 +130,10 @@ void WidgetText_entry::reload()
         text->set_color(textcolor);
         text->set_text(data);
     }
+    if (data.empty()) {
+        cursor.unlock()->setPosition(2, 2);
+    } else
+        cursor.unlock()->setPosition(text->get_size().x, 2);
 }
 
 void WidgetText_entry::clear()

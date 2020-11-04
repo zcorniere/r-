@@ -14,14 +14,18 @@
 #include "sdk/interfaces/Itheme.hpp"
 #include "sdk/widgets/text.hpp"
 #include "sdk/managers/inputs.hpp"
+#include "sdk/utils/varlock.hpp"
+
+#include <iostream>
 
 class WidgetText_entry : public Iwidget {
-    static constexpr auto cursor_timeout = 1000;
+    sdkutils::VarLock<sf::Cursor> arrow_curs;
+    sdkutils::VarLock<sf::Cursor> text_curs;
+    static constexpr auto cursor_timeout = 750;
     bool isfocus = false;
-    bool iscursor = false;
     bool is_placeholdermode = true;
     sf::Clock cursor_clock;
-    std::string cursor;
+    sdkutils::VarLock<sf::RectangleShape> cursor;
     sf::Vector2<float> size;
     WidgetText *text = nullptr;
     sf::Color textcolor;

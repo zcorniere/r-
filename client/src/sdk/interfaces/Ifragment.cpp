@@ -56,12 +56,15 @@ void Ifragment::runCreate()
 
 void Ifragment::runUpdate()
 {
+    auto parent_view = window.getView();
     window.setView(content);
     window.draw(background);
-    onUpdateView();
     for (auto &fragment : fragments) {
         fragment.second->runUpdate();
     }
+    window.setView(content);
+    onUpdateView();
+//    window.setView(parent_view);
 }
 
 void Ifragment::runFinish()

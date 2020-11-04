@@ -26,15 +26,15 @@ void WidgetText::onUpdateView()
 void WidgetText::onFinishView()
 {}
 
-#include <iostream>
-
 void WidgetText::reload()
 {
     const unsigned charsize = text.getCharacterSize();
+    const unsigned letterspacing = text.getLetterSpacing();
+    const unsigned offset = charsize + letterspacing;
     const std::string str = text.getString();
     size = {
-            static_cast<float>(str.length() * (charsize + TEXT_PADDING_WIDTH)),
-            static_cast<float>(charsize) + TEXT_PADDING_HEIGHT
+            static_cast<float>(str.length() * (offset / 2 + text_padding_width)),
+            static_cast<float>(charsize) + text_padding_height
     };
     scale(size);
 }
@@ -65,4 +65,9 @@ void WidgetText::set_text(const std::string &newtext)
 void WidgetText::set_background(sf::Color color)
 {
     background_color = color;
+}
+
+sf::Vector2<float> WidgetText::get_size() const
+{
+    return size;
 }

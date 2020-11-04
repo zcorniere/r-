@@ -13,8 +13,8 @@
 #include "app/res/theme.hpp"
 #include "app/res/string.hpp"
 #include "app/window.hpp"
-#include "app/views/home.hpp"
-#include "app/views/loading.hpp"
+#include "app/views/home/home.hpp"
+#include "app/views/loading/loading.hpp"
 
 static std::unordered_map<std::string, Iview *> generate_views(sf::RenderWindow &sf_win)
 {

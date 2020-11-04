@@ -10,10 +10,10 @@
 #include "app/res/string.hpp"
 #include "app/res/theme.hpp"
 #include "app/window.hpp"
-#include "app/views/home.hpp"
-#include "app/views/fragments/topbar.hpp"
-#include "app/views/fragments/bottombar.hpp"
-#include "app/views/fragments/game.hpp"
+#include "app/views/home/fragments/topbar.hpp"
+#include "app/views/home/fragments/bottombar.hpp"
+#include "app/views/home/fragments/game.hpp"
+#include "app/views/home/home.hpp"
 
 HomeView::HomeView(sf::RenderWindow &window) : Iview(window, {window::WIDTH, window::HEIGHT})
 {

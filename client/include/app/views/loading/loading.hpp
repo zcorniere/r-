@@ -12,7 +12,7 @@
 #include "sdk/interfaces/Iview.hpp"
 
 class LoadingView : public Iview {
-    static constexpr auto LOADING_TIME = 3;
+    static constexpr auto loading_time = 3;
     void onCreateView() final;
     void onUpdateView() final;
     void onFinishView() final;

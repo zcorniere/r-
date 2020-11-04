@@ -31,7 +31,7 @@ namespace protocol {
         };
     }
     namespace input {
-        constexpr short KEYSARRAYSIZE = 5;
+        constexpr short keys_array_size = 5;
         enum Keys {
             LeftClick,
             RightClick,
@@ -111,7 +111,7 @@ namespace protocol {
             short x;
         };
     }
-    constexpr std::pair<std::byte, std::byte> MAGICNUMBER = {std::byte{0xFA}, std::byte{0xDA}};
+    constexpr std::pair<std::byte, std::byte> magic_number = {std::byte{0xFA}, std::byte{0xDA}};
     namespace udp {
         // UDP code
         enum class Code {
@@ -147,7 +147,7 @@ namespace protocol {
             struct Ready {};            // indicate at the server that all asset are loaded and the client is ready to play
             struct Input {              // return to the server all user inputs (mouse & keyboard)
                 short nb_keys = 0;
-                std::array<input::KeysEvent, input::KEYSARRAYSIZE> keys;
+                std::array<input::KeysEvent, input::keys_array_size> keys;
                 input::MousePos pos;
             };
         }

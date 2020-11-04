@@ -12,7 +12,7 @@
 #include "app/res/string.hpp"
 #include "app/res/theme.hpp"
 #include "app/window.hpp"
-#include "app/views/loading.hpp"
+#include "app/views/loading/loading.hpp"
 
 LoadingView::LoadingView(sf::RenderWindow &window) : Iview(window, {window::WIDTH, window::HEIGHT})
 {
@@ -53,7 +53,7 @@ void LoadingView::onCreateView()
 
 void LoadingView::onUpdateView()
 {
-    if (clock.getElapsedTime().asSeconds() >= LOADING_TIME) {
+    if (clock.getElapsedTime().asSeconds() >= loading_time) {
         set_intent("home");
     }
 }

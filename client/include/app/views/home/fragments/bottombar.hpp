@@ -16,7 +16,7 @@ class BottomBar : public Ifragment {
     void onFinishView() final;
 public:
     BottomBar(std::optional<std::string> &intent_ref, bidimensional::Transform &parent_trans, sf::RenderWindow &window);
-    static constexpr auto BARHEIGHT = 30;
+    static constexpr auto bar_height = 30;
 };
 
 #endif

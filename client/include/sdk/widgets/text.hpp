@@ -13,8 +13,8 @@
 #include "sdk/interfaces/Itheme.hpp"
 
 class WidgetText : public Iwidget {
-    static constexpr auto TEXT_PADDING_HEIGHT = 5;
-    static constexpr auto TEXT_PADDING_WIDTH = 0;
+    static constexpr auto text_padding_height = 5;
+    static constexpr auto text_padding_width = 0;
     sf::Vector2<float> size;
     sf::Font font;
     sf::Text text;
@@ -29,6 +29,7 @@ public:
     void set_color(sf::Color color);
     void set_text(const std::string &newtext);
     void set_background(sf::Color color);
+    [[nodiscard]] sf::Vector2<float> get_size() const;
 };
 
 #endif

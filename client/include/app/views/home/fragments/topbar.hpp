@@ -20,9 +20,10 @@ class TopBar : public Ifragment {
     WidgetText_entry *ip_entry;
     sf::Clock clock;
     unsigned fps = 0;
+    sf::RectangleShape bottom_border;
 public:
     TopBar(std::optional<std::string> &intent_ref, bidimensional::Transform &parent_trans, sf::RenderWindow &window);
-    static constexpr auto BARHEIGHT = 50;
+    static constexpr auto bar_height = 50;
 };
 
 #endif
