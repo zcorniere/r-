@@ -1,4 +1,5 @@
 #include "System.hpp"
+#include "SystemStorage.hpp"
 #include "ComponentStorage.hpp"
 
 class Id
@@ -25,12 +26,14 @@ int main(void)
 
     System s1(s1_f);
 
-    s1.call(storage);
 
     System s2 = [](Id id) { std::cerr << "Only id: " << id.id << std::endl; };
 
-    s2.call(storage);
+    SystemStorage systems;
 
+    systems.addSystem(s1);
+    systems.addSystem(s2);
+    systems.runTick(storage);
     // System s3 = [](){};
     // System s3 = 3;
     return 0;

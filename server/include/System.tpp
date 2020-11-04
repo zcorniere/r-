@@ -30,9 +30,4 @@ System::System(SystemFunction auto system)
 {
 }
 
-void System::call(ComponentStorage &storage) const
-{
-    m_call_wrapper(storage);
-}
-
 #endif // BABEL_SYSTEM_IMPL_
