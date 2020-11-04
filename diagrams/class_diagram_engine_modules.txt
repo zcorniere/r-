@@ -29,6 +29,7 @@ package "Modules" #DDDDDD {
         interface IInputModule {
         __ public __
         +vector<Input> getInputEvents()
+        +array<float, 2> getCursorLocation()
     }
     IModule <|-- IInputModule
 

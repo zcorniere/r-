@@ -16,7 +16,11 @@ package "Game Engine" #DDDDDD {
         __ public __
         +Game(string name)
         +addModule(string name, IModule module)
-        +optional<IModule> module(string name)
+        +optional<IModule> getModule(string name)
+        +useAsDisplayModule(string name)
+        +useAsInputModule(string name)
+        +useAsAudioModule(string name)
+        +useAsNetworkModule(string name)
         +run()
     }
 
@@ -30,8 +34,9 @@ package "Game Engine" #DDDDDD {
     class StateMachine {
         __ private __
         -stack<unique_ptr<AState>> m_statesStack
+        -&Game m_instance;
         __ public __
-        +StateMachine()
+        +StateMachine(&Game)
         +void setState(unique_ptr<AState> state)
         +void stackState(unique_ptr<AState> state)
         +optional<reference_wrapper<AState>> getCurrentState() const
@@ -43,14 +48,16 @@ package "Game Engine" #DDDDDD {
         __ private __
         -map<unsigned, bool> m_dead
         -map<typeindex, any> m_storage
+        -StateMachine &m_stateMachine
         -map<unsigned, short> m_parentStates
         -unsigned m_entityCount
         friend EntityBuilder
         -EntityBuilder m_builder
         __ public __
-        +ComponentStorage()
+        +ComponentStorage(StateMachine &statemachine)
         +registerComponent<T>()
         +map<unsigned, T> &getComponents<T>()
+        +map<unsigned, tuple<T&...>> joinComponents<T...>(map<unsigned, T...> &maps...)
         +EntityBuilder buildEntity()
         +destroyEntity(size_t id)
         +~ComponentStorage()
