@@ -89,8 +89,6 @@ namespace keyboard {
     };
 
     constexpr std::array<std::pair<Key, sf::Keyboard::Key>, NB_KEYS> relation_sfml = {{
-        {Key::LeftClick, sf::Keyboard::Key::A},
-        {Key::RightClick, sf::Keyboard::Key::A},
         {Key::A, sf::Keyboard::Key::A},
         {Key::B, sf::Keyboard::Key::B},
         {Key::C, sf::Keyboard::Key::C},

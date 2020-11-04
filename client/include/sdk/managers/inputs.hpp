@@ -22,7 +22,8 @@ public:
     void init(Event *ev);
     [[nodiscard]] static sf::Vector2<int> getMouse();
     [[nodiscard]] static keyboard::KeyStatus getKeys(keyboard::Key key);
-    [[nodiscard]] Event::KeysEvent static getKeysQueue();
+    [[nodiscard]] static Event::KeysEvent getKeysQueue();
+    [[nodiscard]] static std::string get_text_entered();
     // TODO make others methods
 };
 

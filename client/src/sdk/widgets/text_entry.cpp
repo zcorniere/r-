@@ -7,22 +7,15 @@
 
 #include "sdk/widgets/text_entry.hpp"
 
-static void setup_ignored_keys(std::vector<keyboard::Key> &ignored_keys)
-{
-    ignored_keys.push_back(keyboard::Key::LeftClick);
-    ignored_keys.push_back(keyboard::Key::RightClick);
-}
-
 WidgetText_entry::WidgetText_entry(std::optional<std::string> &view_intent, bidimensional::Transform &parent_trans, sf::RenderWindow &main_window, Itheme<Icolors *> *theme) :
     Iwidget(view_intent, parent_trans, main_window)
 {
     add_widget<WidgetText>("text", theme);
     text = get_fragment<WidgetText>("text");
     scale({100, 12});
-    setup_ignored_keys(ignored_keys);
+    cursor_clock.restart();
     reload();
 }
-
 
 bool WidgetText_entry::is_hover()
 {
@@ -42,6 +35,8 @@ bool WidgetText_entry::is_clicked()
 void WidgetText_entry::onCreateView()
 {}
 
+#include <iostream>
+
 void WidgetText_entry::onUpdateView()
 {
     if (is_clicked())
@@ -49,29 +44,54 @@ void WidgetText_entry::onUpdateView()
     else if (!is_hover() && Input::getKeys(keyboard::LeftClick) == keyboard::KeyStatus::PRESSED)
         isfocus = false;
     if (isfocus) {
+        bool has_enter_or_delete = false;
         auto key_queue = Input::getKeysQueue();
         for (auto i = 0; i < key_queue.size; ++i) {
             if (key_queue.data[i].pressed) {
+                // delete
                 if (key_queue.data[i].key == keyboard::Key::BackSpace) {
+                    has_enter_or_delete = true;
                     if (!data.empty())
                         data.pop_back();
                     continue;
                 }
+                // enter
                 if (key_queue.data[i].key == keyboard::Key::Enter) {
+                    has_enter_or_delete = true;
                     handler(data);
                     clear();
                     continue;
                 }
-                if (std::find(ignored_keys.begin(), ignored_keys.end(), key_queue.data[i].key) != ignored_keys.end())
-                    continue;
-                if (key_queue.data[i].pressed) {
-                    data.push_back(key_queue.data[i].key + 'A' - 2);
-                }
             }
         }
-        if (key_queue.size)
+        if (has_enter_or_delete) {
             reload();
+        } else {
+            auto text_entered = Input::get_text_entered();
+            if (!text_entered.empty()) {
+                data += text_entered;
+                reload();
+            }
+        }
+        // draw cursor
+        if (cursor_clock.getElapsedTime().asMilliseconds() >= cursor_timeout) {
+            std::cout << iscursor << std::endl;
+            cursor_clock.restart();
+            iscursor = !iscursor;
+            if (iscursor) {
+                cursor = "|";
+            } else {
+                cursor = " ";
+            }
+        }
+    } else {
+        if (iscursor) {
+            iscursor = false;
+            cursor.clear();
+        }
     }
+    if (!cursor.empty() && !data.empty())
+        text->set_text(data + cursor);
     if (data.empty() && !is_placeholdermode) {
         is_placeholdermode = true;
         reload();

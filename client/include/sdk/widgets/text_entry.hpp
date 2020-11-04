@@ -16,16 +16,18 @@
 #include "sdk/managers/inputs.hpp"
 
 class WidgetText_entry : public Iwidget {
+    static constexpr auto cursor_timeout = 1000;
     bool isfocus = false;
+    bool iscursor = false;
     bool is_placeholdermode = true;
-    bool is_cursormode = false;
+    sf::Clock cursor_clock;
+    std::string cursor;
     sf::Vector2<float> size;
     WidgetText *text = nullptr;
     sf::Color textcolor;
     std::string data = "";
     std::string placeholder = "";
     sf::Color placeholder_color = sf::Color::White;
-    std::vector<keyboard::Key> ignored_keys;
     std::function<void(std::string_view)> handler;
     bool is_hover();
     bool is_clicked();

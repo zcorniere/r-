@@ -44,9 +44,13 @@ static void add_to_queue(Event *event, keyboard::Key key, keyboard::KeyStatus st
 void Event::update()
 {
     keys_event.size = 0;
+    text_entered.clear();
     while (window.pollEvent(event)) {
         if (event.type == sf::Event::Closed)
             window.close();
+        if (event.type == sf::Event::TextEntered) {
+            text_entered += event.text.unicode;
+        }
         if (event.type == sf::Event::KeyPressed) {
             const auto key = do_sfml_relation(event.key.code);
             if (key != std::nullopt) {

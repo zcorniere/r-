@@ -26,3 +26,8 @@ Event::KeysEvent Input::getKeysQueue()
 {
     return event->keys_event;
 }
+
+std::string Input::get_text_entered()
+{
+    return event->text_entered;
+}

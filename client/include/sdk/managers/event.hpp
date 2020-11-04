@@ -26,6 +26,7 @@ class Event {
     sf::RenderWindow &window;
     sf::Event event;
 public:
+    std::string text_entered;
     std::map<keyboard::Key, keyboard::KeyStatus> keys_state;
     /**
      * A FIFO queue for Key event
