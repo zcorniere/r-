@@ -11,5 +11,5 @@
 EnString::EnString()
 {
     *this += CommonString();
-    list.emplace("home", "HOME");
+    list.emplace("IP_entry placeholder", "Enter the server address : IP:PORT");
 }

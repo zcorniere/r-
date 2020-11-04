@@ -8,27 +8,41 @@
 #ifndef _SDK_WIDGETS_TEXT_ENTRY_HPP_
 #define _SDK_WIDGETS_TEXT_ENTRY_HPP_
 
+#include <functional>
 #include <SFML/Graphics.hpp>
 #include "sdk/interfaces/Iwidget.hpp"
 #include "sdk/interfaces/Itheme.hpp"
 #include "sdk/widgets/text.hpp"
+#include "sdk/managers/inputs.hpp"
 
 class WidgetText_entry : public Iwidget {
+    bool isfocus = false;
+    bool is_placeholdermode = true;
+    bool is_cursormode = false;
     sf::Vector2<float> size;
     WidgetText *text = nullptr;
+    sf::Color textcolor;
     std::string data = "";
-    void (*handler)(const std::string &text) = nullptr;
+    std::string placeholder = "";
+    sf::Color placeholder_color = sf::Color::White;
+    std::vector<keyboard::Key> ignored_keys;
+    std::function<void(std::string_view)> handler;
+    bool is_hover();
+    bool is_clicked();
     void onCreateView() final;
     void onUpdateView() final;
     void onFinishView() final;
     void reload();
 public:
     WidgetText_entry(std::optional<std::string> &view_intent, bidimensional::Transform &parent_trans, sf::RenderWindow &main_window, Itheme<Icolors *> *theme);
+    void clear();
     void set_font(const std::string &path);
     void set_fontsize(unsigned int newsize);
     void set_color(sf::Color color);
     void set_background(sf::Color color);
-    void set_handler(void (*handler)(const std::string &text));
+    void set_handler(std::function<void(std::string_view)> functor);
+    void set_placeholder(const std::string &str);
+    void set_placeholder_color(sf::Color color);
 };
 
 #endif

@@ -10,12 +10,14 @@
 
 #include "sdk/interfaces/Ifragment.hpp"
 #include "sdk/widgets/text.hpp"
+#include "sdk/widgets/text_entry.hpp"
 
 class TopBar : public Ifragment {
     void onCreateView() final;
     void onUpdateView() final;
     void onFinishView() final;
     WidgetText *text;
+    WidgetText_entry *ip_entry;
     sf::Clock clock;
     unsigned fps = 0;
 public:

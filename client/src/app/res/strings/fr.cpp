@@ -11,5 +11,5 @@
 FrString::FrString()
 {
     *this += CommonString();
-    list.emplace("home", "ACCEUIL");
+    list.emplace("IP_entry placeholder", "Entrer l'addresse du serveur : IP:PORT");
 }

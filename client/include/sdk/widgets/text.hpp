@@ -14,7 +14,7 @@
 
 class WidgetText : public Iwidget {
     static constexpr auto TEXT_PADDING_HEIGHT = 5;
-    static constexpr auto TEXT_PADDING_WIDTH = -7;
+    static constexpr auto TEXT_PADDING_WIDTH = 0;
     sf::Vector2<float> size;
     sf::Font font;
     sf::Text text;

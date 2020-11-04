@@ -18,6 +18,7 @@ Colors::Colors() : Icolors()
     list.emplace("Magenta", sf::Color::Magenta);
     list.emplace("Cyan", sf::Color::Cyan);
     list.emplace("Transparent", sf::Color::Transparent);
+    list.emplace("Gray", sf::Color(117, 117, 117));
     list.emplace("Glace Vanille", sf::Color(240, 229, 182));
     list.emplace("Vomi d'Alexis", sf::Color(204, 198, 182));
     list.emplace("Background du Babel trop classe de Hugo", sf::Color(34, 40, 64));

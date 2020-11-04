@@ -17,12 +17,27 @@ TopBar::TopBar(std::optional<std::string> &intent_ref, bidimensional::Transform 
     transform.position = {0, 0};
     transform.scale = {window::WIDTH, BARHEIGHT};
     background_color = Theme().getSecondary().value();
+    // add fps text
     add_widget<WidgetText>("text fps", reinterpret_cast<Itheme<Icolors *> *>(std::make_unique<Theme>().get()));
     text = get_fragment<WidgetText>("text fps");
     text->set_font(STRING("helvetica_font"));
     text->set_fontsize(15);
     text->set_color(sf::Color::Yellow);
     text->move({window::WIDTH - 50, 10});
+    // add text_entry for ip
+    add_widget<WidgetText_entry>("IP entry", reinterpret_cast<Itheme<Icolors *> *>(std::make_unique<Theme>().get()));
+    ip_entry = get_fragment<WidgetText_entry>("IP entry");
+    ip_entry->set_font(STRING("helvetica_font"));
+    ip_entry->set_fontsize(15);
+    ip_entry->set_color(Theme().getPrimary().value());
+    ip_entry->set_background(Theme().getTertiary().value());
+    ip_entry->move({200, 10});
+    ip_entry->scale({400, 20});
+    ip_entry->set_placeholder(STRING("IP_entry placeholder"));
+    ip_entry->set_placeholder_color(Theme().getColor("Gray").value());
+    ip_entry->set_handler([](std::string_view str){
+        std::cout << "SUBMIT : " << str << std::endl;
+    });
     clock.restart();
 }
 
