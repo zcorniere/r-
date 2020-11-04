@@ -35,6 +35,7 @@ TopBar::TopBar(std::optional<std::string> &intent_ref, bidimensional::Transform 
     ip_entry->scale({400, 20});
     ip_entry->set_placeholder(STRING("IP_entry placeholder"));
     ip_entry->set_placeholder_color(Theme().getColor("Light Gray").value());
+    ip_entry->set_maxchar_limit(40);
     ip_entry->set_handler([](std::string_view str){
         std::cout << "SUBMIT : " << str << std::endl;
     });

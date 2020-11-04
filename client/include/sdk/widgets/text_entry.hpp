@@ -29,6 +29,7 @@ class WidgetText_entry : public Iwidget {
     std::string placeholder = "";
     sf::Color placeholder_color = sf::Color::White;
     std::function<void(std::string_view)> handler;
+    unsigned short maxchar_limit = 20;
     bool is_hover();
     bool is_clicked();
     void onCreateView() final;
@@ -45,6 +46,7 @@ public:
     void set_handler(std::function<void(std::string_view)> functor);
     void set_placeholder(const std::string &str);
     void set_placeholder_color(sf::Color color);
+    void set_maxchar_limit(unsigned short newlimit);
 };
 
 #endif

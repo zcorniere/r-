@@ -35,8 +35,6 @@ bool WidgetText_entry::is_clicked()
 void WidgetText_entry::onCreateView()
 {}
 
-#include <iostream>
-
 void WidgetText_entry::onUpdateView()
 {
     if (is_clicked())
@@ -67,22 +65,19 @@ void WidgetText_entry::onUpdateView()
         if (has_enter_or_delete) {
             reload();
         } else {
-            auto text_entered = Input::get_text_entered();
-            if (!text_entered.empty()) {
-                data += text_entered;
-                reload();
+            if (data.size() < maxchar_limit) {
+                auto text_entered = Input::get_text_entered();
+                if (!text_entered.empty()) {
+                    data += text_entered;
+                    reload();
+                }
             }
         }
         // draw cursor
         if (cursor_clock.getElapsedTime().asMilliseconds() >= cursor_timeout) {
-            std::cout << iscursor << std::endl;
             cursor_clock.restart();
             iscursor = !iscursor;
-            if (iscursor) {
-                cursor = "|";
-            } else {
-                cursor = " ";
-            }
+            cursor = iscursor ? "|" : " ";
         }
     } else {
         if (iscursor) {
@@ -158,6 +153,11 @@ void WidgetText_entry::set_placeholder_color(sf::Color color)
 {
     placeholder_color = color;
     reload();
+}
+
+void WidgetText_entry::set_maxchar_limit(unsigned short newlimit)
+{
+    maxchar_limit = newlimit;
 }
 
 
