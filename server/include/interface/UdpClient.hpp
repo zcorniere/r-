@@ -59,7 +59,7 @@ class Client: public IClient<T> {
                             addToMsgQueue();
                         }
                     } else {
-                        std::cerr << "[" << this->getId() << "] Write Body failed: " << ec.message() << std::endl;
+                        std::cerr << "[" << this->getId() << "] Read Header failed: " << ec.message() << std::endl;
                         socket.close();
                     }
             });
@@ -72,7 +72,7 @@ class Client: public IClient<T> {
                     if (!ec) {
                         addToMsgQueue();
                     } else {
-                        std::cerr << "[" << this->getId() << "] Write Body failed: " << ec.message() << std::endl;
+                        std::cerr << "[" << this->getId() << "] Read Body failed: " << ec.message() << std::endl;
                         socket.close();
                     }
             });
@@ -93,7 +93,7 @@ class Client: public IClient<T> {
                                 writeHeader();
                         }
                     } else {
-                        std::cerr << "[" << this->getId() << "] Write Body failed: " << ec.message() << std::endl;
+                        std::cerr << "[" << this->getId() << "] Write Header failed: " << ec.message() << std::endl;
                         socket.close();
                     }
             });

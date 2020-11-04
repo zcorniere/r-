@@ -36,19 +36,17 @@ class Server: public IServer<T>, public IClient<T> {
             std::cout << "[SERVER]: Stopped..." << std::endl;
         }
         virtual void update(const size_t maxMessage = -1, const bool wait = false) {
-            (void)maxMessage;
-            (void)wait;
-            for (auto [_, i] : msg_in) {
-                for (auto &j: i) {
-                    this->onMessage(j);
-                }
+            if (wait) msg_in.wait();
+            for (size_t i = 0; i < maxMessage && !msg_in.empty(); i++) {
+                auto msg = msg_in.pop_front();
+                this->onMessage(msg);
             }
         }
         virtual void onMessage(Message<T> msg) = 0;
+        MsgQueue<Message<T>> &getMsgIn() { return msg_in; };
 
     protected:
-        virtual void waitForClientConnection()final {
-        }
+        virtual void waitForClientConnection()final { readHeader(); }
         virtual void readHeader()final {
             asio_acceptor.async_receive_from(boost::asio::buffer(&tmp.head, sizeof(MessageHeader<T>)),
                *tmp_end,
@@ -62,7 +60,7 @@ class Server: public IServer<T>, public IClient<T> {
                             addToMsgQueue();
                         }
                     } else {
-                        std::cerr << "[SERVER] Write Body failed: " << ec.message() << std::endl;
+                        std::cerr << "[SERVER] ReadBody failed: " << ec.message() << std::endl;
                         asio_acceptor.close();
                     }
             });
@@ -75,7 +73,7 @@ class Server: public IServer<T>, public IClient<T> {
                     if (!ec) {
                         addToMsgQueue();
                     } else {
-                        std::cerr << "[SERVER] Write Body failed: " << ec.message() << std::endl;
+                        std::cerr << "[SERVER] ReadBody failed: " << ec.message() << std::endl;
                         asio_acceptor.close();
                     }
             });
@@ -88,12 +86,12 @@ class Server: public IServer<T>, public IClient<T> {
                 this->onClientConnect(client_list.at(tmp_end));
             }
             tmp.remote = client_list.at(tmp_end);
-            msg_in.at(tmp_end).push_back(tmp);
+            msg_in.push_back(tmp);
             tmp_end = std::make_shared<boost::asio::ip::udp::endpoint>();
         }
 
     private:
-        std::unordered_map<std::shared_ptr<boost::asio::ip::udp::endpoint>, std::deque<Message<T>>> msg_in;
+        MsgQueue<Message<T>> msg_in;
         std::unordered_map<std::shared_ptr<boost::asio::ip::udp::endpoint>, std::shared_ptr<Client<T>>> client_list;
 
         boost::asio::io_context asio_context;

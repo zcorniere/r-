@@ -6,10 +6,14 @@
 
 AssetsServer::AssetsServer(const unsigned port):
     Server(port)
-{};
+{
+    this->start();
+};
 
 AssetsServer::~AssetsServer()
-{}
+{
+    this->stop();
+}
 
 void AssetsServer::onMessage(Message<protocol::tcp::AssetsRequest> msg) {
     Message<protocol::tcp::AssetsRequest> rep;
