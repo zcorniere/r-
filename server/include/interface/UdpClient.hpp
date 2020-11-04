@@ -24,19 +24,18 @@ class Client: public IClient<T> {
             context(io_context)
         {};
         virtual ~Client() { this->disconnect(); };
-        virtual void gitId(const uint32_t _id = 0)final { id = _id; }
         virtual void disconnect()final {
             if (this->isConnected())
                 boost::asio::post(context, [this]() { socket.close(); });
         }
-        virtual void send(const T &msg)final {
+        virtual void send(const Message<T> &msg)final {
             boost::asio::post(context,
                 [this, msg]() {
                     q_out.push_back(msg);
                     if (!q_out.empty()) {
-                        writeBody();
+                        writeHeader();
                     }
-            });
+                });
         }
 
         virtual bool isConnected()const final { return socket.is_open(); }
@@ -45,13 +44,13 @@ class Client: public IClient<T> {
                 return socket.remote_endpoint().address().to_string();
             return std::string("Not Connected");
         }
-        virtual const uint32_t &getId()const final { return id; }
 
     protected:
         virtual void readHeader()final {
-            socket.async_receive_from(boost::asio::buffer(&tmp.head, sizeof(MessageHeader<T>))
+            socket.async_receive_from(boost::asio::buffer(&tmp.head, sizeof(MessageHeader<T>)),
                *remote_endpoint,
                [this](std::error_code ec, std::size_t len) {
+                   (void)len;
                     if (!ec) {
                         if (tmp.head.size > 0) {
                             tmp.body.resize(tmp.head.size);
@@ -60,19 +59,20 @@ class Client: public IClient<T> {
                             addToMsgQueue();
                         }
                     } else {
-                        std::cerr << "[" << id << "] Write Body failed: " << ec.message() << std::endl;
+                        std::cerr << "[" << this->getId() << "] Write Body failed: " << ec.message() << std::endl;
                         socket.close();
                     }
             });
         }
         virtual void readBody()final {
-            socket.async_receive_from(boost::asio::buffer(tmp.body.data(), tmp.body.size())
+            socket.async_receive_from(boost::asio::buffer(tmp.body.data(), tmp.body.size()),
                *remote_endpoint,
                [this](std::error_code ec, std::size_t len) {
+                   (void)len;
                     if (!ec) {
                         addToMsgQueue();
                     } else {
-                        std::cerr << "[" << id << "] Write Body failed: " << ec.message() << std::endl;
+                        std::cerr << "[" << this->getId() << "] Write Body failed: " << ec.message() << std::endl;
                         socket.close();
                     }
             });
@@ -83,6 +83,7 @@ class Client: public IClient<T> {
                 boost::asio::buffer(&q_out.front().head, sizeof(MessageHeader<T>)),
                 *remote_endpoint,
                 [this](std::error_code ec, std::size_t len) {
+                   (void)len;
                     if (!ec) {
                         if (q_out.front().body.size() > 0) {
                             writeBody();
@@ -92,7 +93,7 @@ class Client: public IClient<T> {
                                 writeHeader();
                         }
                     } else {
-                        std::cerr << "[" << id << "] Write Body failed: " << ec.message() << std::endl;
+                        std::cerr << "[" << this->getId() << "] Write Body failed: " << ec.message() << std::endl;
                         socket.close();
                     }
             });
@@ -102,12 +103,13 @@ class Client: public IClient<T> {
                 boost::asio::buffer(q_out.front().body.data(), q_out.front().body.size()),
                 *remote_endpoint,
                 [this](std::error_code ec, std::size_t len) {
+                   (void)len;
                     if (!ec) {
                         q_out.pop_front();
                         if (!q_out.empty())
                             writeHeader();
                     } else {
-                        std::cerr << "[" << id << "] Write Body failed: " << ec.message() << std::endl;
+                        std::cerr << "[" << this->getId() << "] Write Body failed: " << ec.message() << std::endl;
                         socket.close();
                     }
             });
@@ -117,11 +119,10 @@ class Client: public IClient<T> {
     private:
         boost::asio::ip::udp::socket &socket;
         std::shared_ptr<boost::asio::ip::udp::endpoint> remote_endpoint;
-        const boost::asio::io_context &context;
+        boost::asio::io_context &context;
 
         MsgQueue<Message<T>> q_out;
         Message<T> tmp;
-        uint32_t id = 0;
 };
 
 }

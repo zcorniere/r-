@@ -23,7 +23,6 @@ class Client: public IClient<T> {
         {};
         virtual ~Client() { this->disconnect(); };
 
-        virtual void giveId(const uint32_t _id = 0)final { id = _id; }
         virtual void disconnect()final {
             if (this->isConnected())
                 boost::asio::post(context, [this]() { socket.close(); });
@@ -35,7 +34,7 @@ class Client: public IClient<T> {
                     if (!q_out.empty()) {
                         writeHeader();
                     }
-                });
+            });
         }
 
         virtual bool isConnected()const final { return socket.is_open(); }
@@ -44,7 +43,6 @@ class Client: public IClient<T> {
                 return socket.remote_endpoint().address().to_string();
             return std::string("Not Connected");
         }
-        virtual const uint32_t &getId()const final { return id; }
 
     protected:
         virtual void readHeader()final {
@@ -60,7 +58,7 @@ class Client: public IClient<T> {
                             addToMsgQueue();
                         }
                     } else {
-                        std::cerr << "[" << id << "] Read Header failed: " << ec.message() << std::endl;
+                        std::cerr << "[" << this->getId() << "] Read Header failed: " << ec.message() << std::endl;
                         socket.close();
                     }
             });
@@ -73,7 +71,7 @@ class Client: public IClient<T> {
                     if (!ec) {
                         addToMsgQueue();
                     } else {
-                        std::cerr << "[" << id << "] Read body failed: " << ec.message() << std::endl;
+                        std::cerr << "[" << this->getId() << "] Read body failed: " << ec.message() << std::endl;
                         socket.close();
                     }
             });
@@ -92,7 +90,7 @@ class Client: public IClient<T> {
                                 writeHeader();
                         }
                     } else {
-                        std::cerr << "[" << id << "] Write header failed: " << ec.message() << std::endl;
+                        std::cerr << "[" << this->getId() << "] Write header failed: " << ec.message() << std::endl;
                         socket.close();
                     }
             });
@@ -107,7 +105,7 @@ class Client: public IClient<T> {
                         if (!q_out.empty())
                             writeHeader();
                     } else {
-                        std::cerr << "[" << id << "] Write header failed: " << ec.message() << std::endl;
+                        std::cerr << "[" << this->getId() << "] Write header failed: " << ec.message() << std::endl;
                         socket.close();
                     }
             });
@@ -126,7 +124,6 @@ class Client: public IClient<T> {
         MsgQueue<Message<T>> &q_in;
         MsgQueue<Message<T>> q_out;
 
-        uint32_t id = 0;
         Message<T> tmp;
 };
 

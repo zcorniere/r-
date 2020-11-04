@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(r-type_server
                             source/main.cpp
                             source/AssetsServer.cpp
+                            source/GameServer.cpp
                             source/StateMachine.cpp
                             source/ComponentStorage.cpp
                             source/Snitch.cpp

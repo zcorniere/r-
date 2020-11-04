@@ -36,21 +36,24 @@ class Server: public IServer<T>, public IClient<T> {
             std::cout << "[SERVER]: Stopped..." << std::endl;
         }
         virtual void update(const size_t maxMessage = -1, const bool wait = false) {
-            for (auto &[e, i] : msg_in) {
-                if (!client_list.contains(e))
-                    client_list.insert(e, std::make_shared<Client<T>>(asio_context, e, asio_acceptor));
-                this->onMessage(i);
+            (void)maxMessage;
+            (void)wait;
+            for (auto [_, i] : msg_in) {
+                for (auto &j: i) {
+                    this->onMessage(j);
+                }
             }
         }
-        virtual void onMessage(T msg) = 0;
+        virtual void onMessage(Message<T> msg) = 0;
 
     protected:
         virtual void waitForClientConnection()final {
         }
         virtual void readHeader()final {
-            asio_acceptor.async_receive_from(boost::asio::buffer(&tmp.head, sizeof(MessageHeader<T>))
+            asio_acceptor.async_receive_from(boost::asio::buffer(&tmp.head, sizeof(MessageHeader<T>)),
                *tmp_end,
                [this](std::error_code ec, std::size_t len) {
+                   (void)len;
                     if (!ec) {
                         if (tmp.head.size > 0) {
                             tmp.body.resize(tmp.head.size);
@@ -65,9 +68,10 @@ class Server: public IServer<T>, public IClient<T> {
             });
         }
         virtual void readBody()final {
-            asio_acceptor.async_receive_from(boost::asio::buffer(tmp.body.data(), tmp.body.size())
+            asio_acceptor.async_receive_from(boost::asio::buffer(tmp.body.data(), tmp.body.size()),
                *tmp_end,
                [this](std::error_code ec, std::size_t len) {
+                   (void)len;
                     if (!ec) {
                         addToMsgQueue();
                     } else {
@@ -80,11 +84,11 @@ class Server: public IServer<T>, public IClient<T> {
         virtual void writeBody()final {};
         virtual void addToMsgQueue()final {
             if (!client_list.contains(tmp_end)) {
-                client_list.insert(tmp_end, std::make_shared<Client<T>>(asio_context, tmp_end, asio_acceptor));
+                client_list.insert({tmp_end, std::make_shared<Client<T>>(asio_context, tmp_end, asio_acceptor)});
                 this->onClientConnect(client_list.at(tmp_end));
             }
             tmp.remote = client_list.at(tmp_end);
-            msg_in[tmp_end].push_back(tmp);
+            msg_in.at(tmp_end).push_back(tmp);
             tmp_end = std::make_shared<boost::asio::ip::udp::endpoint>();
         }
 
