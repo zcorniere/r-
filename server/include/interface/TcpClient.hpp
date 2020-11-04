@@ -1,6 +1,7 @@
 #include "MsgQueue.hpp"
 #include "interface/IClient.hpp"
 
+#include <iostream>
 #include <boost/asio.hpp>
 #include <boost/asio/ts/buffer.hpp>
 #include <boost/asio/ts/internet.hpp>
@@ -19,7 +20,7 @@ class Client: public IClient<T> {
                MsgQueue<Message<T>> &_q_in) :
                socket(std::move(_socket)), context(io_context), q_in(_q_in)
         {};
-        virtual ~Client()final { this->disconnect(); };
+        virtual ~Client() { this->disconnect(); };
 
         virtual void giveId(const uint32_t _id = 0)final { id = _id; }
         virtual void disconnect()final {
@@ -49,7 +50,6 @@ class Client: public IClient<T> {
             boost::asio::async_read(socket,
                 boost::asio::buffer(&tmp.head, sizeof(MessageHeader<T>)),
                 [this](std::error_code ec, std::size_t len) {
-                    (void)len;
                     if (!ec) {
                         if (tmp.head.size > 0) {
                             tmp.body.resize(tmp.head.size);
@@ -67,7 +67,6 @@ class Client: public IClient<T> {
             boost::asio::async_read(socket,
                 boost::asio::buffer(tmp.body.data(), tmp.head.size),
                 [this](std::error_code ec, std::size_t len) {
-                    (void)len;
                     if (!ec) {
                         addToMsgQueue();
                     } else {
