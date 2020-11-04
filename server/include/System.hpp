@@ -8,8 +8,8 @@
 
 template <typename Fn>
 concept SystemFunction =
-    std::is_same<typename function_traits<Fn>::result_type ,void>::value
-    && function_traits<Fn>::arity > 0;
+    std::is_same<typename function_traits<Fn>::result_type, void>::value
+        &&function_traits<Fn>::arity > 0;
 // concept SystemFunction = boost::function_traits<Fn>::result_type;
 
 class System

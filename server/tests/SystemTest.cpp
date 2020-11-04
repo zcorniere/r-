@@ -10,7 +10,7 @@ class Id
 
 void s1_f(Id id, int i)
 {
-        std::cerr << "Id:" << id.id << " i:" << i << std::endl;
+    std::cerr << "Id:" << id.id << " i:" << i << std::endl;
 }
 
 int main(void)
@@ -27,7 +27,7 @@ int main(void)
 
     s1.call(storage);
 
-    System s2([](Id id) { std::cerr << "Only id: " << id.id << std::endl; });
+    System s2 = [](Id id) { std::cerr << "Only id: " << id.id << std::endl; };
 
     s2.call(storage);
 

@@ -7,14 +7,13 @@
 #include "System.hpp"
 #include "function_traits.hpp"
 
-
 template <typename T>
 struct wrapper : public wrapper<typename function_traits<T>::args_type> {
 };
 
 template <typename... Components>
 struct wrapper<std::tuple<Components...>> {
-    static std::function<void(ComponentStorage &)> wrap_system(auto system)
+    static constexpr auto wrap_system(auto system)
     {
         return [system](ComponentStorage &storage) {
             auto components_map =

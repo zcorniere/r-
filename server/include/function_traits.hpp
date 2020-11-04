@@ -24,15 +24,15 @@ struct function_traits<ReturnType (ClassType::*)(Args...) const>
 template <typename ReturnType, typename... Args>
 struct function_traits<ReturnType (*)(Args...)>
 {
-    enum { arity = sizeof...(Args) };
+    static constexpr size_t arity = sizeof...(Args);
 
-    typedef ReturnType result_type;
+    using result_type = ReturnType ;
 
-    typedef std::tuple<Args...> args_type;
+    using args_type = std::tuple<Args...>;
 
     template <size_t i>
     struct arg {
-        typedef typename std::tuple_element<i, std::tuple<Args...>>::type type;
+        using type = typename std::tuple_element<i, std::tuple<Args...>>::type;
     };
 };
 
