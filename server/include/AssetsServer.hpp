@@ -7,9 +7,6 @@
 #include "interface/TcpServer.hpp"
 #include "Protocol.hpp"
 
-constexpr std::pair<uint8_t, uint8_t> MagicPair = {protocol::MAGIC_NB_1,
-                                                   protocol::MAGIC_NB_2};
-
 class AssetsServer: public ecs::tcp::Server<protocol::tcp::AssetsRequest> {
     public:
         AssetsServer(const unsigned port);

@@ -10,6 +10,8 @@ namespace protocol {
 constexpr uint8_t MAGIC_NB_1 = 0xFA;
 constexpr uint8_t MAGIC_NB_2 = 0xDA;
 
+constexpr std::pair<uint8_t, uint8_t> MagicPair = {MAGIC_NB_1, MAGIC_NB_2};
+
 namespace udp {
     enum class CodeSendClient { Texture, Sound, AssetsList, Disconnect };
 

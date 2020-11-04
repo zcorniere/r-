@@ -13,7 +13,7 @@ AssetsServer::~AssetsServer()
 
 void AssetsServer::onMessage(Message<protocol::tcp::AssetsRequest> msg) {
     Message<protocol::tcp::AssetsRequest> rep;
-    if (msg.validMagic(MagicPair) && msg.remote) {
+    if (msg.validMagic(protocol::MagicPair) && msg.remote) {
         switch (msg.head.code) {
             case protocol::tcp::AssetsRequest::AskAssets: {
                 auto body = reinterpret_cast<protocol::tcp::AssetsAsk *>(msg.body.data());
