@@ -18,7 +18,6 @@ public:
 
 class IDisplayModule : public IModule {
 public:
-    virtual void setAssetPath(const std::string &path) = 0;
     virtual void drawSprite(const std::string &name, Transform const &transform, unsigned tile_id) = 0;
     virtual Dimensional getCursorLocation() = 0;
 };
@@ -32,7 +31,6 @@ public:
 
 class IAudioModule : public IModule {
 public:
-    virtual void setAssetPath(const std::string &path) = 0;
     virtual void playSound(const std::string &name, float volume, float pitch) = 0;
 };
 
