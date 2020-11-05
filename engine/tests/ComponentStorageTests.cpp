@@ -1,8 +1,12 @@
+#include "Game.hpp"
 #include "ComponentStorage.hpp"
 #include <iostream>
 
 static bool test_component_join()
 {
+    Game random("random");
+    ComponentStorage storage(random.stateMachine);
+
     std::cout << "component_join tests...";
     std::map<unsigned, char> chars;
     std::map<unsigned, short> shorts;
@@ -15,7 +19,7 @@ static bool test_component_join()
     strings.emplace(0, "__");strings.emplace(1, "first");strings.emplace(2, "__");
     strings.emplace(3, "second");strings.emplace(5, "third");strings.emplace(7, "__");
 
-    std::map<unsigned, std::tuple<char&, short&, std::string&>> result = join_components(chars, shorts, strings);
+    std::map<unsigned, std::tuple<char&, short&, std::string&>> result = storage.join_components(chars, shorts, strings);
     std::map<unsigned, std::tuple<char, short, std::string>> model;
 
     model.emplace(1, std::tuple<char, short, std::string>{'a', 1, "first"});
@@ -55,7 +59,8 @@ int main(void)
 {
     std::cout << "ComponentStorage tests...";
 
-    ComponentStorage storage;
+    Game random("random");
+    ComponentStorage storage(random.stateMachine);
     FiveHandler handler;
     FiveHandler handler2;
 

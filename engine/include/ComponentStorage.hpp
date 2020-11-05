@@ -2,6 +2,7 @@
 #define COMPONENT_STORAGE_HPP
 
 #include "Snitch.hpp"
+#include "StateMachine.hpp"
 
 #include <any>
 #include <map>
@@ -20,9 +21,12 @@ private:
     std::unordered_map<std::type_index, std::any> m_storage;
     unsigned m_entityCount;
     std::map<unsigned, bool> m_dead;
+    StateMachine &m_stateMachine;
+    std::map<unsigned, short> m_parentStates;
 
 public:
-    ComponentStorage();
+    ComponentStorage(StateMachine &stateMachine);
+
     template<typename T>
     void registerComponent()
     {
@@ -30,6 +34,7 @@ public:
 
         m_storage.emplace(typeid(T), std::move(new_row));
     }
+
     template<typename T>
     std::map<unsigned, T> &getComponents()
     {
@@ -40,14 +45,35 @@ public:
                 return output;
             }
         }
+
         Snitch::warn() << "Trying to find unregistered components '" << typeid(T).name() << "'" << Snitch::endl;
         throw std::runtime_error("Couldn't read given storage");
     }
+
+    template<typename First, typename... Rest>
+    std::map<unsigned int, std::tuple<First&, Rest&...>> join_components
+    (std::map<unsigned int, First>& first, std::map<unsigned int, Rest>&... rest)
+    {
+        std::map<unsigned int, std::tuple<First&, Rest&...>> result;
+            for (auto& [key, value]: first)
+                if (
+                    ((rest.find(key) != rest.end()) && ...)
+                    && (
+                        !(m_stateMachine.getCurrentState())
+                        || (*m_stateMachine.getCurrentState()).get().getId() == key
+                        || (*m_stateMachine.getCurrentState()).get().getId() == -1
+                    )
+                )
+                    result.emplace(key, std::tuple<First&, Rest&...>{value, rest.at(key)...});
+        return result;
+    }
+
     EntityBuilder buildEntity();
     void destroyEntity(unsigned id);
     ~ComponentStorage();
 
 private:
+
     template<typename T>
     void storeComponent(T componenent, unsigned index)
     {
@@ -60,6 +86,7 @@ private:
         }
         Snitch::warn() << "Couldn't store unregistered component '" << typeid(T).name() << "'" << Snitch::endl;;
     }
+
     template<typename T>
     void clearZombies(std::map<unsigned, T>& components)
     {
@@ -68,6 +95,7 @@ private:
                 components.erase(id);
         }
     }
+
     unsigned getNextFreeId() const;
 
 
@@ -92,18 +120,6 @@ private:
     };
 };
 
-template<typename First, typename... Rest>
-std::map<unsigned int, std::tuple<First&, Rest&...>> join_components
-(std::map<unsigned int, First>& first, std::map<unsigned int, Rest>&... rest)
-{
-    std::map<unsigned int, std::tuple<First&, Rest&...>> result;
-
-    for (auto& [key, value]: first)
-        if (((rest.find(key) != rest.end()) && ...))
-            result.emplace(key, std::tuple<First&, Rest&...>{value, rest.at(key)...});
-
-    return result;
-}
 
 #endif
 
