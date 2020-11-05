@@ -16,21 +16,20 @@ GameServer::~GameServer()
     this->stop();
 };
 
-void GameServer::update(const size_t maxMessage, const bool wait)
-{
-    auto &q_in = this->getMsgIn();
-    if (wait) q_in.wait();
-    for (size_t i = 0; i < maxMessage && !q_in.empty(); i++) {
-        auto msg = q_in.pop_front();
-        this->onMessage(msg);
-    }
-}
-
 void GameServer::onMessage(Message<CodeSendServer> msg) {
     if (msg.validMagic(protocol::MagicPair) && msg.remote) {
         if (!list.contains(msg.remote)) { list.insert({msg.remote, Player{}}); }
         switch (msg.head.code) {
         case CodeSendServer::Disconnect: msg.remote->disconnect(); break;
+        case CodeSendServer::Ready: list.at(msg.remote).ready = true; break;
+        case CodeSendServer::Input: {
+            auto body = reinterpret_cast<Input *>(msg.body.data());
+            if (!body) { break; }
+            list.at(msg.remote).nb_key = body->nb_keys;
+            list.at(msg.remote).input = body->keys;
+            list.at(msg.remote).cur_pos.y = body->pos.y;
+            list.at(msg.remote).cur_pos.x = body->pos.x;
+        } break;
         default: break;
         }
     }

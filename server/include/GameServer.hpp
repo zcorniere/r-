@@ -1,3 +1,4 @@
+#include <array>
 #include <unordered_map>
 
 #ifndef _GAMESERVER_HPP_
@@ -8,6 +9,8 @@
 
 struct Player {
     bool ready = false;
+    short nb_key = 0;
+    std::array<protocol::udp::Event, protocol::udp::keys::ArraySize> input;
     Dimensional cur_pos = {0, 0};
 };
 
@@ -21,7 +24,6 @@ class GameServer:
         GameServer(const unsigned port);
         ~GameServer();
 
-        virtual void update(const size_t maxMessage = -1, const bool wait = false)final;
         // Required by ecs::udp::Server
         virtual void onMessage(Message<protocol::udp::CodeSendServer> msg)final;
 
