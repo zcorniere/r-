@@ -39,15 +39,13 @@ package "Modules" #DDDDDD {
 
     interface IDisplayModule {
         __ public __
-        +setAssetPath(const string& path);
         +drawSprite(const string& name, Transform const& transform, unsigned id);
-        +Dimensional getCursorLoccation();
+        +Dimensional getCursorLocation();
     }
     IModule <|-- IDisplayModule
 
     interface IAudioModule {
         __ public __
-        +setAssetPath(const string& path);
         +playSound(const string& name, float volume, float pitch);
     }
     IModule <|-- IAudioModule
