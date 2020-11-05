@@ -23,7 +23,7 @@ void GameServer::onMessage(Message<CodeSendServer> msg) {
         case CodeSendServer::Disconnect: msg.remote->disconnect(); break;
         case CodeSendServer::Ready: list.at(msg.remote).ready = true; break;
         case CodeSendServer::Input: {
-            auto body = reinterpret_cast<Input *>(msg.body.data());
+            auto body = reinterpret_cast<protocol::udp::Input *>(msg.body.data());
             if (!body) { break; }
             list.at(msg.remote).nb_key = body->nb_keys;
             list.at(msg.remote).input = body->keys;
@@ -36,7 +36,7 @@ void GameServer::onMessage(Message<CodeSendServer> msg) {
 }
 
 void GameServer::setAssetPath(const std::string &path) {
-
+    this->path = path;
 }
 
 void GameServer::playSound(const std::string &name, float volume, float pitch) {
