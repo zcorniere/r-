@@ -20,6 +20,7 @@ class IDisplayModule : public IModule {
 public:
     virtual void setAssetPath(const std::string &path) = 0;
     virtual void drawSprite(const std::string &name, Transform const &transform, unsigned tile_id) = 0;
+    virtual Dimensional getCursorLocation();
 };
 
 class IInputModule : public IModule {

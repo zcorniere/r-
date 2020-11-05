@@ -1,12 +1,13 @@
 #ifndef TRANSFORM_HPP
 #define TRANSFORM_HPP
 
+struct Dimensional {
+    float x;
+    float y;
+};
+
 // Transform Component
 class Transform {
-    struct Dimensional {
-        float x;
-        float y;
-    };
 public:
     Dimensional location;
     Dimensional rotation;
