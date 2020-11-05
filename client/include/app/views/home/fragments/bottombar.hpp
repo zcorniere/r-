@@ -9,8 +9,10 @@
 #define _APP_VIEWS_FRAGMENTS_BOTTOMBAR_HPP_
 
 #include "sdk/interfaces/Ifragment.hpp"
+#include "sdk/widgets/button_image.hpp"
 
 class BottomBar : public Ifragment {
+    WidgetButtonImage *extend_btn;
     void onCreateView() final;
     void onUpdateView() final;
     void onFinishView() final;

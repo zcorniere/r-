@@ -18,9 +18,8 @@
 
 class Ifragment {
     std::optional<std::string> &intent_ref;
-    bidimensional::Transform &parent_transform;
-
 protected:
+    bidimensional::Transform &parent_transform;
     std::vector<std::pair<std::string, Ifragment *>> fragments;
 public:
     sf::RectangleShape background;

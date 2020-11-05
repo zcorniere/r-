@@ -8,7 +8,6 @@
 #ifndef _APP_VIEWS_FRAGMENTS_TOPBAR_HPP_
 #define _APP_VIEWS_FRAGMENTS_TOPBAR_HPP_
 
-#include <iostream>
 #include "sdk/interfaces/Ifragment.hpp"
 #include "sdk/widgets/text.hpp"
 #include "sdk/widgets/text_entry.hpp"

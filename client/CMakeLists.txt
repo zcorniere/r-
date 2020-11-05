@@ -39,6 +39,7 @@ target_sources(r-type_client_sdk PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/widgets/text.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/widgets/text_entry.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/widgets/button_text.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/sdk/widgets/button_image.cpp
 )
 
 target_sources(r-type_client_app PRIVATE

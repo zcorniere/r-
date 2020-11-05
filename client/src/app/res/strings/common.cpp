@@ -21,4 +21,5 @@ CommonString::CommonString()
     list.emplace("foxy_head_trans_gray", path + "/assets/icon/foxy_head_trans_gray3.png");
     list.emplace("Loader_Blue", path + "/assets/loader/blue.png");
     list.emplace("Loader_Green", path + "/assets/loader/green.png");
+    list.emplace("extend image", path + "/assets/extend.png");
 }

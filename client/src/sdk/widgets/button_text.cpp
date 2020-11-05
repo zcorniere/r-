@@ -18,6 +18,10 @@ WidgetButtonText::WidgetButtonText(std::optional<std::string> &view_intent, bidi
     set_background_color(theme->getTertiary().value());
     set_hover_color(theme->getSecondary().value());
     set_click_color(theme->getPrimary().value());
+    border.setPosition({padding_border, padding_border});
+    border.setFillColor(theme->getColor("Transparent").value());
+    border.setOutlineThickness(padding_border);
+    border.setOutlineColor(theme->getColor("Black").value());
     arrow_curs->loadFromSystem(sf::Cursor::Arrow);
     pointer_curs->loadFromSystem(sf::Cursor::Hand);
     arrow_curs.unlock();
@@ -34,14 +38,18 @@ void WidgetButtonText::reload()
     };
     text->scale(transform.scale);
     text->move({padding_width, (transform.scale.y / 2) - (text_size.y / 2)});
+    border.setSize({transform.scale.x - (padding_border * 2), transform.scale.y - (padding_border * 2)});
 }
 
 bool WidgetButtonText::is_hover()
 {
+    auto pos = transform.position;
+    pos.x += parent_transform.position.x;
+    pos.y += parent_transform.position.y;
     auto mouse = Input::getMouse();
-    if (mouse.x < transform.position.x || mouse.x > transform.position.x + transform.scale.x)
+    if (mouse.x < pos.x || mouse.x > pos.x + transform.scale.x)
         return false;
-    if (mouse.y < transform.position.y || mouse.y > transform.position.y + transform.scale.y)
+    if (mouse.y < pos.y || mouse.y > pos.y + transform.scale.y)
         return false;
     return true;
 }
@@ -79,6 +87,7 @@ void WidgetButtonText::onUpdateView()
         background_color = deactivate_color;
     }
     background.setFillColor(background_color);
+    window.draw(border);
 }
 
 void WidgetButtonText::onFinishView()
