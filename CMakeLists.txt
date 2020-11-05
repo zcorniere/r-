@@ -14,6 +14,6 @@ conan_basic_setup()
 # Build the server and the client
 
 link_libraries(${CONAN_LIBS})
+add_subdirectory(engine)
 add_subdirectory(server)
 add_subdirectory(client)
-
