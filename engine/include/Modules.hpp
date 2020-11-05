@@ -11,7 +11,7 @@
 class IModule {
 public:
     virtual void update() = 0;
-    virtual ~IModule() = 0;
+    virtual ~IModule() {};
 };
 
 // Specific modules
@@ -20,7 +20,7 @@ class IDisplayModule : public IModule {
 public:
     virtual void setAssetPath(const std::string &path) = 0;
     virtual void drawSprite(const std::string &name, Transform const &transform, unsigned tile_id) = 0;
-    virtual Dimensional getCursorLocation();
+    virtual Dimensional getCursorLocation() = 0;
 };
 
 class IInputModule : public IModule {
