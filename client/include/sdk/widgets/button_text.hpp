@@ -17,7 +17,10 @@
 #include "sdk/managers/inputs.hpp"
 
 class WidgetButtonText : public Iwidget {
+    static constexpr auto padding_height = 5;
+    static constexpr auto padding_width = 5;
     bool is_active = false;
+    bool is_clicked = false;
     sdkutils::VarLock<sf::Cursor> arrow_curs;
     sdkutils::VarLock<sf::Cursor> pointer_curs;
     sf::Color base_color = sf::Color::Blue;
@@ -28,10 +31,10 @@ class WidgetButtonText : public Iwidget {
     WidgetText *text;
     std::function<void(void)> handler;
     bool is_hover();
-    bool is_clicked();
     void onCreateView() final;
     void onUpdateView() final;
     void onFinishView() final;
+    void reload();
 public:
     WidgetButtonText(std::optional<std::string> &view_intent, bidimensional::Transform &parent_trans, sf::RenderWindow &main_window, Itheme<Icolors *> *theme);
     void set_handler(std::function<void(void)> functor);

@@ -21,6 +21,7 @@ WidgetText_entry::WidgetText_entry(std::optional<std::string> &view_intent, bidi
     cursor.unlock();
     cursor->setFillColor(sf::Color::Black);
     cursor_clock.restart();
+    delete_clock.lock();
     reload();
 }
 
@@ -65,21 +66,40 @@ void WidgetText_entry::onUpdateView()
     if (isfocus) {
         bool has_enter_or_delete = false;
         auto key_queue = Input::getKeysQueue();
-        for (auto i = 0; i < key_queue.size; ++i) {
-            if (key_queue.data[i].pressed) {
-                // delete
-                if (key_queue.data[i].key == keyboard::Key::BackSpace) {
-                    has_enter_or_delete = true;
-                    if (!data.empty())
-                        data.pop_back();
-                    continue;
-                }
-                // enter
-                if (key_queue.data[i].key == keyboard::Key::Enter) {
-                    has_enter_or_delete = true;
-                    handler(data);
-                    clear();
-                    continue;
+
+        if (delete_clock) {
+            // check if delete is always pressed or quit
+            if (Input::getKeys(keyboard::Key::BackSpace) != keyboard::KeyStatus::PRESSED) {
+                delete_clock.lock();
+            } else if (delete_clock->getElapsedTime().asMilliseconds() >= delete_timeout) {
+                delete_clock.unlock();
+                if (!data.empty())
+                    data.pop_back();
+            } else {
+                delete_clock.unlock();
+            }
+            has_enter_or_delete = true;
+        } else {
+            for (auto i = 0; i < key_queue.size; ++i) {
+                if (key_queue.data[i].pressed) {
+                    // delete
+                    if (key_queue.data[i].key == keyboard::Key::BackSpace) {
+                        has_enter_or_delete = true;
+                        if (!data.empty())
+                            data.pop_back();
+                        delete_clock.unlock()->restart();
+                        delete_clock.unlock();
+                        continue;
+                    } else {
+                        delete_clock.lock();
+                    }
+                    // enter
+                    if (key_queue.data[i].key == keyboard::Key::Enter) {
+                        has_enter_or_delete = true;
+                        handler(data);
+                        clear();
+                        continue;
+                    }
                 }
             }
         }
@@ -133,7 +153,7 @@ void WidgetText_entry::reload()
     if (data.empty()) {
         cursor.unlock()->setPosition(2, 2);
     } else
-        cursor.unlock()->setPosition(2 + data.length() * 9, 2);  // text->get_size().x
+        cursor.unlock()->setPosition(text->get_size().x, 2);
 }
 
 void WidgetText_entry::clear()

@@ -17,11 +17,13 @@
 #include "sdk/utils/varlock.hpp"
 
 class WidgetText_entry : public Iwidget {
+    static constexpr auto cursor_timeout = 750;
+    static constexpr auto delete_timeout = 750;
     sdkutils::VarLock<sf::Cursor> arrow_curs;
     sdkutils::VarLock<sf::Cursor> text_curs;
-    static constexpr auto cursor_timeout = 750;
     bool isfocus = false;
     bool is_placeholdermode = true;
+    sdkutils::VarLock<sf::Clock> delete_clock;
     sf::Clock cursor_clock;
     sdkutils::VarLock<sf::RectangleShape> cursor;
     sf::Vector2<float> size;

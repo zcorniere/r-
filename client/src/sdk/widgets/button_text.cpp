@@ -11,7 +11,6 @@ WidgetButtonText::WidgetButtonText(std::optional<std::string> &view_intent, bidi
     Iwidget(view_intent, parent_trans, main_window)
 {
     transform.position = {0, 0};
-    transform.scale = {50, 30};
     add_widget<WidgetText>("btn text", reinterpret_cast<Itheme<Icolors *> *>(theme));
     text = get_fragment<WidgetText>("btn text");
     text->move({(transform.scale.y / 2) - (text->get_size().y / 2), 3});
@@ -23,7 +22,18 @@ WidgetButtonText::WidgetButtonText(std::optional<std::string> &view_intent, bidi
     pointer_curs->loadFromSystem(sf::Cursor::Hand);
     arrow_curs.unlock();
     pointer_curs.unlock();
-    // TODO
+    reload();
+}
+
+void WidgetButtonText::reload()
+{
+    auto text_size = text->get_size();
+    transform.scale = {
+        text_size.x + (padding_width * 2),
+        text_size.y + (padding_height * 2)
+    };
+    text->scale(transform.scale);
+    text->move({padding_width, (transform.scale.y / 2) - (text_size.y / 2)});
 }
 
 bool WidgetButtonText::is_hover()
@@ -34,11 +44,6 @@ bool WidgetButtonText::is_hover()
     if (mouse.y < transform.position.y || mouse.y > transform.position.y + transform.scale.y)
         return false;
     return true;
-}
-
-bool WidgetButtonText::is_clicked()
-{
-    return is_hover() && Input::getKeys(keyboard::LeftClick) == keyboard::KeyStatus::PRESSED;
 }
 
 void WidgetButtonText::onCreateView()
@@ -61,13 +66,19 @@ void WidgetButtonText::onUpdateView()
         }
         background_color = base_color;
     }
-    if (is_clicked())
+    if (is_hover() && Input::getKeys(keyboard::LeftClick) == keyboard::KeyStatus::PRESSED) {
+        background_color = click_color;
+        is_clicked = true;
+    } else if (is_clicked  && is_hover() && Input::getKeys(keyboard::LeftClick) == keyboard::KeyStatus::RELEASED) {
         click();
+        is_clicked = false;
+    } else {
+        is_clicked = false;
+    }
     if (!is_active) {
         background_color = deactivate_color;
     }
     background.setFillColor(background_color);
-    // TODO
 }
 
 void WidgetButtonText::onFinishView()
@@ -91,6 +102,7 @@ void WidgetButtonText::deactivate()
 void WidgetButtonText::set_text(const std::string &newtext)
 {
     text->set_text(newtext);
+    reload();
 }
 
 void WidgetButtonText::set_font(const std::string &path)
@@ -131,7 +143,6 @@ void WidgetButtonText::set_deactivate_color(sf::Color color)
 void WidgetButtonText::click()
 {
     if (is_active) {
-        background_color = click_color;
         handler();
     }
 }

@@ -12,6 +12,6 @@ FrString::FrString()
 {
     *this += CommonString();
     list.emplace("IP_entry placeholder", "Entrer l'addresse du serveur : IP:PORT");
-    list.emplace("disconnect", "Déconnexion");
+    list.emplace("disconnect", "Deconnexion");
     list.emplace("connect", "Connexion");
 }
