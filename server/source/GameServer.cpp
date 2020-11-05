@@ -1,5 +1,7 @@
 #include "GameServer.hpp"
 
+using namespace protocol::udp;
+
 GameServer::GameServer(const unsigned port) :
     Server(port)
 {
@@ -8,6 +10,9 @@ GameServer::GameServer(const unsigned port) :
 
 GameServer::~GameServer()
 {
+    Message<CodeSendServer> msg;
+    msg.head.code = CodeSendServer::Disconnect;
+    this->msgAll(msg);
     this->stop();
 };
 
@@ -21,10 +26,11 @@ void GameServer::update(const size_t maxMessage, const bool wait)
     }
 }
 
-void GameServer::onMessage(Message<protocol::udp::CodeSendServer> msg) {
+void GameServer::onMessage(Message<CodeSendServer> msg) {
     if (msg.validMagic(protocol::MagicPair) && msg.remote) {
+        if (!list.contains(msg.remote)) { list.insert({msg.remote, Player{}}); }
         switch (msg.head.code) {
-
+        case CodeSendServer::Disconnect: msg.remote->disconnect(); break;
         default: break;
         }
     }
@@ -43,6 +49,6 @@ void GameServer::drawSprite(const std::string &name, const Transform &transf, un
 }
 
 Dimensional GameServer::getCursorLocation() {
-    return cur_pos;
+    return Dimensional();
 }
 

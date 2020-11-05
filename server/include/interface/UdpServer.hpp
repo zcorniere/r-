@@ -47,6 +47,22 @@ class Server: public IServer<T>, public IClient<T> {
 
     protected:
         virtual void waitForClientConnection()final { readHeader(); }
+        virtual void msgClient(Message<T> &msg, std::shared_ptr<Client<T>> cli)final {
+            if (*cli) {
+                cli->send(msg);
+            } else {
+                std::cerr << "[SERVER]: Sending to invalid client" << std::endl;
+                client_list.erase(cli->remote_endpoint);
+            }
+        }
+        virtual void msgAll(Message<T> &msg, std::shared_ptr<Client<T>> skip = nullptr)final {
+            for (auto &[_, i] : client_list) {
+                if (i == skip) continue;
+                this->msgClient(msg, i);
+            }
+        }
+
+    protected:
         virtual void readHeader()final {
             asio_acceptor.async_receive_from(boost::asio::buffer(&tmp.head, sizeof(MessageHeader<T>)),
                *tmp_end,

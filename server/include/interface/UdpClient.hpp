@@ -19,8 +19,8 @@ class Client: public IClient<T> {
         Client(boost::asio::io_context &io_context,
                std::shared_ptr<boost::asio::ip::udp::endpoint> remote_endpoint_,
                boost::asio::ip::udp::socket &_socket) :
-            socket(_socket),
             remote_endpoint(remote_endpoint_),
+            socket(_socket),
             context(io_context)
         {};
         virtual ~Client() { this->disconnect(); };
@@ -116,9 +116,11 @@ class Client: public IClient<T> {
         }
         virtual void addToMsgQueue()final {}
 
+    public:
+        std::shared_ptr<boost::asio::ip::udp::endpoint> remote_endpoint;
+
     private:
         boost::asio::ip::udp::socket &socket;
-        std::shared_ptr<boost::asio::ip::udp::endpoint> remote_endpoint;
         boost::asio::io_context &context;
 
         MsgQueue<Message<T>> q_out;
