@@ -11,24 +11,26 @@ add_library(r-type_engine STATIC
                             source/Game.cpp
                             source/states/DebugState.cpp
                             source/components/Transform.cpp
+                            source/System.cpp
+                            source/SystemStorage.cpp
 )
 
-#add_executable(tests_StateMachine
-#                            tests/StateMachineTests.cpp
-#)
+add_executable(tests_StateMachine
+                            tests/StateMachineTests.cpp
+)
 
-#target_link_libraries(tests_StateMachine r-type_engine)
-
-
-#add_executable(tests_ComponentStorage
- #                           tests/ComponentStorageTests.cpp
-#)
-
-#target_link_libraries(tests_ComponentStorage r-type_engine)
+target_link_libraries(tests_StateMachine r-type_engine)
 
 
-#add_executable(tests_System
- #                           tests/SystemTest.cpp
-#)
+add_executable(tests_ComponentStorage
+                        tests/ComponentStorageTests.cpp
+)
 
-#target_link_libraries(tests_System r-type_engine)
+target_link_libraries(tests_ComponentStorage r-type_engine)
+
+
+add_executable(tests_System
+                        tests/SystemTest.cpp
+)
+
+target_link_libraries(tests_System r-type_engine)
