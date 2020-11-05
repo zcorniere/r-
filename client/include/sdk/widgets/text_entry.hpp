@@ -16,8 +16,6 @@
 #include "sdk/managers/inputs.hpp"
 #include "sdk/utils/varlock.hpp"
 
-#include <iostream>
-
 class WidgetText_entry : public Iwidget {
     sdkutils::VarLock<sf::Cursor> arrow_curs;
     sdkutils::VarLock<sf::Cursor> text_curs;

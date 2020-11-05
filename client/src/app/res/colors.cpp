@@ -26,4 +26,7 @@ Colors::Colors() : Icolors()
     list.emplace("Discord : Gris-violet", sf::Color(153, 170, 181));
     list.emplace("Discord : Sombre, mais pas noir", sf::Color(44, 47, 51));
     list.emplace("Discord : Pas noir mais presque", sf::Color(35, 39, 42));
+    list.emplace("buttons hover", sf::Color(123, 126, 150));
+    list.emplace("buttons click", sf::Color(66, 66, 66));
+    list.emplace("buttons deactivate", sf::Color(97, 97, 97));
 }

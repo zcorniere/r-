@@ -9,8 +9,14 @@
 #define _APP_VIEWS_HOME_HPP_
 
 #include "sdk/interfaces/Iview.hpp"
+#include "app/views/home/fragments/topbar.hpp"
+#include "app/views/home/fragments/bottombar.hpp"
+#include "app/views/home/fragments/game.hpp"
 
 class HomeView : public Iview {
+    TopBar *top_bar = nullptr;
+    Game *game = nullptr;
+    BottomBar *bottom_bar = nullptr;
     void onCreateView() final;
     void onUpdateView() final;
     void onFinishView() final;

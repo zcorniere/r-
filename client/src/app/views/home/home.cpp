@@ -10,16 +10,16 @@
 #include "app/res/string.hpp"
 #include "app/res/theme.hpp"
 #include "app/window.hpp"
-#include "app/views/home/fragments/topbar.hpp"
-#include "app/views/home/fragments/bottombar.hpp"
-#include "app/views/home/fragments/game.hpp"
 #include "app/views/home/home.hpp"
 
 HomeView::HomeView(sf::RenderWindow &window) : Iview(window, {window::WIDTH, window::HEIGHT})
 {
     add_fragment<TopBar>("Topbar");
-    add_fragment<BottomBar>("BottomBar");
+    top_bar = get_fragment<TopBar>("Topbar");
     add_fragment<Game>("GameScreen");
+    game = get_fragment<Game>("GameScreen");
+    add_fragment<BottomBar>("BottomBar");
+    bottom_bar = get_fragment<BottomBar>("BottomBar");
     // Adding foxy
     add_widget<WidgetImage>("foxy", reinterpret_cast<Itheme<Icolors *> *>(std::make_unique<Theme>().get()));
     auto foxy = get_fragment<WidgetImage>("foxy");
@@ -32,6 +32,7 @@ HomeView::HomeView(sf::RenderWindow &window) : Iview(window, {window::WIDTH, win
 void HomeView::onCreateView()
 {
     std::cout << "create home" << std::endl;
+    top_bar->set_is_connect(game->get_is_connect());
 }
 
 void HomeView::onUpdateView()

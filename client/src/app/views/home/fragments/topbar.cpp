@@ -26,10 +26,40 @@ TopBar::TopBar(std::optional<std::string> &intent_ref, bidimensional::Transform 
     text->move({window::WIDTH - 50, 12});
 
     // add disconnect button
-    // TODO
+    add_widget<WidgetButtonText>("disconnect btn", reinterpret_cast<Itheme<Icolors *> *>(std::make_unique<Theme>().get()));
+    disconnect = get_fragment<WidgetButtonText>("disconnect btn");
+//    disconnect->scale()
+    disconnect->move({100, 9});
+    disconnect->scale({90, 30});
+    disconnect->set_hover_color(Theme().getColor("buttons hover").value());
+    disconnect->set_click_color(Theme().getColor("buttons click").value());
+    disconnect->set_deactivate_color(Theme().getColor("buttons deactivate").value());
+    disconnect->set_font(STRING("helvetica_font"));
+    disconnect->set_fontsize(15);
+    disconnect->set_text(STRING("disconnect"));
+    disconnect->deactivate();
+    disconnect->set_handler([](){
+        std::cout << "disconnect clicked !" << std::endl;
+        // TODO
+    });
 
     // add connect button
-    // TODO
+    add_widget<WidgetButtonText>("connect btn", reinterpret_cast<Itheme<Icolors *> *>(std::make_unique<Theme>().get()));
+    connect = get_fragment<WidgetButtonText>("connect btn");
+//    connect->scale()
+    connect->move({window::WIDTH / 2 + 300, 9});
+    connect->scale({70, 30});
+    connect->set_hover_color(Theme().getColor("buttons hover").value());
+    connect->set_click_color(Theme().getColor("buttons click").value());
+    connect->set_deactivate_color(Theme().getColor("buttons deactivate").value());
+    connect->set_font(STRING("helvetica_font"));
+    connect->set_fontsize(15);
+    connect->set_text(STRING("connect"));
+    connect->activate();
+    connect->set_handler([](){
+        std::cout << "connect clicked !" << std::endl;
+        // TODO
+    });
 
     // add text_entry for ip
     add_widget<WidgetText_entry>("IP entry", reinterpret_cast<Itheme<Icolors *> *>(std::make_unique<Theme>().get()));
@@ -61,6 +91,13 @@ void TopBar::onCreateView()
 
 void TopBar::onUpdateView()
 {
+    if (is_connect) {
+        if (*is_connect) {
+            disconnect->activate();
+        } else {
+            disconnect->deactivate();
+        }
+    }
     fps++;
     if (clock.getElapsedTime().asSeconds() >= 1) {
         text->set_text("fps:" + std::to_string(fps));
@@ -73,5 +110,10 @@ void TopBar::onUpdateView()
 void TopBar::onFinishView()
 {
     std::cout << "Finish Topbar" << std::endl;
+}
+
+void TopBar::set_is_connect(bool *ptr)
+{
+    is_connect = ptr;
 }
 

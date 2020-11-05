@@ -33,7 +33,8 @@ void WidgetText::reload()
     const unsigned offset = charsize + letterspacing;
     const std::string str = text.getString();
     size = {
-            static_cast<float>(str.length() * (offset / 2 + text_padding_width)),
+//            static_cast<float>(str.length() * (offset / 2 + text_padding_width)),
+            static_cast<float>(str.length() * (offset + text_padding_width)),
             static_cast<float>(charsize) + text_padding_height
     };
     scale(size);

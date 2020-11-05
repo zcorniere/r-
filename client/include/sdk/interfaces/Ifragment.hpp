@@ -22,8 +22,9 @@ class Ifragment {
 
 protected:
     std::vector<std::pair<std::string, Ifragment *>> fragments;
-private:
+public:
     sf::RectangleShape background;
+private:
     void compute_content();
 protected:
     sf::RenderWindow &window;

@@ -133,7 +133,7 @@ void WidgetText_entry::reload()
     if (data.empty()) {
         cursor.unlock()->setPosition(2, 2);
     } else
-        cursor.unlock()->setPosition(text->get_size().x, 2);
+        cursor.unlock()->setPosition(2 + data.length() * 9, 2);  // text->get_size().x
 }
 
 void WidgetText_entry::clear()

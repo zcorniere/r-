@@ -33,3 +33,8 @@ void Game::onFinishView()
 {
     std::cout << "Finish Game" << std::endl;
 }
+
+bool *Game::get_is_connect()
+{
+    return &is_connect;
+}

@@ -12,4 +12,6 @@ EnString::EnString()
 {
     *this += CommonString();
     list.emplace("IP_entry placeholder", "Enter the server address : IP:PORT");
+    list.emplace("disconnect", "Disconnect");
+    list.emplace("connect", "Connect");
 }

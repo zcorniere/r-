@@ -11,11 +11,13 @@
 #include "sdk/interfaces/Ifragment.hpp"
 
 class Game : public Ifragment {
+    bool is_connect = false;
     void onCreateView() final;
     void onUpdateView() final;
     void onFinishView() final;
 public:
     Game(std::optional<std::string> &intent_ref, bidimensional::Transform &parent_trans, sf::RenderWindow &window);
+    [[nodiscard]] bool *get_is_connect();
 };
 
 #endif
