@@ -9,22 +9,26 @@
 #define _APP_VIEWS_HOME_WIDGETS_CONSOLE_HPP_
 
 #include "sdk/interfaces/Iwidget.hpp"
+#include "sdk/widgets/text.hpp"
 #include "app/window.hpp"
 
 class Console : public Iwidget {
-    bool is_fold = true;
+    bool is_fold = false;
     static constexpr auto margin_height = 3;
     static constexpr auto padding_left = -350;
     static constexpr auto border_thickness = 3;
-    static constexpr auto max_stack_limit = 20;
+    static constexpr auto max_stack_limit = 33;
+    static constexpr auto log_character_height = 18;
     sf::Vector2<float> fold_pos = {0, 0};
-    sf::Vector2<float> fold_size = {700, 25};
     sf::Vector2<float> unfold_pos = {0, 0};
+    sf::Vector2<float> fold_size = {700, 25};
     sf::Vector2<float> unfold_size = {700, 600};
+    std::array<WidgetText *, max_stack_limit> stack;
     sf::RectangleShape border;
     void onCreateView() final;
     void onUpdateView() final;
     void onFinishView() final;
+    void initStack();
 public:
     Console(std::optional<std::string> &view_intent, bidimensional::Transform &parent_trans, sf::RenderWindow &main_window, Itheme<Icolors *> *theme);
     void set_fold_pos(sf::Vector2<float> newpos);
@@ -35,6 +39,7 @@ public:
     void fold();
     void unfold();
     void flip();
+    void log(const std::string &message);
 };
 
 #endif

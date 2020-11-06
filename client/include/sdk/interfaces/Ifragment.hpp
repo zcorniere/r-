@@ -120,7 +120,8 @@ public:
      * @param scale
      */
     virtual void scale(sf::Vector2<float> scale);
-
+    void setViewCenter(sf::Vector2<float> coords);
+    [[nodiscard]] sf::Vector2<float> getViewCenter() const;
 private:
     void reload();
 };

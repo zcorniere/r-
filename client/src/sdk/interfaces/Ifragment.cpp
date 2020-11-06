@@ -142,11 +142,22 @@ void Ifragment::scale(sf::Vector2<float> scale)
     reload();
 }
 
+void Ifragment::setViewCenter(sf::Vector2<float> coords)
+{
+    content.setCenter(coords.x, coords.y);
+}
+
+[[nodiscard]] sf::Vector2<float> Ifragment::getViewCenter() const
+{
+    return content.getCenter();
+}
+
 void Ifragment::reload()
 {
     background.setSize(transform.scale);
     compute_content();
 }
+
 
 
 

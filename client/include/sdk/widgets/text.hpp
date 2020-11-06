@@ -15,6 +15,7 @@
 class WidgetText : public Iwidget {
     static constexpr auto text_padding_height = 3;
     static constexpr auto text_padding_width = 2;
+    bool is_hide = false;
     sf::Vector2<float> size;
     sf::Font font;
     sf::Text text;
@@ -30,6 +31,9 @@ public:
     void set_text(const std::string &newtext);
     void set_background(sf::Color color);
     [[nodiscard]] sf::Vector2<float> get_size() const;
+    [[nodiscard]] std::string get_text() const;
+    void hide();
+    void unhide();
 };
 
 #endif

@@ -7,11 +7,31 @@
 
 #include "app/views/home/fragments/bottombar.hpp"
 #include "app/views/home/widgets/console.hpp"
+#include "app/res/theme.hpp"
+#include "app/res/string.hpp"
+
+void Console::initStack()
+{
+    auto theme = std::make_unique<Theme>();
+    auto theme_ptr = reinterpret_cast<Itheme<Icolors *> *>(theme.get());
+    sf::Vector2<float> pos = {5, 0};
+    std::string font_path = STRING("helvetica_font");
+
+    for (auto i = 0; i < max_stack_limit; ++i) {
+        add_widget<WidgetText>("log_" + std::to_string(i), theme_ptr);
+        stack[i] = get_fragment<WidgetText>("log_" + std::to_string(i));
+        stack[i]->set_font(font_path);
+        stack[i]->set_fontsize(15);
+        stack[i]->set_color(sf::Color::Red);
+        stack[i]->move(pos);
+        stack[i]->set_text("");
+        pos.y += log_character_height;
+    }
+}
 
 Console::Console(std::optional<std::string> &view_intent, bidimensional::Transform &parent_trans, sf::RenderWindow &main_window, Itheme<Icolors *> *theme) :
     Iwidget(view_intent, parent_trans, main_window)
 {
-//    transform.position = {console_width_offset, window::HEIGHT - BottomBar::bar_height - transform.scale.y + console_height_offset};
     auto color = theme->getColor("Black").value();
     color.a /= 2;
     background_color = color;
@@ -20,11 +40,16 @@ Console::Console(std::optional<std::string> &view_intent, bidimensional::Transfo
     border.setOutlineThickness(border_thickness);
     set_fold_pos({window::WIDTH / 2 + padding_left, window::HEIGHT - BottomBar::bar_height + margin_height});
     set_unfold_pos({fold_pos.x, fold_pos.y - unfold_size.y + fold_size.y });
+    move(unfold_pos);
+    scale(unfold_size);
+    initStack();
     reload();
 }
 
 void Console::onCreateView()
-{}
+{
+    flip();
+}
 
 void Console::onUpdateView()
 {
@@ -57,9 +82,15 @@ void Console::set_unfold_size(sf::Vector2<float> newsize)
 void Console::reload()
 {
     if (is_fold) {
+        for (auto i = 0; i < max_stack_limit - 1; ++i) {
+            stack[i]->hide();
+        }
         move(fold_pos);
         scale(fold_size);
     } else {
+        for (auto i = 0; i < max_stack_limit - 1; ++i) {
+            stack[i]->unhide();
+        }
         move(unfold_pos);
         scale(unfold_size);
     }
@@ -87,4 +118,11 @@ void Console::flip()
     } else {
         fold();
     }
+}
+
+void Console::log(const std::string &message)
+{
+    for (auto i = 1; i < max_stack_limit; ++i)
+        stack[i - 1]->set_text(stack[i]->get_text());
+    stack[max_stack_limit - 1]->set_text(message);
 }

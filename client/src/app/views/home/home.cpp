@@ -43,7 +43,14 @@ void HomeView::onCreateView()
 }
 
 void HomeView::onUpdateView()
-{}
+{
+    static auto counter = 0;
+    counter++;
+    if (counter > 100) {
+        console->log("test: " + std::to_string(counter));
+        counter = 0;
+    }
+}
 
 void HomeView::onFinishView()
 {

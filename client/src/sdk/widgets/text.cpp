@@ -20,7 +20,8 @@ void WidgetText::onCreateView()
 
 void WidgetText::onUpdateView()
 {
-    window.draw(text);
+    if (!is_hide)
+        window.draw(text);
 }
 
 void WidgetText::onFinishView()
@@ -66,4 +67,19 @@ void WidgetText::set_background(sf::Color color)
 sf::Vector2<float> WidgetText::get_size() const
 {
     return size;
+}
+
+std::string WidgetText::get_text() const
+{
+    return text.getString();
+}
+
+void WidgetText::hide()
+{
+    is_hide = true;
+}
+
+void WidgetText::unhide()
+{
+    is_hide = false;
 }
