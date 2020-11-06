@@ -90,7 +90,6 @@ enum class Input {
 class IDisplayModule : public IModule {
 public:
     virtual void drawSprite(const std::string &name, Transform const &transform, unsigned tile_id) = 0;
-    virtual Dimensional getCursorLocation() = 0;
 };
 
 class IInputModule : public IModule {
