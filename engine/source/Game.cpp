@@ -10,6 +10,8 @@ void Game::run()
 {
     while(stateMachine.getCurrentState()) {
         stateMachine.update();
+        for (auto &[name, module] : m_modules)
+            (*module).update();
     }
 }
 
