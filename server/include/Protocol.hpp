@@ -54,7 +54,7 @@ namespace udp {
     enum class CodeSendServer { Disconnect, Ready, Input, AskAssets };
     namespace keys {
         constexpr short ArraySize = 5;
-        typedef Input Keys;
+        typedef ::Input Keys;
     };
     struct Event {
         bool pressed: 1;

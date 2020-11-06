@@ -51,3 +51,6 @@ Dimensional GameServer::getCursorLocation() {
     return Dimensional();
 }
 
+std::vector<::Input> GameServer::getInputEvents() {
+    return std::vector<::Input>(0);
+}
