@@ -24,11 +24,11 @@ class GameServer:
         GameServer(const unsigned port);
         ~GameServer();
 
+        // Required by IModule
+        virtual void update()final;
+
         // Required by ecs::udp::Server
         virtual void onMessage(Message<protocol::udp::CodeSendServer> msg)final;
-
-        // Required by IAudioModule and IDisplayModule
-        virtual void setAssetPath(const std::string &path)final;
 
         // Required by IAudioModule
         virtual void playSound(const std::string &name, float volume, float pitch)final;

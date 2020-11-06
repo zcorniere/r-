@@ -16,6 +16,10 @@ GameServer::~GameServer()
     this->stop();
 };
 
+void GameServer::update() {
+    this->Server::update();
+}
+
 void GameServer::onMessage(Message<CodeSendServer> msg) {
     if (msg.validMagic(protocol::MagicPair) && msg.remote) {
         if (!list.contains(msg.remote)) { list.insert({msg.remote, Player{}}); }
@@ -33,10 +37,6 @@ void GameServer::onMessage(Message<CodeSendServer> msg) {
         default: break;
         }
     }
-}
-
-void GameServer::setAssetPath(const std::string &path) {
-    this->path = path;
 }
 
 void GameServer::playSound(const std::string &name, float volume, float pitch) {
