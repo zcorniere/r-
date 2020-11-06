@@ -5,7 +5,6 @@
 ** R-type
 */
 
-#include <iostream>
 #include "app/res/theme.hpp"
 #include "app/window.hpp"
 #include "app/views/home/fragments/bottombar.hpp"
@@ -24,11 +23,10 @@ BottomBar::BottomBar(std::optional<std::string> &intent_ref, bidimensional::Tran
     extend_btn->set_deactivate_color(Theme().getColor("buttons deactivate").value());
     extend_btn->set_image(STRING("extend image"));
     extend_btn->activate();
-    extend_btn->set_handler([](){
-        std::cout << "extend clicked !" << std::endl;
-        // TODO
+    extend_btn->set_handler([&](){
+        console->flip();
     });
-    extend_btn->move({window::WIDTH / 2 + 300, 3});
+    extend_btn->move({window::WIDTH / 2 + 350, 3});
     extend_btn->set_size({25, 25});
 }
 
@@ -43,4 +41,9 @@ void BottomBar::onUpdateView()
 void BottomBar::onFinishView()
 {
     std::cout << "Finish Bottombar" << std::endl;
+}
+
+void BottomBar::set_console(Console *newconsole)
+{
+    console = newconsole;
 }

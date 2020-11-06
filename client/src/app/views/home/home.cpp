@@ -16,10 +16,17 @@ HomeView::HomeView(sf::RenderWindow &window) : Iview(window, {window::WIDTH, win
 {
     add_fragment<TopBar>("Topbar");
     top_bar = get_fragment<TopBar>("Topbar");
+    top_bar->z_index = 5;
     add_fragment<Game>("GameScreen");
     game = get_fragment<Game>("GameScreen");
+    game->z_index = 2;
     add_fragment<BottomBar>("BottomBar");
     bottom_bar = get_fragment<BottomBar>("BottomBar");
+    bottom_bar->z_index = 5;
+    add_widget<Console>("console", reinterpret_cast<Itheme<Icolors *> *>(std::make_unique<Theme>().get()));
+    console = get_fragment<Console>("console");
+    console->z_index = 7;
+    bottom_bar->set_console(console);
     // Adding foxy
     add_widget<WidgetImage>("foxy", reinterpret_cast<Itheme<Icolors *> *>(std::make_unique<Theme>().get()));
     auto foxy = get_fragment<WidgetImage>("foxy");

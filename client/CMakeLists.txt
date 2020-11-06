@@ -53,6 +53,7 @@ target_sources(r-type_client_app PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/app/views/home/fragments/topbar.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/app/views/home/fragments/bottombar.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/app/views/home/fragments/game.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/app/views/home/widgets/console.cpp
 )
 
 conan_target_link_libraries(r-type_client_sdk)

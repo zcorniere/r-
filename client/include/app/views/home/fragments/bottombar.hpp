@@ -10,15 +10,18 @@
 
 #include "sdk/interfaces/Ifragment.hpp"
 #include "sdk/widgets/button_image.hpp"
+#include "app/views/home/widgets/console.hpp"
 
 class BottomBar : public Ifragment {
+    Console *console = nullptr;
     WidgetButtonImage *extend_btn;
     void onCreateView() final;
     void onUpdateView() final;
     void onFinishView() final;
 public:
-    BottomBar(std::optional<std::string> &intent_ref, bidimensional::Transform &parent_trans, sf::RenderWindow &window);
     static constexpr auto bar_height = 30;
+    BottomBar(std::optional<std::string> &intent_ref, bidimensional::Transform &parent_trans, sf::RenderWindow &window);
+    void set_console(Console *newconsole);
 };
 
 #endif
