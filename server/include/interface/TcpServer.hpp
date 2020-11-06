@@ -57,7 +57,7 @@ class Server: public IServer<T> {
                     }
             });
         }
-        virtual void msgClient(Message<T> &msg, std::shared_ptr<Client<T>> cli)final {
+        virtual void msgClient(const Message<T> &msg, std::shared_ptr<IClient<T>> cli)final {
             if (cli && *cli) {
                 cli->send(msg);
             } else {
@@ -66,12 +66,12 @@ class Server: public IServer<T> {
                 clients.erase(std::remove(clients.begin(), clients.end(), nullptr), clients.end());
             }
         }
-        virtual void msgAll(Message<T> &msg, std::shared_ptr<Client<T>> cli = nullptr)final {
+        virtual void msgAll(const Message<T> &msg, std::shared_ptr<IClient<T>> skip = nullptr)final {
             bool isInvalidClients = false;
 
             for (auto &i : clients) {
                 if (i && *i) {
-                    if (i == cli)
+                    if (i == skip)
                         i->send(msg);
                 } else {
                     this->onClientDisconnect(i);

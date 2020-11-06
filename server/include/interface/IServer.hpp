@@ -25,8 +25,8 @@ class IServer {
             return true;
         }
         virtual void waitForClientConnection() = 0; // ASYNC
-        virtual void msgClient(Message<T> msg, std::shared_ptr<IClient<T>> cli) = 0;
-        virtual void msgAll(Message<T> msg, std::shared_ptr<IClient<T>> skip = nullptr) = 0;
+        virtual void msgClient(const Message<T> &msg, std::shared_ptr<IClient<T>> cli) = 0;
+        virtual void msgAll(const Message<T> &msg, std::shared_ptr<IClient<T>> skip = nullptr) = 0;
         virtual void onMessage(Message<T> msg) = 0;
 };
 

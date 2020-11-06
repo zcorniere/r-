@@ -11,7 +11,7 @@ namespace ecs {
 namespace udp {
 
 template<typename T>
-class Server: public IServer<T>, public IClient<T> {
+class Server: public IServer<T> {
     public:
         Server(const unsigned port) :
             asio_acceptor(asio_context,
@@ -42,28 +42,30 @@ class Server: public IServer<T>, public IClient<T> {
                 this->onMessage(msg);
             }
         }
-        virtual void onMessage(Message<T> msg) = 0;
         MsgQueue<Message<T>> &getMsgIn() { return msg_in; };
 
     protected:
         virtual void waitForClientConnection()final { readHeader(); }
-        virtual void msgClient(Message<T> &msg, std::shared_ptr<Client<T>> cli)final {
+        virtual void msgClient(const Message<T> &msg, std::shared_ptr<IClient<T>> cli)final { (void)msg; (void)cli; };
+        void msgClient(const Message<T> &msg, std::shared_ptr<Client<T>> cli) {
             if (*cli) {
                 cli->send(msg);
             } else {
                 std::cerr << "[SERVER]: Sending to invalid client" << std::endl;
+                this->onClientDisconnect(cli);
                 client_list.erase(cli->remote_endpoint);
             }
         }
-        virtual void msgAll(Message<T> &msg, std::shared_ptr<Client<T>> skip = nullptr)final {
+        virtual void msgAll(const Message<T> &msg, std::shared_ptr<IClient<T>> skip = nullptr)final {
             for (auto &[_, i] : client_list) {
                 if (i == skip) continue;
                 this->msgClient(msg, i);
             }
         }
+        virtual void onMessage(Message<T> msg) = 0;
 
-    protected:
-        virtual void readHeader()final {
+    private:
+       void readHeader() {
             asio_acceptor.async_receive_from(boost::asio::buffer(&tmp.head, sizeof(MessageHeader<T>)),
                *tmp_end,
                [this](std::error_code ec, std::size_t len) {
@@ -81,7 +83,7 @@ class Server: public IServer<T>, public IClient<T> {
                     }
             });
         }
-        virtual void readBody()final {
+        void readBody() {
             asio_acceptor.async_receive_from(boost::asio::buffer(tmp.body.data(), tmp.body.size()),
                *tmp_end,
                [this](std::error_code ec, std::size_t len) {
@@ -94,9 +96,7 @@ class Server: public IServer<T>, public IClient<T> {
                     }
             });
         }
-        virtual void writeHeader()final {};
-        virtual void writeBody()final {};
-        virtual void addToMsgQueue()final {
+        void addToMsgQueue() {
             if (!client_list.contains(tmp_end)) {
                 client_list.insert({tmp_end, std::make_shared<Client<T>>(asio_context, tmp_end, asio_acceptor)});
                 this->onClientConnect(client_list.at(tmp_end));

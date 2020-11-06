@@ -36,7 +36,9 @@ class GameServer:
         // Required by IDisplayModule
         virtual void drawSprite(const std::string &name, Transform const &transf, unsigned tile_id)final;
 
+        // Required by IInputModule
         virtual Dimensional getCursorLocation()final;
+        virtual std::vector<Input> getInputEvents()final;
 
     private:
         std::unordered_map<std::shared_ptr<ecs::IClient<protocol::udp::CodeSendServer>>, Player> list;
