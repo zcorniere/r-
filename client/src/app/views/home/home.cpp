@@ -5,7 +5,6 @@
 ** R-type
 */
 
-#include <iostream>
 #include "sdk/widgets/image.hpp"
 #include "app/res/string.hpp"
 #include "app/res/theme.hpp"
@@ -26,6 +25,9 @@ HomeView::HomeView(sf::RenderWindow &window) : Iview(window, {window::WIDTH, win
     add_widget<Console>("console", reinterpret_cast<Itheme<Icolors *> *>(std::make_unique<Theme>().get()));
     console = get_fragment<Console>("console");
     console->z_index = 7;
+    // make connection between fragments
+    top_bar->set_game(game);
+    game->set_console(console);
     bottom_bar->set_console(console);
     // Adding foxy
     add_widget<WidgetImage>("foxy", reinterpret_cast<Itheme<Icolors *> *>(std::make_unique<Theme>().get()));
@@ -38,21 +40,12 @@ HomeView::HomeView(sf::RenderWindow &window) : Iview(window, {window::WIDTH, win
 
 void HomeView::onCreateView()
 {
-    std::cout << "create home" << std::endl;
     top_bar->set_is_connect(game->get_is_connect());
+    console->log("Loading done ! Welcome on rtype client");
 }
 
 void HomeView::onUpdateView()
-{
-    static auto counter = 0;
-    counter++;
-    if (counter > 100) {
-        console->log("test: " + std::to_string(counter));
-        counter = 0;
-    }
-}
+{}
 
 void HomeView::onFinishView()
-{
-    std::cout << "finish home" << std::endl;
-}
+{}

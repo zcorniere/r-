@@ -96,8 +96,7 @@ void WidgetText_entry::onUpdateView()
                     // enter
                     if (key_queue.data[i].key == keyboard::Key::Enter) {
                         has_enter_or_delete = true;
-                        handler(data);
-                        clear();
+                        submit();
                         continue;
                     }
                 }
@@ -203,6 +202,12 @@ void WidgetText_entry::set_placeholder_color(sf::Color color)
 void WidgetText_entry::set_maxchar_limit(unsigned short newlimit)
 {
     maxchar_limit = newlimit;
+}
+
+void WidgetText_entry::submit()
+{
+    handler(data);
+    clear();
 }
 
 

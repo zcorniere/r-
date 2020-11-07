@@ -31,19 +31,16 @@ BottomBar::BottomBar(std::optional<std::string> &intent_ref, bidimensional::Tran
 }
 
 void BottomBar::onCreateView()
-{
-    std::cout << "Create Bottombar" << std::endl;
-}
+{}
 
 void BottomBar::onUpdateView()
 {}
 
 void BottomBar::onFinishView()
-{
-    std::cout << "Finish Bottombar" << std::endl;
-}
+{}
 
 void BottomBar::set_console(Console *newconsole)
 {
     console = newconsole;
 }
+

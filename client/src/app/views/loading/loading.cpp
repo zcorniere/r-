@@ -5,7 +5,6 @@
 ** R-type
 */
 
-#include <iostream>
 #include <memory>
 #include "sdk/widgets/image.hpp"
 #include "sdk/widgets/loader.hpp"
@@ -16,7 +15,6 @@
 
 LoadingView::LoadingView(sf::RenderWindow &window) : Iview(window, {window::WIDTH, window::HEIGHT})
 {
-//    auto theme = std::make_unique<Theme>().get();
     auto theme = std::make_unique<Theme>();
     // Adding foxy
     add_widget<WidgetImage>("Image", reinterpret_cast<Itheme<Icolors *> *>(theme.get()));
@@ -47,9 +45,7 @@ LoadingView::LoadingView(sf::RenderWindow &window) : Iview(window, {window::WIDT
 }
 
 void LoadingView::onCreateView()
-{
-    std::cout << "create loading" << std::endl;
-}
+{}
 
 void LoadingView::onUpdateView()
 {
@@ -59,6 +55,4 @@ void LoadingView::onUpdateView()
 }
 
 void LoadingView::onFinishView()
-{
-    std::cout << "finish loading" << std::endl;
-}
+{}

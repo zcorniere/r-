@@ -5,7 +5,6 @@
 ** R-type
 */
 
-#include <iostream>
 #include "app/res/theme.hpp"
 #include "app/views/home/fragments/topbar.hpp"
 #include "app/views/home/fragments/bottombar.hpp"
@@ -22,19 +21,36 @@ Game::Game(std::optional<std::string> &intent_ref, bidimensional::Transform &par
 }
 
 void Game::onCreateView()
-{
-    std::cout << "Create Game" << std::endl;
-}
+{}
 
 void Game::onUpdateView()
 {}
 
 void Game::onFinishView()
-{
-    std::cout << "Finish Game" << std::endl;
-}
+{}
 
 bool *Game::get_is_connect()
 {
     return &is_connect;
+}
+
+void Game::disconnect()
+{
+    is_connect = false;
+    console->log("you have been disconnected");
+    // TODO
+}
+
+void Game::connect(const std::string &address)
+{
+    if (is_connect)
+        disconnect();
+    is_connect = true;
+    console->log( "try to connect to : " + address);
+    // TODO
+}
+
+void Game::set_console(Console *newconsole)
+{
+    console = newconsole;
 }

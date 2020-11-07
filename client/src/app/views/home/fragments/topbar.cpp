@@ -38,17 +38,14 @@ TopBar::TopBar(std::optional<std::string> &intent_ref, bidimensional::Transform 
     disconnect->set_fontsize(15);
     disconnect->set_text(STRING("disconnect"));
     disconnect->deactivate();
-    disconnect->set_handler([](){
-        std::cout << "disconnect clicked !" << std::endl;
-        // TODO
+    disconnect->set_handler([&](){
+        game->disconnect();
     });
 
     // add connect button
     add_widget<WidgetButtonText>("connect btn", reinterpret_cast<Itheme<Icolors *> *>(std::make_unique<Theme>().get()));
     connect = get_fragment<WidgetButtonText>("connect btn");
-//    connect->scale()
     connect->move({window::WIDTH / 2 + 300, 9});
-//    connect->scale({70, 30});
     connect->set_hover_color(Theme().getColor("buttons hover").value());
     connect->set_click_color(Theme().getColor("buttons click").value());
     connect->set_deactivate_color(Theme().getColor("buttons deactivate").value());
@@ -56,9 +53,8 @@ TopBar::TopBar(std::optional<std::string> &intent_ref, bidimensional::Transform 
     connect->set_fontsize(15);
     connect->set_text(STRING("connect"));
     connect->activate();
-    connect->set_handler([](){
-        std::cout << "connect clicked !" << std::endl;
-        // TODO
+    connect->set_handler([&](){
+        ip_entry->submit();
     });
 
     // add text_entry for ip
@@ -73,8 +69,8 @@ TopBar::TopBar(std::optional<std::string> &intent_ref, bidimensional::Transform 
     ip_entry->set_placeholder(STRING("IP_entry placeholder"));
     ip_entry->set_placeholder_color(Theme().getColor("Light Gray").value());
     ip_entry->set_maxchar_limit(40);
-    ip_entry->set_handler([](std::string_view str){
-        std::cout << "SUBMIT : " << str << std::endl;
+    ip_entry->set_handler([&](std::string_view str){
+        game->connect(std::string(str));
     });
     // bottom line
     bottom_border.setPosition({0, bar_height - 5});
@@ -85,9 +81,7 @@ TopBar::TopBar(std::optional<std::string> &intent_ref, bidimensional::Transform 
 }
 
 void TopBar::onCreateView()
-{
-    std::cout << "Create Topbar" << std::endl;
-}
+{}
 
 void TopBar::onUpdateView()
 {
@@ -108,12 +102,14 @@ void TopBar::onUpdateView()
 }
 
 void TopBar::onFinishView()
-{
-    std::cout << "Finish Topbar" << std::endl;
-}
+{}
 
 void TopBar::set_is_connect(bool *ptr)
 {
     is_connect = ptr;
 }
 
+void TopBar::set_game(Game *newgame)
+{
+    game = newgame;
+}

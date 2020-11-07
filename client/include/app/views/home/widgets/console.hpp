@@ -29,6 +29,7 @@ class Console : public Iwidget {
     void onUpdateView() final;
     void onFinishView() final;
     void initStack();
+    void updateStack();
 public:
     Console(std::optional<std::string> &view_intent, bidimensional::Transform &parent_trans, sf::RenderWindow &main_window, Itheme<Icolors *> *theme);
     void set_fold_pos(sf::Vector2<float> newpos);

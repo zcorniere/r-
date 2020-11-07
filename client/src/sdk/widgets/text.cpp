@@ -77,9 +77,11 @@ std::string WidgetText::get_text() const
 void WidgetText::hide()
 {
     is_hide = true;
+    reload();
 }
 
 void WidgetText::unhide()
 {
     is_hide = false;
+    reload();
 }
