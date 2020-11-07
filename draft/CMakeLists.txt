@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(r-type_local
                             source/main.cpp
                             source/SfmlModule.cpp
+                            source/SfmlAudioModule.cpp
 )
 
 target_link_libraries(r-type_local r-type_engine)
