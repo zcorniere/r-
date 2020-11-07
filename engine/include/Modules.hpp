@@ -18,6 +18,7 @@ public:
 // Specific modules
 
 enum class Input {
+    Unknwown = 0,
     LeftClick,
     RightClick,
     A,
@@ -85,7 +86,9 @@ enum class Input {
     F12,
     F13,
     F14,
-    F15
+    F15,
+    ExitWindow,
+    KeyCount
 };
 
 class IDisplayModule : public virtual IModule {
