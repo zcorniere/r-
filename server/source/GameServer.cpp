@@ -2,16 +2,16 @@
 
 using namespace protocol::udp;
 
-GameServer::GameServer(const unsigned port) :
-    Server(port)
+GameServer::GameServer(std::shared_ptr<Storage> stor, const unsigned port) :
+    Server(port), stor(stor)
 {
     this->start();
 };
 
 GameServer::~GameServer()
 {
-    Message<CodeSendServer> msg;
-    msg.head.code = CodeSendServer::Disconnect;
+    Message<RequestCode> msg;
+    msg.head.code = RequestCode::Disconnect;
     this->msgAll(msg);
     this->stop();
 };
@@ -20,13 +20,13 @@ void GameServer::update() {
     this->Server::update();
 }
 
-void GameServer::onMessage(Message<CodeSendServer> msg) {
+void GameServer::onMessage(Message<RequestCode> msg) {
     if (msg.validMagic(protocol::MagicPair) && msg.remote) {
         if (!list.contains(msg.remote)) { list.insert({msg.remote, Player{}}); }
         switch (msg.head.code) {
-        case CodeSendServer::Disconnect: msg.remote->disconnect(); break;
-        case CodeSendServer::Ready: list.at(msg.remote).ready = true; break;
-        case CodeSendServer::Input: {
+        case RequestCode::Disconnect: msg.remote->disconnect(); break;
+        case RequestCode::Ready: list.at(msg.remote).ready = true; break;
+        case RequestCode::Input: {
             auto body = reinterpret_cast<protocol::udp::Input *>(msg.body.data());
             if (!body) { break; }
             list.at(msg.remote).nb_key = body->nb_keys;
@@ -39,18 +39,44 @@ void GameServer::onMessage(Message<CodeSendServer> msg) {
     }
 }
 
-void GameServer::playSound(const std::string &name, float volume, float pitch) {
-
+void GameServer::playSound(const unsigned player, const std::string &name, float volume, float pitch) {
+    if (!stor)
+        throw std::runtime_error("Uninitialized storage");
+    Message<RequestCode> rep;
+    rep.head.code = protocol::udp::RequestCode::Sound;
+    protocol::udp::Sound s;
+    s.volume = volume;
+    s.pitch = pitch;
+    s.isLooping = false;
+    auto v = stor->getIdFromPath(name);
+    s.id = v ? *v : -1;
+    rep.insert(s);
+    this->msgAll(rep);
 }
 
-void GameServer::drawSprite(const std::string &name, const Transform &transf, unsigned int tile_id) {
-
+void GameServer::drawSprite(const unsigned player, const std::string &name, const Transform &transf, unsigned int tile_id) {
+    if (!stor)
+        throw std::runtime_error("Uninitialized storage");
 }
 
-Dimensional GameServer::getCursorLocation() {
-    return Dimensional();
+Dimensional GameServer::getCursorLocation(const unsigned player) {
+    for (const auto &[e, i] : list) {
+        if (e->getId() == player) {
+            return i.cur_pos;
+        }
+    }
+    return Dimensional {-1, -1};
 }
 
-std::vector<::Input> GameServer::getInputEvents() {
-    return std::vector<::Input>(0);
+std::vector<::Input> GameServer::getInputEvents(const unsigned player) {
+    for (const auto &[e, i] : list) {
+        if (e->getId() == player) {
+            std::vector<::Input> ret(i.input.size());
+            for (const auto &i: i.input) {
+                ret.emplace_back(i);
+            }
+            return ret;
+        }
+    }
+    return std::vector<::Input>();
 }

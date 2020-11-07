@@ -13,14 +13,16 @@ const std::unordered_map<std::string, protocol::tcp::AssetsPackage::Type> ext_to
 };
 
 AssetsServer::AssetsServer(const unsigned port, const std::string &path):
-    Server(port), path(path)
+    Server(port), stor(std::make_shared<Storage>(path, [](std::filesystem::path p) {
+        if (!ext_to_type.contains(p.extension()))
+            return false;
+        return true;
+    }))
 {
-    long id = 0;
-    for (const auto &e: std::filesystem::directory_iterator(path)) {
-        auto path = e.path();
-        if (!ext_to_type.contains(path.extension()))
+    for (auto &[i, e]: stor->getStorage()) {
+        if (!ext_to_type.contains(std::filesystem::path(i).extension()))
             continue;
-        assets_map.insert({id++, {path.string(), ext_to_type.at(path.extension())}});
+        assets_map.insert({e, ext_to_type.at(std::filesystem::path(i).extension())});
     }
     this->start();
 };
@@ -36,18 +38,18 @@ void AssetsServer::onMessage(Message<protocol::tcp::AssetsRequest> msg) {
         switch (msg.head.code) {
             case protocol::tcp::AssetsRequest::AskAssets: {
                 auto body = reinterpret_cast<protocol::tcp::AssetsAsk *>(msg.body.data());
-                if (!assets_map.contains(body->id)) {
-                    break;
-                }
                 protocol::tcp::AssetsPackage reply;
                 try {
-                    reply.data = this->getFileAt(assets_map.at(body->id).first);
-                    reply.config = this->getFileAt(this->getConfigForAssets(assets_map.at(body->id).first));
+                    auto path_data = stor->getPathFromId(body->id);
+                    if (!path_data)
+                        break;
+                    reply.data = this->getFileAt(*path_data);
+                    reply.config = this->getFileAt(this->getConfigForAssets(*path_data));
                     if (reply.data.size() != 0 && reply.config.size() != 0) {
                         reply.size_data = reply.data.size();
                         reply.size_config = reply.config.size();
                         reply.id = body->id;
-                        reply.type = assets_map.at(body->id).second;
+                        reply.type = assets_map.at(body->id);
                         rep.head.code = msg.head.code;
                         rep.insert(reply);
                     }
@@ -59,6 +61,10 @@ void AssetsServer::onMessage(Message<protocol::tcp::AssetsRequest> msg) {
         }
     }
     msg.remote->send(rep);
+}
+
+std::shared_ptr<Storage> AssetsServer::getStorage()const {
+    return stor;
 }
 
 std::vector<uint8_t> AssetsServer::getFileAt(const std::string &path) {
