@@ -93,7 +93,7 @@ enum class Input {
 
 class IDisplayModule : public virtual IModule {
 public:
-    virtual void drawSprite(const unsigned player, const std::string &name, Transform const &transform, unsigned tile_id) = 0;
+    virtual void drawSprite(const std::string &name, Transform const &transform, unsigned tile_id) = 0;
 };
 
 class IInputModule : public virtual IModule {
