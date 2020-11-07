@@ -88,19 +88,19 @@ enum class Input {
     F15
 };
 
-class IDisplayModule : public IModule {
+class IDisplayModule : public virtual IModule {
 public:
     virtual void drawSprite(const std::string &name, Transform const &transform, unsigned tile_id) = 0;
 };
 
-class IInputModule : public IModule {
+class IInputModule : public virtual IModule {
 public:
 
     virtual std::vector<Input> getInputEvents() = 0;
     virtual Dimensional getCursorLocation() = 0;
 };
 
-class IAudioModule : public IModule
+class IAudioModule : public virtual IModule
 {
   public:
     virtual void playSound(const std::string &name, float volume = 1,
@@ -112,7 +112,7 @@ class AudioError : public std::runtime_error
     using std::runtime_error::runtime_error;
 };
 
-class INetworkModule : public IModule {
+class INetworkModule : public virtual IModule {
 public:
     virtual long initInstance(unsigned maxPlayers) = 0;
     //virtual std::optional<Instance> getInstance();
