@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <optional>
+#include <stdexcept>
 
 // General Module Interface
 
@@ -99,9 +100,16 @@ public:
     virtual Dimensional getCursorLocation() = 0;
 };
 
-class IAudioModule : public IModule {
-public:
-    virtual void playSound(const std::string &name, float volume, float pitch) = 0;
+class IAudioModule : public IModule
+{
+  public:
+    virtual void playSound(const std::string &name, float volume = 1,
+                           float pitch = 1) = 0;
+};
+
+class AudioError : public std::runtime_error
+{
+    using std::runtime_error::runtime_error;
 };
 
 class INetworkModule : public IModule {
