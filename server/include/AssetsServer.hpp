@@ -9,13 +9,17 @@
 
 class AssetsServer: public ecs::tcp::Server<protocol::tcp::AssetsRequest> {
     public:
-        AssetsServer(const unsigned port);
+        AssetsServer(const unsigned port, const std::string &path);
         ~AssetsServer();
         virtual void onMessage(Message<protocol::tcp::AssetsRequest> msg)final;
 
     private:
+        std::vector<uint8_t> getFileAt(const std::string &path);
+        std::string getConfigForAssets(std::string path);
+
+    private:
+        std::string path;
         std::unordered_map<long, std::pair<std::string, protocol::tcp::AssetsPackage::Type>> assets_map;
-        std::unordered_map<long, protocol::tcp::AssetsRequest> type_map;
 };
 
 #endif //_ASSETSSERVER_HPP_
