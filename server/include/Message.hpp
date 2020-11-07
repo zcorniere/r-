@@ -16,6 +16,8 @@ concept isLayoutStd = std::is_standard_layout<T>::value;
 
 template<typename T>
 struct MessageHeader {
+    uint8_t magic1;
+    uint8_t magic2;
     T code{};
     uint32_t size = 0;
 };
@@ -24,7 +26,10 @@ template<typename T>
 class Message {
     public:
         Message() = default;
-        Message(const uint8_t m1, const uint8_t m2) : magic1(m1), magic2(m2) {}
+        Message(const uint8_t m1, const uint8_t m2) {
+            head.magic1(m1);
+            head.magic2(m2);
+        }
         ~Message() {};
 
         void empty() {
@@ -35,7 +40,7 @@ class Message {
             return body.size();
         }
         bool validMagic(const uint8_t &m1, const uint8_t &m2)const {
-            return this->magic1 == m1 && this->magic2 == m2;
+            return this->head.magic1 == m1 && this->head.magic2 == m2;
         }
         bool validMagic(const std::pair<uint8_t, uint8_t> &p)const {
             return this->validMagic(p.first, p.second);
@@ -59,8 +64,6 @@ class Message {
 
     public:
         std::shared_ptr<ecs::IClient<T>> remote = nullptr;
-        uint8_t magic1;
-        uint8_t magic2;
         MessageHeader<T> head{};
         std::vector<std::byte> body;
 };
