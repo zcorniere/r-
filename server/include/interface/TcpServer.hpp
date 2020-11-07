@@ -92,7 +92,7 @@ class Server: public IServer<T> {
         std::thread context_thread;
 
         boost::asio::ip::tcp::acceptor asio_acceptor;
-        uint32_t base_id = 10000;
+        uint32_t base_id = 0;
 };
 
 }

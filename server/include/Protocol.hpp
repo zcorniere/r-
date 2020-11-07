@@ -15,7 +15,15 @@ constexpr uint8_t MAGIC_NB_2 = 0xDA;
 constexpr std::pair<uint8_t, uint8_t> MagicPair = {MAGIC_NB_1, MAGIC_NB_2};
 
 namespace udp {
-    enum class CodeSendClient { Texture, Sound, AssetsList, Disconnect };
+    enum class RequestCode: uint8_t {
+        Texture = 0x01,
+        Sound = 0x02,
+        AssetsList = 0x03,
+        AssestsAsk = 0x04,
+        Ready = 0x05,
+        Input = 0x06,
+        Disconnect = 0x07,
+    };
 
     struct AssetsList {
         size_t size;
@@ -47,11 +55,11 @@ namespace udp {
 
     struct Sound {
         long id;
+        float volume;
         float pitch;
         bool isLooping;
     };
 
-    enum class CodeSendServer { Disconnect, Ready, Input, AskAssets };
     namespace keys {
         constexpr short ArraySize = 5;
         typedef ::Input Keys;
@@ -66,22 +74,25 @@ namespace udp {
     };
     struct Input {
         short nb_keys = 0;
-        std::array<Event, keys::ArraySize> keys;
+        std::array<::Input, keys::ArraySize> keys;
         MousePos pos;
     };
 }
 
 namespace tcp {
     // Given by client
-    enum class AssetsRequest { AskAssets };
+    enum class AssetsRequest: uint8_t {
+        AskAssets = 0x01,
+        AssetsPackage = 0x02,
+    };
     struct AssetsAsk { long id; };
 
     // Reply by the server
     struct AssetsPackage {
-        enum Type {Sound, Texture} type;
+        enum Type {Sound = 0x01, Texture = 0x02} type;
         long id;
-        size_t size_config;
-        size_t size_data;
+        std::size_t size_data;
+        std::size_t size_config;
         std::vector<uint8_t> data;
         std::vector<uint8_t> config;
     };

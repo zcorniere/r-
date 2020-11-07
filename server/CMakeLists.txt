@@ -12,6 +12,7 @@ add_executable(r-type_server
                             source/main.cpp
                             source/AssetsServer.cpp
                             source/GameServer.cpp
+                            source/Storage.cpp
 )
 
 target_link_libraries(r-type_server r-type_engine)

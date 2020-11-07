@@ -19,7 +19,7 @@ public:
 
 enum class Input {
     Unknwown = 0,
-    LeftClick,
+    LeftClick = 1,
     RightClick,
     A,
     B,
