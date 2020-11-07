@@ -39,7 +39,7 @@ void GameServer::onMessage(Message<RequestCode> msg) {
     }
 }
 
-void GameServer::playSound(const unsigned player, const std::string &name, float volume, float pitch) {
+void GameServer::playSound(const std::string &name, float volume, float pitch) {
     if (!stor)
         throw std::runtime_error("Uninitialized storage");
     Message<RequestCode> rep;
@@ -54,9 +54,23 @@ void GameServer::playSound(const unsigned player, const std::string &name, float
     this->msgAll(rep);
 }
 
-void GameServer::drawSprite(const unsigned player, const std::string &name, const Transform &transf, unsigned int tile_id) {
+void GameServer::drawSprite(const std::string &name, const Transform &transf, unsigned int tile_id) {
     if (!stor)
         throw std::runtime_error("Uninitialized storage");
+    Message<RequestCode> rep;
+    rep.head.code = protocol::udp::RequestCode::Sound;
+    protocol::udp::Sprite s;
+    s.rot.x = transf.rotation.x;
+    s.rot.y = transf.rotation.y;
+    s.pos.x = transf.location.x;
+    s.pos.y = transf.location.y;
+    s.scale.x = transf.scale.x;
+    s.scale.y = transf.scale.y;
+    auto v = stor->getIdFromPath(name);
+    s.id_assets = v ? *v : -1;
+    s.id_rectangle = tile_id;
+    rep.insert(s);
+    this->msgAll(rep);
 }
 
 Dimensional GameServer::getCursorLocation(const unsigned player) {

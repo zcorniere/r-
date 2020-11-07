@@ -32,10 +32,10 @@ class GameServer:
         virtual void onMessage(Message<protocol::udp::RequestCode> msg)final;
 
         // Required by IAudioModule
-        virtual void playSound(const unsigned player, const std::string &name, float volume, float pitch)final;
+        virtual void playSound(const std::string &name, float volume, float pitch)final;
 
         // Required by IDisplayModule
-        virtual void drawSprite(const unsigned player, const std::string &name, Transform const &transf, unsigned tile_id)final;
+        virtual void drawSprite(const std::string &name, Transform const &transf, unsigned tile_id)final;
 
         // Required by IInputModule
         virtual Dimensional getCursorLocation(const unsigned player)final;
