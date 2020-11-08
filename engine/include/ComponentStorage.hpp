@@ -14,6 +14,7 @@
 #include <typeindex>
 #include <vector>
 #include <stdexcept>
+#include <boost/type_index.hpp>
 
 class ComponentStorage {
 class EntityBuilder;
@@ -40,13 +41,20 @@ public:
     {
         for (auto &[storage_type, storage] : m_storage) {
             if (storage_type == typeid(T)) {
-                auto &output = std::any_cast<std::map<unsigned, T>&>(storage);
-                clearZombies(output);
-                return output;
+                try {
+                    auto &output =
+                        std::any_cast<std::map<unsigned, T> &>(storage);
+                    clearZombies(output);
+                    return output;
+                } catch (std::bad_any_cast const &) {
+                    break;
+                }
             }
         }
 
-        Snitch::warn() << "Trying to find unregistered components '" << typeid(T).name() << "'" << Snitch::endl;
+        Snitch::warn() << "Trying to find unregistered components '"
+                       << boost::typeindex::type_id_with_cvr<T>().pretty_name()
+                       << "'" << Snitch::endl;
         throw std::runtime_error("Couldn't read given storage");
     }
 
