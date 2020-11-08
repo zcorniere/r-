@@ -32,8 +32,8 @@ namespace protocol {
     }
     namespace input {
         constexpr short keys_array_size = 5;
-        enum Keys {
-            LeftClick,
+        enum class Keys {
+            LeftClick = 1,
             RightClick,
             A,
             B,
@@ -115,13 +115,13 @@ namespace protocol {
     namespace udp {
         // UDP code
         enum class Code {
-            Sprite,         // from server
-            Sound,          // from server
-            AssetList,      // from server
-            AskAssetList,   // from client
-            Ready,          // from client
-            Input,          // from client
-            Disconnect,     // Both
+            Sprite = 1,         // from server
+            Sound = 2,          // from server
+            AssetList = 3,      // from server
+            AskAssetList = 4,   // from client
+            Ready = 5,          // from client
+            Input = 6,          // from client
+            Disconnect = 7,     // Both
         };
         namespace from_server {
             struct Sprite {
@@ -156,14 +156,17 @@ namespace protocol {
     namespace tcp {
         // TCP code
         enum class Code {
-            AssetAsk,       // from client
-            AssetPackage    // from server
+            AssetAsk = 1,       // from client
+            AssetPackage = 2    // from server
         };
         struct AssetAsk {
             long id;
         };
         struct AssetPackage {
-            enum class Type {Sound, Texture} type;
+            enum class Type {
+                Sound = 1,
+                Texture = 2
+            } type;
             long id_asset;
             std::size_t size_data;
             std::size_t size_config;

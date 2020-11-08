@@ -8,6 +8,8 @@
 #ifndef _SDK_UTILS_VARLOCK_HPP_
 #define _SDK_UTILS_VARLOCK_HPP_
 
+#include <iostream>
+
 namespace sdkutils {
     template<typename T>
     class VarLock {
@@ -58,6 +60,8 @@ namespace sdkutils {
                 islock = true;
                 ret = &data;
             }
+            if (ret == nullptr)
+                std::cerr << "Varlock : operator-> return nullptr" << std::endl;
             return ret;
         }
     };
