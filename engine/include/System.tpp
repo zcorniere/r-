@@ -6,6 +6,9 @@
 
 #include "System.hpp"
 #include "function_traits.hpp"
+template <typename T>
+using cleaned_component =
+    typename std::remove_cv<typename std::remove_reference<T>::type>::type;
 
 template <typename T>
 struct wrapper : public wrapper<typename function_traits<T>::args_type> {
@@ -16,8 +19,8 @@ struct wrapper<std::tuple<Components...>> {
     static constexpr auto wrap_system(auto system)
     {
         return [system](ComponentStorage &storage) {
-            auto components_map =
-                storage.join_components(storage.getComponents<Components>()...);
+            auto components_map = storage.join_components(
+                storage.getComponents<cleaned_component<Components>>()...);
 
             for (auto &[_, components] : components_map)
                 std::apply(system, components);
