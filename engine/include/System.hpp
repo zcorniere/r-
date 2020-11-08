@@ -1,7 +1,7 @@
 #ifndef BABEL_SYSTEM_H_
 #define BABEL_SYSTEM_H_
 
-#include "ComponentStorage.hpp"
+#include "Game.hpp"
 #include "function_traits.hpp"
 #include <concepts>
 #include <functional>
@@ -17,10 +17,10 @@ class System
   public:
     System(SystemFunction auto system);
 
-    void call(ComponentStorage &) const;
+    void call(Game &) const;
 
   private:
-    std::function<void(ComponentStorage &)> m_call_wrapper;
+    std::function<void(Game &)> m_call_wrapper;
 };
 
 #include "System.tpp"

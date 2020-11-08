@@ -28,9 +28,10 @@ int main(void)
     systems.addSystem([](Position &position, const Velocity &velocity) {
         position.x += velocity.vx;
     });
-    systems.addSystem(
-        [](const Position &p) { std::cout << "Position " << p.x << std::endl; });
+    systems.addSystem([](const Position &p) {
+        std::cout << "Position " << p.x << std::endl;
+    });
 
-    systems.runTick(game.componentStorage);
+    systems.runTick(game);
     return 0;
 }
