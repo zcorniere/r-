@@ -2,6 +2,8 @@
 #include "SfmlKeyMapping.hpp"
 #include <iostream>
 #include <string_view>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
 
 SfmlModule::SfmlModule(const std::string &name, std::filesystem::path assets_path)
 : m_window(sf::VideoMode(1000, 600), name), m_assets_path(assets_path)
@@ -14,14 +16,51 @@ SfmlModule::SfmlModule(const std::string &name, std::filesystem::path assets_pat
 
 void SfmlModule::loadAsset(std::filesystem::path path)
 {
-    sf::Texture texture;
+    // Loading Texture raw asset
 
+    sf::Texture texture;
     texture.loadFromFile(path);
+
+    // Loading Spritesheet configuration file
+
+    boost::property_tree::ptree root(m_assets_path);
+    std::cout << "Parsing " << path.replace_extension(".json") << std::endl;
+    boost::property_tree::read_json(path.replace_extension(".json"), root);
+
+    // Creating Sprites from configuration
+
+    m_sprites[path.stem()] = {};
+    for (auto const &sprite : root.get_child("sprites")) {
+        sf::Sprite new_sprite(texture);
+        sf::Rect<int> texture_rect(
+            sprite.second.get<int>("origin_x"),
+            sprite.second.get<int>("origin_y"),
+            sprite.second.get<int>("width"),
+            sprite.second.get<int>("height")
+        );
+
+        new_sprite.setTextureRect(texture_rect);
+        m_sprites.at(path.stem())
+        .emplace(sprite.second.get<int>("id"), std::move(new_sprite));
+    }
+
+    // Storing texture
+
     m_textures.emplace(path.stem(), std::move(texture));
+
     std::cout << "Loaded " << path.stem() << std::endl;
 }
 
-void SfmlModule::drawSprite(const std::string &name, Transform const &transform, unsigned id) {}
+void SfmlModule::drawSprite(const std::string &name, Transform const &transform, unsigned id)
+{
+    sf::Sprite &sprite = m_sprites.at(name).at(id);
+
+    sprite.setPosition(transform.location.x, transform.location.y);
+    sprite.setRotation(transform.rotation.x);
+    sprite.setScale(transform.scale.x, transform.scale.y);
+
+    m_window.draw(sprite);
+}
 
 void SfmlModule::update()
 {
