@@ -12,6 +12,8 @@
 #include <array>
 #include <type_traits>
 #include <vector>
+#include <cstring>
+#include <boost/asio/buffer.hpp>
 
 // TODO Le client à besoin d'une table de liaison pour lier std::pair<long id_asset, long id_sprite> à sf::Sprite
 
@@ -188,8 +190,21 @@ namespace protocol {
         uint32_t body_size;     // security : must be equal as sizeof(type defined by code)
     };
     template<typename T>
-    class Message {
+    class MessageReceived {
+        std::vector<std::byte> data;
     public:
+        explicit MessageReceived(std::vector<std::byte> data) : data(std::move(data)) {}
+        MessageHeader<T> head() const {
+            MessageHeader<T> ret;
+            std::memcpy(&ret, data.data(), sizeof(ret));
+            return ret;
+        }
+        boost::asio::const_buffer body() const {
+            return {data.data(), head().body_size};
+        }
+    };
+    template<typename T>
+    struct MessageToSend {
         MessageHeader<T> head;
         std::vector<std::byte> body;
     };

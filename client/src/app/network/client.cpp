@@ -5,8 +5,13 @@
 ** R-type
 */
 
+#include <algorithm>
 #include <cstring>
 #include "app/network/client.hpp"
+
+network::Client::Client(sf::RenderWindow &p_window) :
+    window(p_window)
+{}
 
 void network::Client::update()
 {
@@ -18,23 +23,54 @@ void network::Client::update()
             return;
         for (auto &message : message_list) {
             // handle server disconnection
-            if (message.head.code == UdpCode::Disconnect) {
+            if (message.head().code == UdpCode::Disconnect) {
                 if (console) console->log("Server is disconnected");
                 disconnect();
             }
             // handle server game instruction
-            if (message.head.code == UdpCode::Sprite) {
-                // TODO
+            if (message.head().code == UdpCode::Sprite) {
+                protocol::udp::from_server::Sprite sprite;
+                std::memcpy(&sprite, message.body().data(), message.body().size());
+                auto it = std::find_if(assets.begin(), assets.end(), [&](const auto &item){
+                    if (item.type != Asset::Type::Texture)
+                        return false;
+                    if (item.id_asset != sprite.id_asset)
+                        return false;
+                    if (item.id_tile != sprite.id_sprite)
+                        return false;
+                    return true;
+                });
+                if (it != assets.end()) {
+                    it->sprite.setRotation(sprite.rot.x);
+                    it->sprite.setPosition(sprite.pos.x, sprite.pos.y);
+                    it->sprite.scale(sprite.scale.x, sprite.scale.y);
+                    window.draw(it->sprite);
+                } else
+                    console->log("Error [Play]: Sprite specified not found");
             }
-            if (message.head.code == UdpCode::Sound) {
-                // TODO
+            if (message.head().code == UdpCode::Sound) {
+                protocol::udp::from_server::Sound sound;
+                std::memcpy(&sound, message.body().data(), message.body().size());
+                auto it = std::find_if(assets.begin(), assets.end(), [&](const auto &item){
+                    if (item.type != Asset::Type::Sound)
+                        return false;
+                    if (item.id_asset != sound.id)
+                        return false;
+                    return true;
+                });
+                if (it != assets.end()) {
+                    it->sound.setPitch(sound.pitch);
+                    it->sound.setLoop(sound.isLooping);
+                    it->sound.play();
+                } else
+                    console->log("Error [Play]: Sound specified not found");
             }
         }
         // send input
-        protocol::Message<UdpCode> message;
+        protocol::MessageToSend<UdpCode> message;
         message.head.code = protocol::udp::Code::Input;
         message.head.body_size = sizeof(protocol::udp::from_client::Input);
-        protocol::udp::from_client::Input body; // TODO
+        protocol::udp::from_client::Input body;
         auto mouse = Input::getMouse();
         auto keys = Input::getKeysQueue();
         body.pos = {static_cast<short>(mouse.x), static_cast<short>(mouse.y)};
@@ -51,11 +87,9 @@ void network::Client::update()
         if (!udp.isConnected())
             udp.setHost(server_ip, server_udp_port);
         if (udp.isConnected()) {
-            protocol::Message<UdpCode> message;
+            protocol::MessageToSend<UdpCode> message;
             message.head.code = protocol::udp::Code::AskAssetList;
             message.head.body_size = sizeof(protocol::udp::from_client::AskAssetList);
-//            auto ptr = reinterpret_cast<std::byte*>(&protocol::udp::from_client::AskAssetList());
-//            auto buffer = std::vector<std::byte>(ptr, ptr + sizeof s);
             message.body.clear();
             udp.send(message);
             status = Status::WaitingForAssets;
@@ -68,10 +102,17 @@ void network::Client::update()
             auto message_list = udp.receive();
             if (message_list.empty())
                 return;
-            auto message = message_list.begin();
-            if (message->head.code == UdpCode::AssetList) {
+            auto message = message_list.front();
+            if (message.head().code == UdpCode::AssetList) {
                 protocol::udp::from_server::AssetList assetlist;
-                std::memcpy(&assetlist, message->body.data(), message->head.body_size);
+//                std::memcpy(&assetlist, message->body().data(), message->body().size());
+                auto body = message.body();
+                std::memcpy(&assetlist.port, body.data(), sizeof(assetlist.port));
+                body += sizeof(assetlist.port);
+                std::memcpy(&assetlist.size, body.data(), sizeof(assetlist.size));
+                body += sizeof(assetlist.size);
+                assetlist.list.resize(assetlist.size);
+                std::memcpy(assetlist.list.data(), body.data(), assetlist.size * sizeof(assetlist.list.front()));
                 server_tcp_port = assetlist.port;
                 for (auto i = 0; i < assetlist.size; ++i)
                     assets_ids_list.emplace_back(assetlist.list[i], false);
@@ -97,10 +138,9 @@ void network::Client::update()
         }
     }
     if (status == Status::Ready) {
-        protocol::Message<UdpCode> message;
+        protocol::MessageToSend<UdpCode> message;
         message.head.code = protocol::udp::Code::Ready;
         message.head.body_size = sizeof(protocol::udp::from_client::Ready);
-        message.body.clear();
         udp.send(message);
         status = Status::Play;
         timeout_clock.restart();
@@ -140,6 +180,7 @@ void network::Client::connect(const std::string &new_udp_server_address)
     auto host = parseAddress(new_udp_server_address);
     if (host == std::nullopt) {
         if (console) console->log( "failed to parse address");
+        disconnect();
         return;
     }
     server_ip = host.value().first;
@@ -151,10 +192,9 @@ void network::Client::connect(const std::string &new_udp_server_address)
 
 void network::Client::disconnect()
 {
-    protocol::Message<UdpCode> message;
+    protocol::MessageToSend<UdpCode> message;
     message.head.code = protocol::udp::Code::Disconnect;
     message.head.body_size = sizeof(protocol::udp::Disconnect);
-    message.body.clear();
     udp.send(message);
     timeout_clock.restart();
     status = Status::NotConnected;

@@ -22,14 +22,17 @@ namespace network {
         boost::asio::io_context io_context;
         udp::socket socket;
         udp::resolver resolver;
+        udp::endpoint endpoint;
+        std::vector<protocol::MessageReceived<UdpCode>> received_messages;
+        void do_receive();
     public:
         UdpSockMngr();
         void setConsole(Console *new_console);
         void setHost(const std::string &ip, short port);
         void reset();
         [[nodiscard]] bool isConnected() const;
-        void send(protocol::Message<UdpCode> message);
-        std::vector<protocol::Message<UdpCode>> receive();
+        void send(protocol::MessageToSend<UdpCode> message);
+        std::vector<protocol::MessageReceived<UdpCode>> receive();
     };
 }
 

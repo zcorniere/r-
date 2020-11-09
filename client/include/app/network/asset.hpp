@@ -17,10 +17,11 @@ struct Asset {
         Texture,
     } type;
     long id_asset;
-    long id_tile;           // if type is texture (tilesheet)
-    sf::Texture texture;
-    sf::Sprite sprite;
-    sf::SoundBuffer sound;  // if type is Sound
+    long id_tile;                  // if type is texture
+    sf::Texture texture;           // if type is texture
+    sf::Sprite sprite;             // if type is texture
+    sf::Sound sound;               // if type is Sound
+    sf::SoundBuffer sound_buffer;  // if type is Sound
 };
 
 #endif
