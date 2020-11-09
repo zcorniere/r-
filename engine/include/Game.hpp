@@ -43,8 +43,6 @@ public:
     void setNetworkModule(const std::string &name);
 };
 
-#ifndef RTYPE_SYSTEM_NO_IMPL
 #include "System.tpp"
-#endif
 
 #endif
