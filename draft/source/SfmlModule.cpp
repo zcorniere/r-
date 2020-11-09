@@ -1,9 +1,25 @@
 #include "SfmlModule.hpp"
 #include "SfmlKeyMapping.hpp"
+#include <iostream>
+#include <string_view>
 
-SfmlModule::SfmlModule(const std::string &name, Dimensional dimensions)
-: m_window(sf::VideoMode(1000, 600), name)
-{}
+SfmlModule::SfmlModule(const std::string &name, std::filesystem::path assets_path)
+: m_window(sf::VideoMode(1000, 600), name), m_assets_path(assets_path)
+{
+    for (auto &file : std::filesystem::directory_iterator(m_assets_path)) {
+        if (file.path().string().ends_with(".png"))
+            loadAsset(file.path());
+    }
+}
+
+void SfmlModule::loadAsset(std::filesystem::path path)
+{
+    sf::Texture texture;
+
+    texture.loadFromFile(path);
+    m_textures.emplace(path.stem(), std::move(texture));
+    std::cout << "Loaded " << path.stem() << std::endl;
+}
 
 void SfmlModule::drawSprite(const std::string &name, Transform const &transform, unsigned id) {}
 

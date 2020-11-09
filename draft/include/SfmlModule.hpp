@@ -5,14 +5,20 @@
 #include "components/Transform.hpp"
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <filesystem>
+#include <unordered_map>
 
 class SfmlModule : public IDisplayModule, public IInputModule {
     sf::RenderWindow m_window;
     std::vector<Input> m_pending_inputs;
+    std::filesystem::path m_assets_path;
+    std::unordered_map<std::string, sf::Texture> m_textures;
+    std::unordered_map<std::string, std::unordered_map<unsigned, sf::Sprite>> m_sprites;
 
     void retrieveInputs();
+    void loadAsset(std::filesystem::path path);
 public:
-    SfmlModule(const std::string &name, Dimensional dimensions={1000, 600});
+    SfmlModule(const std::string &name, std::filesystem::path assets_path);
     void drawSprite(const std::string &name, Transform const &transform, unsigned id) override;
     void update() override;
     std::vector<Input> getInputEvents() override;
