@@ -12,6 +12,7 @@ void Game::run()
         stateMachine.update();
         for (auto &[name, module] : m_modules)
             (*module).update();
+        systemStorage.runTick(*this);
     }
 }
 

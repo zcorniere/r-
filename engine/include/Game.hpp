@@ -4,6 +4,7 @@
 #include "StateMachine.hpp"
 #include "ComponentStorage.hpp"
 #include "Modules.hpp"
+#include "SystemStorage.hpp"
 #include <string>
 #include <unordered_map>
 #include <memory>
@@ -17,6 +18,7 @@ private:
 public:
     StateMachine stateMachine;
     ComponentStorage componentStorage;
+    SystemStorage systemStorage;
 public:
     Game(std::string name);
     void run();
