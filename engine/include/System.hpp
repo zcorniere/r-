@@ -1,10 +1,11 @@
 #ifndef BABEL_SYSTEM_H_
 #define BABEL_SYSTEM_H_
 
-#include "Game.hpp"
 #include "function_traits.hpp"
 #include <concepts>
 #include <functional>
+
+class Game;
 
 template <typename Fn>
 concept SystemFunction =
@@ -23,6 +24,8 @@ class System
     std::function<void(Game &)> m_call_wrapper;
 };
 
+#ifndef RTYPE_SYSTEM_NO_IMPL
 #include "System.tpp"
+#endif
 
 #endif // BABEL_SYSTEM_H_

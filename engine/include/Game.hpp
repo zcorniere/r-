@@ -1,6 +1,9 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
+#define RTYPE_SYSTEM_NO_IMPL
+#define RTYPE_SYSTEM_STORAGE_NO_IMPL
+
 #include "StateMachine.hpp"
 #include "ComponentStorage.hpp"
 #include "Modules.hpp"
@@ -39,5 +42,9 @@ public:
     void setAudioModule(const std::string &name);
     void setNetworkModule(const std::string &name);
 };
+
+#ifndef RTYPE_SYSTEM_NO_IMPL
+#include "System.tpp"
+#endif
 
 #endif
