@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <optional>
+#include <stdexcept>
 
 // General Module Interface
 
@@ -17,6 +18,7 @@ public:
 // Specific modules
 
 enum class Input {
+    Unknwown = 0,
     LeftClick,
     RightClick,
     A,
@@ -84,27 +86,36 @@ enum class Input {
     F12,
     F13,
     F14,
-    F15
+    F15,
+    ExitWindow,
+    KeyCount
 };
 
-class IDisplayModule : public IModule {
+class IDisplayModule : public virtual IModule {
 public:
     virtual void drawSprite(const std::string &name, Transform const &transform, unsigned tile_id) = 0;
 };
 
-class IInputModule : public IModule {
+class IInputModule : public virtual IModule {
 public:
 
     virtual std::vector<Input> getInputEvents() = 0;
     virtual Dimensional getCursorLocation() = 0;
 };
 
-class IAudioModule : public IModule {
-public:
-    virtual void playSound(const std::string &name, float volume, float pitch) = 0;
+class IAudioModule : public virtual IModule
+{
+  public:
+    virtual void playSound(const std::string &name, float volume = 1,
+                           float pitch = 1) = 0;
 };
 
-class INetworkModule : public IModule {
+class AudioError : public std::runtime_error
+{
+    using std::runtime_error::runtime_error;
+};
+
+class INetworkModule : public virtual IModule {
 public:
     virtual long initInstance(unsigned maxPlayers) = 0;
     //virtual std::optional<Instance> getInstance();

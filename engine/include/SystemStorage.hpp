@@ -10,7 +10,7 @@ class SystemStorage
 
     void addSystem(System system);
 
-    void runTick(ComponentStorage &) const;
+    void runTick(Game &) const;
 
   private:
     std::vector<System> m_systems;
