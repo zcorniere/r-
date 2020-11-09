@@ -2,13 +2,25 @@
 #include "SfmlModule.hpp"
 #include <iostream>
 
+class BasicState : public AState {
+public:
+    void onStart(Game &instance) {}
+    void onPause(Game &instance) {}
+    void onResume(Game &instance) {}
+    void onTick(Game &instance) {}
+    void onStop(Game &instance) {}
+};
+
 int main(void)
 {
     Game game("R-Type SOLO");
     std::unique_ptr<IModule> sfml_module(new SfmlModule("R-Type SOLO v0.1"));
+    std::unique_ptr<AState> state(new BasicState);
 
     game.addModule("sfml", std::move(sfml_module));
     game.setDisplayModule("sfml");
 
-    return 0;
+    game.stateMachine.setState(std::move(state));
+
+    game.run();
 }
