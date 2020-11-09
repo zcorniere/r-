@@ -182,17 +182,20 @@ namespace protocol {
     }
     template<typename T>
     struct MessageHeader {
-        std::byte firstbyte;
-        std::byte secondbyte;
+        std::byte firstbyte = protocol::magic_number.first;
+        std::byte secondbyte = protocol::magic_number.second;
         T code;
         uint32_t body_size;     // security : must be equal as sizeof(type defined by code)
     };
     template<typename T>
     class Message {
-        static_assert(std::is_base_of<tcp::Code, T>::value || std::is_base_of<udp::Code, T>::value, "Template argument must be either udp::Code or tcp::Code");
+    public:
         MessageHeader<T> head;
         std::vector<std::byte> body;
     };
 }
+
+using UdpCode = protocol::udp::Code;
+using TcpCode = protocol::tcp::Code;
 
 #endif

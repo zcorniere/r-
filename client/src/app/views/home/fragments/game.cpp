@@ -18,13 +18,20 @@ Game::Game(std::optional<std::string> &intent_ref, bidimensional::Transform &par
     transform.scale = {window::WIDTH, window::HEIGHT - TopBar::bar_height - BottomBar::bar_height};
     background_color = Theme().getColor("Transparent").value(); ;
     z_index = 1;
+    client.set_onDisconnect([&](){
+        is_connect = false;
+    });
 }
 
 void Game::onCreateView()
-{}
+{
+    client.setConsole(console);
+}
 
 void Game::onUpdateView()
-{}
+{
+    client.update();
+}
 
 void Game::onFinishView()
 {}
@@ -36,9 +43,7 @@ bool *Game::get_is_connect()
 
 void Game::disconnect()
 {
-    is_connect = false;
-    console->log("you have been disconnected");
-    // TODO
+    client.disconnect();
 }
 
 void Game::connect(const std::string &address)
@@ -46,8 +51,7 @@ void Game::connect(const std::string &address)
     if (is_connect)
         disconnect();
     is_connect = true;
-    console->log( "try to connect to : " + address);
-    // TODO
+    client.connect(address);
 }
 
 void Game::set_console(Console *newconsole)

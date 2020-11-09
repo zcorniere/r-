@@ -10,9 +10,11 @@
 
 #include "sdk/interfaces/Ifragment.hpp"
 #include "app/views/home/widgets/console.hpp"
+#include "app/network/client.hpp"
 
 class Game : public Ifragment {
     bool is_connect = false;
+    network::Client client;
     Console *console = nullptr;
     void onCreateView() final;
     void onUpdateView() final;
