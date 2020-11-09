@@ -3,6 +3,7 @@
 #include "SfmlModule.hpp"
 #include "components/Sprite.hpp"
 #include <iostream>
+#include <boost/dll/runtime_symbol_info.hpp>
 
 class BasicState : public AState {
 public:
@@ -16,7 +17,16 @@ public:
 int main(void)
 {
     Game game("R-Type SOLO");
-    std::unique_ptr<IModule> sfml_module(new SfmlModule("R-Type SOLO v0.1"));
+    std::filesystem::path assets_location =
+        std::filesystem::path(boost::dll::program_location().string())
+            .parent_path()
+            .parent_path()
+            .parent_path()
+            .append("draft")
+            .append("assets");
+    std::unique_ptr<IModule> sfml_module(new SfmlModule(
+        "R-Type SOLO v0.1",
+        assets_location));
     std::unique_ptr<AState> state(new BasicState);
     auto audio_module = std::make_unique<SfmlAudioModule>();
 
