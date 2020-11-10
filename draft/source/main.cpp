@@ -5,6 +5,7 @@
 #include "components/PlayerControlled.hpp"
 #include "LevelState.hpp"
 #include <iostream>
+#include "systems/InputHandler.hpp"
 #include <boost/dll/runtime_symbol_info.hpp>
 
 int main(void)
@@ -40,17 +41,14 @@ int main(void)
                 display.drawSprite(sprite.name, transform, sprite.tile_id);
     });
 
-    // System that moves player controlled entities
-    game.systemStorage.addSystem([](IInputModule &input, PlayerControlled p, Transform &transform) {
-        if (input.isKeyPressed(p.player_id, Input::Up))
-            transform.location.y--;
-        if (input.isKeyPressed(p.player_id, Input::Down))
-            transform.location.y++;
-        if (input.isKeyPressed(p.player_id, Input::Left))
-            transform.location.x--;
-        if (input.isKeyPressed(p.player_id, Input::Right))
-            transform.location.x++;
-    });
+    game.systemStorage.addSystem(createInputHandler(
+        Input::Up, [](Transform &transform) { transform.location.y--; }));
+    game.systemStorage.addSystem(createInputHandler(
+        Input::Down, [](Transform &transform) { transform.location.y++; }));
+    game.systemStorage.addSystem(createInputHandler(
+        Input::Left, [](Transform &transform) { transform.location.x--; }));
+    game.systemStorage.addSystem(createInputHandler(
+        Input::Right, [](Transform &transform) { transform.location.x++; }));
 
     game.stateMachine.setState(std::move(level_state));
     game.run();

@@ -1,5 +1,9 @@
 #include "System.hpp"
 
+System::System(std::function<void(Game &)> system) : m_call_wrapper(system)
+{
+}
+
 void System::call(Game &game) const
 {
     m_call_wrapper(game);
