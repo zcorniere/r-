@@ -8,7 +8,7 @@ void LevelState::onStart(Game &instance)
     instance.componentStorage.buildEntity()
             .withComponent(Sprite("player_ships", 0))
             .withComponent(Transform(Dimensional(10, 10), Dimensional(1, 1), Dimensional(1, 1)))
-            .withComponent(PlayerControlled{})
+            .withComponent(PlayerControlled{1})
             .build();
 }
 

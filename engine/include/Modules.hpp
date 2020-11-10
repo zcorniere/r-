@@ -99,9 +99,9 @@ public:
 class IInputModule : public virtual IModule {
 public:
 
-    virtual std::vector<Input> getInputEvents() = 0;
-    virtual Dimensional getCursorLocation() = 0;
-    virtual bool isKeyPressed(Input key) = 0;
+    virtual std::vector<Input> getInputEvents(unsigned player) = 0;
+    virtual Dimensional getCursorLocation(unsigned player) = 0;
+    virtual bool isKeyPressed(unsigned player, Input key) = 0;
 };
 
 class IAudioModule : public virtual IModule

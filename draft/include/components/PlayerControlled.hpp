@@ -1,6 +1,8 @@
 #ifndef PLAYER_CONTROLLED_HPP
 #define PLAYER_CONTROLLED_HPP
 
-struct PlayerControlled{};
+struct PlayerControlled{
+    unsigned int player_id;
+};
 
 #endif

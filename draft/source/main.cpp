@@ -42,13 +42,13 @@ int main(void)
 
     // System that moves player controlled entities
     game.systemStorage.addSystem([](IInputModule &input, PlayerControlled p, Transform &transform) {
-        if (input.isKeyPressed(Input::Up))
+        if (input.isKeyPressed(p.player_id, Input::Up))
             transform.location.y--;
-        if (input.isKeyPressed(Input::Down))
+        if (input.isKeyPressed(p.player_id, Input::Down))
             transform.location.y++;
-        if (input.isKeyPressed(Input::Left))
+        if (input.isKeyPressed(p.player_id, Input::Left))
             transform.location.x--;
-        if (input.isKeyPressed(Input::Right))
+        if (input.isKeyPressed(p.player_id, Input::Right))
             transform.location.x++;
     });
 

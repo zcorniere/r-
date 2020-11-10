@@ -22,9 +22,9 @@ public:
     SfmlModule(const std::string &name, std::filesystem::path assets_path);
     void drawSprite(const std::string &name, Transform const &transform, unsigned id) override;
     void update() override;
-    std::vector<Input> getInputEvents() override;
-    Dimensional getCursorLocation() override;
-    bool isKeyPressed(Input key) override;
+    std::vector<Input> getInputEvents(unsigned player) override;
+    Dimensional getCursorLocation(unsigned player) override;
+    bool isKeyPressed(unsigned player, Input key) override;
     ~SfmlModule();
 };
 
