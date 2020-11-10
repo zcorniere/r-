@@ -101,6 +101,7 @@ public:
 
     virtual std::vector<Input> getInputEvents() = 0;
     virtual Dimensional getCursorLocation() = 0;
+    virtual bool isKeyPressed(Input key) = 0;
 };
 
 class IAudioModule : public virtual IModule

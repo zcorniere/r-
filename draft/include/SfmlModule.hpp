@@ -24,6 +24,7 @@ public:
     void update() override;
     std::vector<Input> getInputEvents() override;
     Dimensional getCursorLocation() override;
+    bool isKeyPressed(Input key) override;
     ~SfmlModule();
 };
 

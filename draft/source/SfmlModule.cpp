@@ -85,6 +85,17 @@ Dimensional SfmlModule::getCursorLocation()
                        static_cast<float>(position.y)};
 }
 
+bool SfmlModule::isKeyPressed(Input key)
+{
+    sf::Keyboard::Key sfml_key =
+        SfmlKeyMapping::rtype_key_mapping[static_cast<std::size_t>(key)];
+
+    if (sfml_key != sf::Keyboard::Unknown)
+        return sf::Keyboard::isKeyPressed(sfml_key);
+    else
+        return false;
+}
+
 void SfmlModule::retrieveInputs()
 {
     sf::Event event;
