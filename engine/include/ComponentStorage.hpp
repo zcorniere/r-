@@ -68,7 +68,7 @@ public:
                     ((rest.find(key) != rest.end()) && ...)
                     && (
                         !(m_stateMachine.getCurrentState())
-                        || (*m_stateMachine.getCurrentState()).get().getId() == key
+                        || (*m_stateMachine.getCurrentState()).get().getId() == m_parentStates.at(key)
                         || (*m_stateMachine.getCurrentState()).get().getId() == -1
                     )
                 )

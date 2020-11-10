@@ -31,8 +31,8 @@ void StateMachine::stackState(std::unique_ptr<AState> state)
 {
     if (getCurrentState())
         (*getCurrentState()).get().onPause(m_instance);
-    (*state).onStart(m_instance);
     m_statesStack.push(std::move(state));
+    m_statesStack.top()->onStart(m_instance);
 }
 
 std::optional<std::reference_wrapper<AState>> StateMachine::getCurrentState() const
