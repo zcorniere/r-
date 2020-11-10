@@ -1,9 +1,12 @@
 #include "SfmlModule.hpp"
 #include "SfmlKeyMapping.hpp"
+#include "Snitch.hpp"
 #include <iostream>
 #include <string_view>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <cstdlib>
+
 
 SfmlModule::SfmlModule(const std::string &name, std::filesystem::path assets_path)
 : m_window(sf::VideoMode(1000, 600), name), m_assets_path(assets_path)
@@ -64,6 +67,18 @@ void SfmlModule::drawSprite(const std::string &name, Transform const &transform,
 
 void SfmlModule::update()
 {
+    sf::Event event;
+    while (m_window.pollEvent(event)) {
+        if (event.type == sf::Event::Closed) {
+            Snitch::warn() << "Oh naw, you stopped the game the wrong way :/" << Snitch::endl;
+            /*
+            ** exit is actually an alias for a well designed function
+            ** that correctly handles the game's stop and absolutely not
+            ** a simple exit
+            */
+            exit(0);
+        }
+    }
     m_window.display();
     m_window.clear();
 }
