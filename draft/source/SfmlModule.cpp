@@ -18,8 +18,8 @@ void SfmlModule::loadAsset(std::filesystem::path path)
 {
     // Loading Texture raw asset
 
-    sf::Texture texture;
-    texture.loadFromFile(path);
+    std::unique_ptr<sf::Texture> texture(new sf::Texture);
+    (*texture).loadFromFile(path);
 
     // Loading Spritesheet configuration file
 
@@ -31,7 +31,7 @@ void SfmlModule::loadAsset(std::filesystem::path path)
 
     m_sprites[path.stem()] = {};
     for (auto const &sprite : root.get_child("sprites")) {
-        sf::Sprite new_sprite(texture);
+        sf::Sprite new_sprite(*texture);
         sf::Rect<int> texture_rect(
             sprite.second.get<int>("origin_x"),
             sprite.second.get<int>("origin_y"),

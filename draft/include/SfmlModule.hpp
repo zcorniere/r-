@@ -7,12 +7,13 @@
 #include <string>
 #include <filesystem>
 #include <unordered_map>
+#include <memory>
 
 class SfmlModule : public IDisplayModule, public IInputModule {
     sf::RenderWindow m_window;
     std::vector<Input> m_pending_inputs;
     std::filesystem::path m_assets_path;
-    std::unordered_map<std::string, sf::Texture> m_textures;
+    std::unordered_map<std::string, std::unique_ptr<sf::Texture>> m_textures;
     std::unordered_map<std::string, std::unordered_map<unsigned, sf::Sprite>> m_sprites;
 
     void retrieveInputs();
