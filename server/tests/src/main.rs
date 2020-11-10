@@ -1,5 +1,6 @@
 use std::net::Ipv4Addr;
 use std::rc::Rc;
+use std::error::Error;
 
 const INPUT_PATH: &str = "./input/";
 const OUTPUT_PATH: &str = "./output/";
@@ -7,19 +8,26 @@ const OUTPUT_PATH: &str = "./output/";
 mod server;
 use server::Server;
 
-fn main() {
-    let serv = Rc::new(Server::new(Ipv4Addr::LOCALHOST, 8765));
+mod args;
+use args::Args;
+
+fn main() -> Result<(), Box<dyn Error>> {
+    let args = Args::from_env()?;
+    let serv = Rc::new(Server::new(Ipv4Addr::LOCALHOST, args.port));
     let mut vec = Vec::new();
     for n in std::fs::read_dir(INPUT_PATH).unwrap() {
-        let n = n.unwrap().path();
-        if n.is_file() {
-            vec.push(Tests::new(Rc::clone(&serv), n.file_name().unwrap().to_str().unwrap()));
+        if let Ok(n) = n {
+            let n = n.path();
+            if n.is_file() {
+                vec.push(Tests::new(Rc::clone(&serv), n.file_name().unwrap().to_str().unwrap()));
+            }
         }
     }
     for mut i in vec {
         i.run();
         println!("{}", i);
     }
+    Ok(())
 }
 
 #[derive(Debug)]
@@ -41,8 +49,7 @@ impl Tests {
     pub fn run(&mut self) {
         self.server.send(&self.input);
         let ret = self.server.recv(self.output.len());
-        let ret = ret == self.output;
-        self.result.replace(ret);
+        self.result.replace(ret == self.output);
     }
 }
 

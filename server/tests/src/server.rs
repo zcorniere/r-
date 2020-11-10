@@ -1,5 +1,4 @@
 use std::net::UdpSocket;
-use std::net::ToSocketAddrs;
 use std::net::Ipv4Addr;
 
 #[derive(Debug)]
@@ -12,6 +11,7 @@ pub struct Server {
 impl Server {
     pub fn new(ip: Ipv4Addr, port: u16) -> Self {
         let socket = UdpSocket::bind((ip.clone(), 24556)).expect("coudln't bind to address");
+        socket.connect((ip.clone(), port)).unwrap();
         Server {
             ip,
             port,
@@ -19,7 +19,7 @@ impl Server {
         }
     }
     pub fn send(&self, data: &Vec<u8>) {
-        self.socket.send_to(data, (self.ip, self.port)).unwrap();
+        self.socket.send(data).unwrap();
     }
     pub fn recv(&self, size: usize) -> Vec<u8> {
         let mut data = Vec::with_capacity(size);
