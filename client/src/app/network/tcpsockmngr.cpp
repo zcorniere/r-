@@ -6,7 +6,6 @@
 */
 
 #include <algorithm>
-#include <boost/foreach.hpp>
 #include "app/network/tcpsockmngr.hpp"
 
 network::TcpSockMngr::TcpSockMngr() :
@@ -54,21 +53,21 @@ long network::TcpSockMngr::receiveAsset()
         std::memcpy(body.config.data(), buff.data(), size);
     }
     // body is build
-    if (body.type == protocol::tcp::AssetPackage::Type::Sound) {  // Texture
+    if (body.type == protocol::tcp::AssetPackage::Type::Sound) {  // Sound
         Asset asset;
         asset.type = Asset::Type::Sound;
         asset.id_asset = body.id_asset;
         asset.sound_buffer.loadFromMemory(body.data.data(), body.data.size());
         asset.sound.setBuffer(asset.sound_buffer);
         assets.push_back(asset);
-    } else {    //Sound
+    } else {    // Texture
         std::string config;
         config.resize(body.size_config);
         std::memcpy(config.data(), body.config.data(), body.size_config);
         std::istringstream is(config);
         ptree json;
         read_json(is, json);
-        BOOST_FOREACH(boost::property_tree::ptree::value_type  &v, json.get_child("sprites")) {
+        for (auto& v : json.get_child("sprites")) {
             if (v.first.empty()) {
                 console->log("Error [TCP]: Config file is incorrect");
                 break;

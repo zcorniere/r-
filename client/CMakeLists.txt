@@ -90,6 +90,7 @@ if(MSVC)
 else()
     target_compile_options(r-type_client PRIVATE ${GCC_FLAGS})
 endif()
+target_compile_definitions(r-type_client_app PUBLIC BOOST_BIND_GLOBAL_PLACEHOLDERS=1)
 
 # Unit Tests
 add_subdirectory(test)
