@@ -43,6 +43,9 @@ public:
     void setNetworkModule(const std::string &name);
 };
 
+// Game loop tick delay (in milliseconds)
+constexpr int GAME_TICK_DELAY = 10;
+
 #include "System.tpp"
 
 #endif
