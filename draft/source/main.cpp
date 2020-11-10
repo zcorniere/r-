@@ -37,6 +37,7 @@ int main(void)
     game.systemStorage.addSystem([](IDisplayModule &display,
                                     const Transform &transform,
                                     const Sprite &sprite) {
+                std::cout << "drawing: " << sprite.name << std::endl;
                 display.drawSprite(sprite.name, transform, sprite.tile_id);
     });
 
