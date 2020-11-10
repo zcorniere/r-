@@ -12,6 +12,7 @@ add_executable(r-type_local
                             source/main.cpp
                             source/SfmlModule.cpp
                             source/SfmlAudioModule.cpp
+                            source/LevelState.cpp
 )
 
 target_link_libraries(r-type_local r-type_engine)

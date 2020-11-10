@@ -2,19 +2,10 @@
 #include "SfmlAudioModule.hpp"
 #include "SfmlModule.hpp"
 #include "components/Sprite.hpp"
+#include "components/PlayerControlled.hpp"
+#include "LevelState.hpp"
 #include <iostream>
 #include <boost/dll/runtime_symbol_info.hpp>
-
-class BasicState : public AState {
-public:
-    void onStart(Game &instance) {}
-    void onPause(Game &instance) {}
-    void onResume(Game &instance) {}
-    void onTick(Game &instance) {}
-    void onStop(Game &instance) {}
-};
-
-struct PlayerControlled{};
 
 int main(void)
 {
@@ -29,7 +20,7 @@ int main(void)
     std::unique_ptr<IModule> sfml_module(new SfmlModule(
         "R-Type SOLO v0.1",
         assets_location));
-    std::unique_ptr<AState> state(new BasicState);
+    std::unique_ptr<AState> level_state(new LevelState);
     auto audio_module = std::make_unique<SfmlAudioModule>();
 
     game.addModule("sfml", std::move(sfml_module));
@@ -61,13 +52,6 @@ int main(void)
             transform.location.x++;
     });
 
-    game.stateMachine.setState(std::move(state));
-
-    game.componentStorage.buildEntity()
-    .withComponent(Sprite("player_ships", 0))
-    .withComponent(Transform(Dimensional(10, 10), Dimensional(10, 10), Dimensional(10, 10)))
-        .withComponent(PlayerControlled{})
-    .build();
-
+    game.stateMachine.setState(std::move(level_state));
     game.run();
 }
