@@ -99,7 +99,8 @@ void SfmlModule::retrieveInputs()
                 m_pending_inputs.push_back(Input::RightClick);
         }
         if (event.type == sf::Event::KeyPressed)
-            m_pending_inputs.push_back(sfml_key_mapping[event.key.code]);
+            m_pending_inputs.push_back(
+                SfmlKeyMapping::sfml_key_mapping[event.key.code]);
     }
 }
 

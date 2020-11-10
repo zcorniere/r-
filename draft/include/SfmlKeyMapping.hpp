@@ -5,9 +5,9 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <array>
 
-constexpr std::array<Input, sf::Keyboard::KeyCount> create_sfml_mapping()
+namespace SfmlKeyMapping
 {
-    std::initializer_list<std::pair<sf::Keyboard::Key, Input>>
+    constexpr std::initializer_list<std::pair<sf::Keyboard::Key, Input>>
         internal_sfml_mapping = {
             {sf::Keyboard::Key::A, Input::A},
             {sf::Keyboard::Key::B, Input::B},
@@ -75,17 +75,40 @@ constexpr std::array<Input, sf::Keyboard::KeyCount> create_sfml_mapping()
             {sf::Keyboard::Key::F13, Input::F13},
             {sf::Keyboard::Key::F14, Input::F14},
             {sf::Keyboard::Key::F15, Input::F15},
-        };
+    };
 
-    std::array<Input, sf::Keyboard::KeyCount> mapping = {Input::Unknwown};
+    constexpr std::array<Input, sf::Keyboard::KeyCount> create_sfml_mapping()
+    {
 
-    for (auto [sfml_key, rtype_key] : internal_sfml_mapping) {
-        mapping[sfml_key] = rtype_key;
+        std::array<Input, sf::Keyboard::KeyCount> mapping = {Input::Unknwown};
+
+        for (auto [sfml_key, rtype_key] : internal_sfml_mapping) {
+            mapping[sfml_key] = rtype_key;
+        }
+        return mapping;
     }
-    return mapping;
-}
 
-constexpr std::array<Input, sf::Keyboard::KeyCount> sfml_key_mapping =
-    create_sfml_mapping();
+    constexpr std::array<Input, sf::Keyboard::KeyCount> sfml_key_mapping =
+        create_sfml_mapping();
+
+    constexpr std::size_t rtype_key_count =
+        static_cast<std::size_t>(Input::KeyCount);
+
+    constexpr std::array<sf::Keyboard::Key, rtype_key_count>
+    create_rtype_mapping()
+    {
+
+        std::array<sf::Keyboard::Key, rtype_key_count> mapping = {
+            sf::Keyboard::Unknown};
+
+        for (auto [sfml_key, rtype_key] : internal_sfml_mapping) {
+            mapping[static_cast<std::size_t>(rtype_key)] = sfml_key;
+        }
+        return mapping;
+    }
+
+    constexpr std::array<sf::Keyboard::Key, rtype_key_count> rtype_key_mapping =
+        create_rtype_mapping();
+} // namespace SfmlKeyMapping
 
 #endif // RTYPE_SFMLKEYMAPPING_H_
