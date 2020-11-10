@@ -16,6 +16,7 @@ concept SystemFunction =
 class System
 {
   public:
+    System(std::function<void(Game &)> system);
     System(SystemFunction auto system);
 
     void call(Game &) const;
