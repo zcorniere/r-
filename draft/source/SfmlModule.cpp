@@ -64,8 +64,8 @@ void SfmlModule::drawSprite(const std::string &name, Transform const &transform,
 
 void SfmlModule::update()
 {
-    m_window.clear();
     m_window.display();
+    m_window.clear();
 }
 
 std::vector<Input> SfmlModule::getInputEvents()
