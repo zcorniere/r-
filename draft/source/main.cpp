@@ -14,6 +14,8 @@ public:
     void onStop(Game &instance) {}
 };
 
+struct PlayerControlled{};
+
 int main(void)
 {
     Game game("R-Type SOLO");
@@ -32,11 +34,13 @@ int main(void)
 
     game.addModule("sfml", std::move(sfml_module));
     game.setDisplayModule("sfml");
+    game.setInputModule("sfml");
     game.addModule("audio-sfml", std::move(audio_module));
     game.setAudioModule("audio-sfml");
 
     game.componentStorage.registerComponent<Transform>();
     game.componentStorage.registerComponent<Sprite>();
+    game.componentStorage.registerComponent<PlayerControlled>();
 
     // System that displays entities with a transform and a sprite on screen
     game.systemStorage.addSystem([](IDisplayModule &display,
@@ -45,11 +49,24 @@ int main(void)
                 display.drawSprite(sprite.name, transform, sprite.tile_id);
     });
 
+    // System that moves player controlled entities
+    game.systemStorage.addSystem([](IInputModule &input, PlayerControlled p, Transform &transform) {
+        if (input.isKeyPressed(Input::Up))
+            transform.location.y--;
+        if (input.isKeyPressed(Input::Down))
+            transform.location.y++;
+        if (input.isKeyPressed(Input::Left))
+            transform.location.x--;
+        if (input.isKeyPressed(Input::Right))
+            transform.location.x++;
+    });
+
     game.stateMachine.setState(std::move(state));
 
     game.componentStorage.buildEntity()
     .withComponent(Sprite("player_ships", 0))
     .withComponent(Transform(Dimensional(10, 10), Dimensional(10, 10), Dimensional(10, 10)))
+        .withComponent(PlayerControlled{})
     .build();
 
     game.run();
