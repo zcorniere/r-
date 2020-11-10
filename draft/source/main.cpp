@@ -42,10 +42,15 @@ int main(void)
     game.systemStorage.addSystem([](IDisplayModule &display,
                                     const Transform &transform,
                                     const Sprite &sprite) {
-        display.drawSprite(sprite.name, transform, sprite.tile_id);
+                display.drawSprite(sprite.name, transform, sprite.tile_id);
     });
 
     game.stateMachine.setState(std::move(state));
+
+    game.componentStorage.buildEntity()
+    .withComponent(Sprite("player_ships", 0))
+    .withComponent(Transform(Dimensional(10, 10), Dimensional(10, 10), Dimensional(10, 10)))
+    .build();
 
     game.run();
 }
