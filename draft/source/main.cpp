@@ -3,6 +3,7 @@
 #include "SfmlModule.hpp"
 #include "components/Sprite.hpp"
 #include "components/PlayerControlled.hpp"
+#include "components/Velocity.hpp"
 #include "LevelState.hpp"
 #include <iostream>
 #include "systems/InputHandler.hpp"
@@ -18,27 +19,36 @@ int main(void)
             .parent_path()
             .append("draft")
             .append("assets");
+
+    // Modules Initialisation and assignation
     std::unique_ptr<IModule> sfml_module(new SfmlModule(
         "R-Type SOLO v0.1",
         assets_location));
-    std::unique_ptr<AState> level_state(new LevelState);
     auto audio_module = std::make_unique<SfmlAudioModule>();
-
     game.addModule("sfml", std::move(sfml_module));
     game.setDisplayModule("sfml");
     game.setInputModule("sfml");
     game.addModule("audio-sfml", std::move(audio_module));
     game.setAudioModule("audio-sfml");
 
+    // Components registering
     game.componentStorage.registerComponent<Transform>();
     game.componentStorage.registerComponent<Sprite>();
     game.componentStorage.registerComponent<PlayerControlled>();
+    game.componentStorage.registerComponent<Velocity>();
 
+    // Systems Initialisation
     // System that displays entities with a transform and a sprite on screen
     game.systemStorage.addSystem([](IDisplayModule &display,
                                     const Transform &transform,
                                     const Sprite &sprite) {
                 display.drawSprite(sprite.name, transform, sprite.tile_id);
+    });
+
+    game.systemStorage.addSystem([]
+    (Transform &transform, const Velocity &velocity) {
+        transform.location.x += velocity.x;
+        transform.location.y += velocity.y;
     });
 
     game.systemStorage.addSystem(createInputHandler(
@@ -50,6 +60,9 @@ int main(void)
     game.systemStorage.addSystem(createInputHandler(
         Input::Right, [](Transform &transform) { transform.location.x++; }));
 
+    // States Initialisation
+    std::unique_ptr<AState> level_state(new LevelState);
     game.stateMachine.setState(std::move(level_state));
+
     game.run();
 }
