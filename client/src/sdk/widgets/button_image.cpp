@@ -52,8 +52,8 @@ void WidgetButtonImage::set_image(const std::string &path)
 {
     text.loadFromFile(path);
     sprite.setTexture(text);
-    size.x = text.getSize().x;
-    size.y = text.getSize().y;
+    size.x = static_cast<float>(text.getSize().x);
+    size.y = static_cast<float>(text.getSize().y);
     scale(size);
 }
 

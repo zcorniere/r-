@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <cstring>
+#include <utility>
 #include "app/network/client.hpp"
 
 network::Client::Client(sf::RenderWindow &p_window) :
@@ -79,7 +80,7 @@ void network::Client::update()
             body.keys[i].pressed = keys.data[i].pressed;
         }
         body.nb_keys = keys.size;
-        std::memcpy(&message.body, &body, message.head.body_size);
+        std::memcpy(message.body.data(), &body, message.head.body_size);
         udp.send(message);
         return;
     }
@@ -105,7 +106,6 @@ void network::Client::update()
             for (auto &message : message_list) {
                 if (message.head().code == UdpCode::AssetList) {
                     protocol::udp::from_server::AssetList assetlist;
-//                std::memcpy(&assetlist, message->body().data(), message->body().size());
                     auto body = message.body();
                     std::memcpy(&assetlist.port, body.data(), sizeof(assetlist.port));
                     body += sizeof(assetlist.port);
@@ -113,7 +113,7 @@ void network::Client::update()
                     body += sizeof(assetlist.size);
                     assetlist.list.resize(assetlist.size);
                     std::memcpy(assetlist.list.data(), body.data(), assetlist.size * sizeof(assetlist.list.front()));
-                    server_tcp_port = assetlist.port;
+                    server_tcp_port = static_cast<short>(assetlist.port);
                     for (auto i = 0; i < assetlist.size; ++i)
                         assets_ids_list.emplace_back(assetlist.list[i], false);
                     status = Status::DownloadAssets;
@@ -163,7 +163,7 @@ void network::Client::setConsole(Console *new_console)
 
 void network::Client::set_onDisconnect(std::function<void(void)> functor)
 {
-    onDisconnect_hdl = functor;
+    onDisconnect_hdl = std::move(functor);
 }
 
 static std::optional<std::pair<std::string, short>> parseAddress(const std::string &address)

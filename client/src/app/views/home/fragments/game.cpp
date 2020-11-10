@@ -33,7 +33,7 @@ void Game::onUpdateView()
     try {
         client.update();
     } catch (std::exception e) {
-        console->log(e.what());
+        console->log("EXCEPTION : " + std::string(e.what()));
         disconnect();
     }
 }
@@ -49,6 +49,7 @@ bool *Game::get_is_connect()
 void Game::disconnect()
 {
     client.disconnect();
+    client.reset();         // TODO necessary ?
 }
 
 void Game::connect(const std::string &address)

@@ -19,8 +19,9 @@ void network::UdpSockMngr::do_receive()
         if (!is_connected)
             return;
         auto len = socket.available();
-        if (error || len > sizeof(protocol::MessageHeader<UdpCode>))    // TODO second check is valid ?
+        if (error || len < sizeof(protocol::MessageHeader<UdpCode>))
             do_receive();
+        // TODO case protocol::from_server::AssetList dont work
         std::vector<std::byte> buffer;
         buffer.resize(len);
         auto size = socket.receive(boost::asio::buffer(buffer, len));

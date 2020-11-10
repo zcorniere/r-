@@ -13,8 +13,8 @@
 
 struct Asset {
     enum class Type {
-        Sound,
-        Texture,
+        Sound = 1,
+        Texture = 2,
     } type;
     long id_asset;
     long id_tile;                  // if type is texture

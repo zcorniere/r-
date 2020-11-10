@@ -8,6 +8,7 @@ if (WIN32)
             $<$<CONFIG:Debug>:/MD> #----|-- Statically link the runtime libraries (sfml fix)
             $<$<CONFIG:Release>:/MD> #--|
     )
+    add_definitions(-D_WIN32_WINNT=0x0601)
 endif()
 
 link_directories(${CMAKE_BINARY_DIR}/bin)
