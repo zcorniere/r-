@@ -25,6 +25,7 @@ namespace network {
         udp::endpoint endpoint;
         std::vector<protocol::MessageReceived<UdpCode>> received_messages;
         void do_receive();
+        void do_send(protocol::MessageToSend<UdpCode> message);
     public:
         UdpSockMngr();
         void setConsole(Console *new_console);

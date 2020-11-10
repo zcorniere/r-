@@ -57,6 +57,7 @@ target_sources(r-type_client_app PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/app/network/client.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/app/network/tcpsockmngr.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/app/network/udpsockmngr.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/app/network/protocol.cpp
 )
 
 conan_target_link_libraries(r-type_client_sdk)

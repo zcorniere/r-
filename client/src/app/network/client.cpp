@@ -102,26 +102,28 @@ void network::Client::update()
             auto message_list = udp.receive();
             if (message_list.empty())
                 return;
-            auto message = message_list.front();
-            if (message.head().code == UdpCode::AssetList) {
-                protocol::udp::from_server::AssetList assetlist;
+            for (auto &message : message_list) {
+                if (message.head().code == UdpCode::AssetList) {
+                    protocol::udp::from_server::AssetList assetlist;
 //                std::memcpy(&assetlist, message->body().data(), message->body().size());
-                auto body = message.body();
-                std::memcpy(&assetlist.port, body.data(), sizeof(assetlist.port));
-                body += sizeof(assetlist.port);
-                std::memcpy(&assetlist.size, body.data(), sizeof(assetlist.size));
-                body += sizeof(assetlist.size);
-                assetlist.list.resize(assetlist.size);
-                std::memcpy(assetlist.list.data(), body.data(), assetlist.size * sizeof(assetlist.list.front()));
-                server_tcp_port = assetlist.port;
-                for (auto i = 0; i < assetlist.size; ++i)
-                    assets_ids_list.emplace_back(assetlist.list[i], false);
-                status = Status::DownloadAssets;
-                timeout_clock.restart();
-                if (console) console->log("Success [WaitingForAssets]");
-            } else {
-                if (console) console->log("Error [WaitingForAssets] : Server sent wrong data");
-                return;
+                    auto body = message.body();
+                    std::memcpy(&assetlist.port, body.data(), sizeof(assetlist.port));
+                    body += sizeof(assetlist.port);
+                    std::memcpy(&assetlist.size, body.data(), sizeof(assetlist.size));
+                    body += sizeof(assetlist.size);
+                    assetlist.list.resize(assetlist.size);
+                    std::memcpy(assetlist.list.data(), body.data(), assetlist.size * sizeof(assetlist.list.front()));
+                    server_tcp_port = assetlist.port;
+                    for (auto i = 0; i < assetlist.size; ++i)
+                        assets_ids_list.emplace_back(assetlist.list[i], false);
+                    status = Status::DownloadAssets;
+                    timeout_clock.restart();
+                    if (console) console->log("Success [WaitingForAssets]");
+                    break;
+                } else {
+                    if (console) console->log("Error [WaitingForAssets] : Server sent wrong data");
+                    continue;
+                }
             }
         }
     }

@@ -213,4 +213,9 @@ namespace protocol {
 using UdpCode = protocol::udp::Code;
 using TcpCode = protocol::tcp::Code;
 
+namespace protocol {
+    bool check_size(UdpCode type, uint32_t size);
+    bool check_size(TcpCode type, uint32_t size);
+}
+
 #endif
