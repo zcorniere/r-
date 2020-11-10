@@ -68,7 +68,7 @@ void SfmlModule::update()
     m_window.clear();
 }
 
-std::vector<Input> SfmlModule::getInputEvents()
+std::vector<Input> SfmlModule::getInputEvents(unsigned player)
 {
     std::vector<Input> inputs;
 
@@ -77,7 +77,7 @@ std::vector<Input> SfmlModule::getInputEvents()
     return inputs;
 }
 
-Dimensional SfmlModule::getCursorLocation()
+Dimensional SfmlModule::getCursorLocation(unsigned player)
 {
     sf::Vector2i position = sf::Mouse::getPosition();
 
@@ -85,7 +85,7 @@ Dimensional SfmlModule::getCursorLocation()
                        static_cast<float>(position.y)};
 }
 
-bool SfmlModule::isKeyPressed(Input key)
+bool SfmlModule::isKeyPressed(unsigned player, Input key)
 {
     sf::Keyboard::Key sfml_key =
         SfmlKeyMapping::rtype_key_mapping[static_cast<std::size_t>(key)];
