@@ -3,6 +3,8 @@
 #include "components/Sprite.hpp"
 #include "components/PlayerControlled.hpp"
 #include "components/Velocity.hpp"
+#include "components/CollisionBox.hpp"
+#include "components/GameObject.hpp"
 
 void LevelState::onStart(Game &instance)
 {
@@ -18,6 +20,8 @@ void LevelState::onStart(Game &instance)
         .withComponent(Sprite("player_ships", 0))
         .withComponent(Transform(Dimensional(10, 10), Dimensional(1, 1), Dimensional(1.5, 1.5)))
         .withComponent(PlayerControlled{1})
+        .withComponent(GameObject::PlayerShip)
+        .withComponent(CollisionBox(10, 10, 10))
         .build();
 }
 

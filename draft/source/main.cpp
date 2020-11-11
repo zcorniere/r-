@@ -4,6 +4,8 @@
 #include "components/Sprite.hpp"
 #include "components/PlayerControlled.hpp"
 #include "components/Velocity.hpp"
+#include "components/GameObject.hpp"
+#include "components/CollisionBox.hpp"
 #include "LevelState.hpp"
 #include <iostream>
 #include "systems/InputHandler.hpp"
@@ -36,6 +38,8 @@ int main(void)
     game.componentStorage.registerComponent<Sprite>();
     game.componentStorage.registerComponent<PlayerControlled>();
     game.componentStorage.registerComponent<Velocity>();
+    game.componentStorage.registerComponent<CollisionBox>();
+    game.componentStorage.registerComponent<GameObject>();
 
     // Systems Initialisation
     // System that displays entities with a transform and a sprite on screen
