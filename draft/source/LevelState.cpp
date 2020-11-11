@@ -18,7 +18,7 @@ void LevelState::onStart(Game &instance)
 
     // Creating Player Ship
     instance.componentStorage.buildEntity()
-        .withComponent(Sprite("player_ships", 0))
+        .withComponent(Sprite("player_ships", 2))
         .withComponent(Transform(Dimensional(10, 10), Dimensional(0, 0), Dimensional(1.5, 1.5)))
         .withComponent(PlayerControlled{1})
         .withComponent(GameObject::PlayerShip)
