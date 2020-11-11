@@ -49,10 +49,22 @@ int main(void)
                 display.drawSprite(sprite.name, transform, sprite.tile_id);
     });
 
+    // Velocity System
+
     game.systemStorage.addSystem([]
     (Transform &transform, const Velocity &velocity) {
         transform.location.x += velocity.x;
         transform.location.y += velocity.y;
+    });
+
+    // DEBUG Collision Displayer
+
+    game.systemStorage.addSystem([]
+    (IDisplayModule &display, const Transform &transform, const CollisionBox &box) {
+        sf::RectangleShape rect;
+        rect.setPosition(transform.location.x + box.offset_x, transform.location.y + box.offset_y);
+        rect.setSize(sf::Vector2f(box.width * transform.scale.x, box.height * transform.scale.y))    ;
+        dynamic_cast<SfmlModule &>(display).drawDebugBox(rect);
     });
 
     game.systemStorage.addSystem(createInputHandler(

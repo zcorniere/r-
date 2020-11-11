@@ -65,6 +65,12 @@ void SfmlModule::drawSprite(const std::string &name, Transform const &transform,
     m_window.draw(sprite);
 }
 
+void SfmlModule::drawDebugBox(sf::RectangleShape box)
+{
+    box.setFillColor(sf::Color(255, 0, 0, 100));
+    m_window.draw(box);
+}
+
 void SfmlModule::update()
 {
     sf::Event event;

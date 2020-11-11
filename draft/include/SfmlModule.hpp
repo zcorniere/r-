@@ -21,6 +21,7 @@ class SfmlModule : public IDisplayModule, public IInputModule {
 public:
     SfmlModule(const std::string &name, std::filesystem::path assets_path);
     void drawSprite(const std::string &name, Transform const &transform, unsigned id) override;
+    void drawDebugBox(sf::RectangleShape box);
     void update() override;
     std::vector<Input> getInputEvents(unsigned player) override;
     Dimensional getCursorLocation(unsigned player) override;

@@ -2,11 +2,14 @@
 #define COLLISION_BOX_HPP
 
 #include "GameObject.hpp"
+#include <functional>
 
 struct CollisionBox {
     float width;
     float height;
-    int onCollision;
+    std::function<void(GameObject object)> onCollision;
+    float offset_x = 0;
+    float offset_y = 0;
 };
 
 #endif
