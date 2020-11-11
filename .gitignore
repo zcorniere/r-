@@ -16,4 +16,10 @@ Makefile
 
 # Ignore the build directory
 build/
+cmake-build-*
 
+# Ignore JetBrains IDE files
+.idea
+
+# Ignore doc
+doc
