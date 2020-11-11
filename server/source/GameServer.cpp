@@ -2,9 +2,10 @@
 
 using namespace protocol::udp;
 
-GameServer::GameServer(std::shared_ptr<Storage> stor, const unsigned port) :
-    Server(port), stor(stor)
+GameServer::GameServer(unsigned port, std::filesystem::path &p) :
+    Server(port), assets(port + 1, p)
 {
+    this->stor = this->assets.getStorage();
     this->start();
 };
 
@@ -93,4 +94,8 @@ std::vector<::Input> GameServer::getInputEvents(const unsigned player) {
         }
     }
     return std::vector<::Input>();
+}
+
+bool GameServer::isKeyPressed(unsigned player, ::Input key) {
+    return false;
 }

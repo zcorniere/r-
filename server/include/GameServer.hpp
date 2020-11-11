@@ -7,6 +7,7 @@
 #include "Storage.hpp"
 #include "Modules.hpp"
 #include "interface/UdpServer.hpp"
+#include "AssetsServer.hpp"
 
 struct Player {
     bool ready = false;
@@ -22,7 +23,7 @@ class GameServer:
     public IInputModule
 {
     public:
-        GameServer(std::shared_ptr<Storage> stor, const unsigned port);
+        GameServer(unsigned port, std::filesystem::path &p);
         ~GameServer();
 
         // Required by IModule
@@ -40,8 +41,10 @@ class GameServer:
         // Required by IInputModule
         virtual Dimensional getCursorLocation(const unsigned player)final;
         virtual std::vector<Input> getInputEvents(const unsigned player)final;
+        virtual bool isKeyPressed(unsigned player, Input key)final;
 
     private:
+        AssetsServer assets;
         std::shared_ptr<Storage> stor;
         std::unordered_map<std::shared_ptr<ecs::IClient<protocol::udp::RequestCode>>, Player> list;
         std::string path;
