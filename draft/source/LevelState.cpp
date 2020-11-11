@@ -31,6 +31,13 @@ void LevelState::onStart(Game &instance)
         .withComponent(GameObject::Wall)
         .withComponent(CollisionBox(1000, 30))
         .build();
+
+    // Example Projectile
+    instance.componentStorage.buildEntity()
+        .withComponent(Sprite("player_projectiles", 2))
+        .withComponent(Transform(Dimensional(0, 200), Dimensional(0, 0), Dimensional(1, 1)))
+        .withComponent(Velocity(7, 0))
+        .build();
 }
 
 void LevelState::onPause(Game &instance)
