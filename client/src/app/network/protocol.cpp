@@ -11,10 +11,10 @@ bool protocol::check_size(UdpCode type, uint32_t size) {
     if (type == UdpCode::Sprite) return size == sizeof(protocol::udp::from_server::Sprite);
     if (type == UdpCode::Sound) return size == sizeof(protocol::udp::from_server::Sound);
     if (type == UdpCode::AssetList) return size == sizeof(protocol::udp::from_server::AssetList);
-    if (type == UdpCode::AskAssetList) return size == sizeof(protocol::udp::from_client::AskAssetList);
-    if (type == UdpCode::Ready) return size == sizeof(protocol::udp::from_client::Ready);
+    if (type == UdpCode::AskAssetList) return size == 0;
+    if (type == UdpCode::Ready) return size == 0;
     if (type == UdpCode::Input) return size == sizeof(protocol::udp::from_client::Input);
-    if (type == UdpCode::Disconnect) return size == sizeof(protocol::udp::Disconnect);
+    if (type == UdpCode::Disconnect) return size == 0;
     return false;
 }
 

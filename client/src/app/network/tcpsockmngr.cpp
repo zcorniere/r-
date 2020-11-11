@@ -177,9 +177,6 @@ void network::TcpSockMngr::setConsole(Console *new_console)
 void network::TcpSockMngr::setHost(const std::string &ip, short port)
 {
     is_connected = true;
-//    endpoint = resolver.resolve(ip, std::to_string(port))->endpoint();
-//    socket.async_connect(endpoint, )
-//    boost::asio::connect(socket, endpoint);
     tcp::resolver::query query(ip, std::to_string(port));
     resolver.async_resolve(query, [&](const boost::system::error_code& ec, tcp::resolver::results_type results) {
         if (ec) {

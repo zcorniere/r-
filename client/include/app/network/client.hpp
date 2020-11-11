@@ -39,7 +39,7 @@ namespace network {
         network::UdpSockMngr udp;
         network::TcpSockMngr tcp;
         sf::Clock timeout_clock;
-        static constexpr auto timeout = 30000;
+        static constexpr auto timeout = 10000;
         std::function<void(void)> onDisconnect_hdl = nullptr;
         Console *console = nullptr;
     public:
