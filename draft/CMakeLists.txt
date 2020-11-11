@@ -1,5 +1,4 @@
 include_directories(
-./include/
 ../engine/include/
 ../server/include/
 )
@@ -13,7 +12,7 @@ add_executable(r-type_local
                             source/main.cpp
                             source/SfmlModule.cpp
                             source/SfmlAudioModule.cpp
-                            source/LevelState.cpp
+                            ../server/source/LevelState.cpp
                             ../server/source/GameServer.cpp
                             ../server/source/AssetsServer.cpp
                             ../server/source/Storage.cpp

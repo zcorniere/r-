@@ -10,8 +10,6 @@
 #include <iostream>
 #include "systems/InputHandler.hpp"
 #include <boost/dll/runtime_symbol_info.hpp>
-#include "GameServer.hpp"
-#include "Protocol.hpp"
 
 int main(void)
 {
@@ -24,18 +22,17 @@ int main(void)
             .append("draft")
             .append("assets");
 
-    std::unique_ptr<IModule> game_server(new GameServer(25555, assets_location));
     // Modules Initialisation and assignation
-    //std::unique_ptr<IModule> sfml_module(new SfmlModule(
-    //    "R-Type SOLO v0.1",
-    //    assets_location));
-    //auto audio_module = std::make_unique<SfmlAudioModule>();
-    game.addModule("server", std::move(game_server));
-    //game.addModule("sfml", std::move(sfml_module));
-    game.setDisplayModule("server");
-    game.setInputModule("server");
-    //game.addModule("audio-sfml", std::move(audio_module));
-    game.setAudioModule("server");
+    std::unique_ptr<IModule> sfml_module(new SfmlModule(
+        "R-Type SOLO v0.1",
+        assets_location));
+    auto audio_module = std::make_unique<SfmlAudioModule>();
+
+    game.addModule("sfml", std::move(sfml_module));
+    game.setDisplayModule("sfml");
+    game.setInputModule("sfml");
+    game.addModule("audio-sfml", std::move(audio_module));
+    game.setAudioModule("audio-sfml");
 
     // Components registering
     game.componentStorage.registerComponent<Transform>();
@@ -63,13 +60,13 @@ int main(void)
 
     // DEBUG Collision Displayer
 
-    //game.systemStorage.addSystem([]
-    //(IDisplayModule &display, const Transform &transform, const CollisionBox &box) {
-    //    sf::RectangleShape rect;
-    //    rect.setPosition(transform.location.x + box.offset_x, transform.location.y + box.offset_y);
-    //    rect.setSize(sf::Vector2f(box.width * transform.scale.x, box.height * transform.scale.y))    ;
-    //    dynamic_cast<SfmlModule &>(display).drawDebugBox(rect);
-    //});
+    game.systemStorage.addSystem([]
+    (IDisplayModule &display, const Transform &transform, const CollisionBox &box) {
+        sf::RectangleShape rect;
+        rect.setPosition(transform.location.x + box.offset_x, transform.location.y + box.offset_y);
+        rect.setSize(sf::Vector2f(box.width * transform.scale.x, box.height * transform.scale.y))    ;
+        dynamic_cast<SfmlModule &>(display).drawDebugBox(rect);
+    });
 
     game.systemStorage.addSystem(createInputHandler(
         Input::Up, [](Transform &transform) { transform.location.y--; }));
