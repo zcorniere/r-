@@ -1,6 +1,14 @@
 #ifndef DESTRUCTIBLE_HPP
 #define DESTRUCTIBLE_HPP
 
-//class Destrictuble {}
+struct Destructible {
+    enum class Status {
+        Alive,
+        Dying,
+        Dead,
+    };
+    unsigned health;
+    Status status = Status::Alive;
+};
 
 #endif

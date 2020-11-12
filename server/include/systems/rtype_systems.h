@@ -6,11 +6,15 @@
 #include "components/PlayerShipController.hpp"
 #include "components/Enemy.hpp"
 #include "components/AnimationLoop.hpp"
+#include "components/CollisionBox.hpp"
+#include "components/Destructible.hpp"
 
-void collisions_system(Game &instance);
+void collisions_update(Game &instance);
 void playership_ct_input_getter(IInputModule &input, PlayerShipController &controller);
 void playership_animations(const PlayerShipController &controller, Sprite &sprite);
 void move_enemies(Enemy &enemy, Velocity &velocity);
 void run_animation_loops(AnimationLoop &loop, Sprite &sprite);
+void destructible_reaper(Game &instance);
+void collision_damages(const CollisionBox &box, Destructible &destructible);
 
 #endif

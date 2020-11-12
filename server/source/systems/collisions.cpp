@@ -1,6 +1,8 @@
 #include "Game.hpp"
 #include "components/Transform.hpp"
 #include "components/CollisionBox.hpp"
+#include "components/GameObject.hpp"
+#include "components/Destructible.hpp"
 
 static bool are_colliding(Transform transform_a, CollisionBox box_a, \
 Transform transform_b, CollisionBox box_b) {
@@ -22,11 +24,12 @@ Transform transform_b, CollisionBox box_b) {
     );
 }
 
-void collisions_system(Game &instance)
+void collisions_update(Game &instance)
 {
     auto collision_parameters = instance.componentStorage.join_components(
         instance.componentStorage.getComponents<CollisionBox>(),
-        instance.componentStorage.getComponents<Transform>()
+        instance.componentStorage.getComponents<Transform>(),
+        instance.componentStorage.getComponents<GameObject>()
     );
 
     for (
@@ -38,12 +41,18 @@ void collisions_system(Game &instance)
             auto other = element;
             ++other != collision_parameters.end();
         ) {
-            const auto &[box, transform] = element->second;
-            const auto &[o_box, o_transform] = other->second;
+            auto &[box, transform, type] = element->second;
+            auto &[o_box, o_transform, o_type] = other->second;
             if (are_colliding(transform, box, o_transform, o_box)) {
-                box.onCollision();
-                o_box.onCollision();
+                box.collidingWith = o_type;
+                o_box.collidingWith = type;
             }
         }
     }
 };
+
+void collision_damages(const CollisionBox &box, Destructible &destructible)
+{
+    if (box.collidingWith)
+        destructible.status = Destructible::Status::Dead;
+}

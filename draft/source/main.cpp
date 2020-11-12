@@ -6,6 +6,7 @@
 #include "components/Velocity.hpp"
 #include "components/GameObject.hpp"
 #include "components/CollisionBox.hpp"
+#include "components/Destructible.hpp"
 #include "LevelState.hpp"
 #include <iostream>
 #include "systems/InputHandler.hpp"
@@ -49,6 +50,7 @@ int main(void)
     game.componentStorage.registerComponent<PlayerShipController>();
     game.componentStorage.registerComponent<Enemy>();
     game.componentStorage.registerComponent<AnimationLoop>();
+    game.componentStorage.registerComponent<Destructible>();
 
     // Systems Initialisation
     // System that displays entities with a transform and a sprite on screen
@@ -85,12 +87,15 @@ int main(void)
         dynamic_cast<SfmlModule &>(display).drawDebugBox(rect);
     });
 
-    std::function<void(Game &)> collision_checker = &collisions_system;
-    game.systemStorage.addSystem(collision_checker);
+    std::function<void(Game &)> collision_system = collisions_update;
+    game.systemStorage.addSystem(collision_system);
+    std::function<void(Game &)> destructible_reaper_system = destructible_reaper;
+    game.systemStorage.addSystem(destructible_reaper_system);
 
     game.systemStorage.addSystem(playership_animations);
     game.systemStorage.addSystem(move_enemies);
     game.systemStorage.addSystem(run_animation_loops);
+    game.systemStorage.addSystem(collision_damages);
 
     // States Initialisation
     std::unique_ptr<AState> level_state(new LevelState);

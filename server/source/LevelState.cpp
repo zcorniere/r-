@@ -7,6 +7,7 @@
 #include "components/GameObject.hpp"
 #include "components/Enemy.hpp"
 #include "components/AnimationLoop.hpp"
+#include "components/Destructible.hpp"
 #include <iostream>
 #include <chrono>
 #include <cstdlib>
@@ -34,8 +35,8 @@ void LevelState::onStart(Game &instance)
         .withComponent(PlayerShipController(0, 2.5))
         .withComponent(Velocity(0, 0))
         .withComponent(GameObject::PlayerShip)
-        .withComponent(CollisionBox(
-            30, 10, []() { std::cout << "gmal\n"; }, 0, 3))
+        .withComponent(CollisionBox(30, 10, 0, 3))
+        .withComponent(Destructible(1))
         .build();
 
     // Floor CollisionBox
