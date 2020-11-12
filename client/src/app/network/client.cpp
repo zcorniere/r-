@@ -91,7 +91,6 @@ void network::Client::update()
             protocol::MessageToSend<UdpCode> message;
             message.head.code = protocol::udp::Code::AskAssetList;
             message.head.body_size = 0;
-            message.body.clear();
             udp.send(message);
             status = Status::WaitingForAssets;
             timeout_clock.restart();

@@ -71,6 +71,7 @@ class Server: public IServer<T> {
                [this](std::error_code ec, std::size_t len) {
                    (void)len;
                     if (!ec) {
+                        std::cout << "server received udp package" << std::endl;
                         if (tmp.head.size > 0) {
                             tmp.body.resize(tmp.head.size);
                             readBody();
