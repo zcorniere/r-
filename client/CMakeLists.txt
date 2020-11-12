@@ -17,13 +17,7 @@ add_executable(r-type_client ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
 add_library(r-type_client_sdk STATIC)
 add_library(r-type_client_app STATIC)
 
-target_include_directories(r-type_client PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
-        )
 target_include_directories(r-type_client_sdk PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-target_include_directories(r-type_client_app PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 

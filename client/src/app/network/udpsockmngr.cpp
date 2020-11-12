@@ -59,6 +59,7 @@ void network::UdpSockMngr::setHost(const std::string &ip, short port)
     is_connected = true;
     endpoint = resolver.resolve(ip, std::to_string(port))->endpoint();
     do_receive();   // start listening
+//    io_context.run();
 }
 
 void network::UdpSockMngr::reset()

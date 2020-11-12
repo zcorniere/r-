@@ -60,9 +60,9 @@ void network::Client::update()
                     return true;
                 });
                 if (it != assets.end()) {
-//                    it->sound.setPitch(sound.pitch);
-//                    it->sound.setLoop(sound.isLooping);
-//                    it->sound.play();
+                   it->sound.setPitch(sound.pitch);
+                   it->sound.setLoop(sound.isLooping);
+                   it->sound.play();
                 } else
                     console->log("Error [Play]: Sound specified not found");
             }
