@@ -11,6 +11,8 @@
 #include "systems/InputHandler.hpp"
 #include "systems/rtype_systems.h"
 #include <boost/dll/runtime_symbol_info.hpp>
+#include <cstdlib>
+#include <time.h>
 
 int main(void)
 {
@@ -34,6 +36,8 @@ int main(void)
     game.setInputModule("sfml");
     game.addModule("audio-sfml", std::move(audio_module));
     game.setAudioModule("audio-sfml");
+
+    srand(time(NULL));
 
     // Components registering
     game.componentStorage.registerComponent<Transform>();

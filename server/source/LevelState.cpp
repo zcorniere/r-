@@ -6,6 +6,13 @@
 #include "components/CollisionBox.hpp"
 #include "components/GameObject.hpp"
 #include <iostream>
+#include <chrono>
+#include <cstdlib>
+
+// Counted in milleseconds
+constexpr int STAR_SPAWN_DELAY = 300;
+
+constexpr unsigned STAR_BUFFER_SIZE = 100;
 
 void LevelState::onStart(Game &instance)
 {
@@ -47,7 +54,30 @@ void LevelState::onResume(Game &instance)
 {}
 
 void LevelState::onTick(Game &instance)
-{}
+{
+    static std::chrono::time_point last_update = std::chrono::system_clock::now();
+    std::chrono::milliseconds tick_delay(STAR_SPAWN_DELAY);
+
+    if (std::chrono::system_clock::now() - last_update < tick_delay)
+        return;
+    last_update = std::chrono::system_clock::now();
+
+    float scale = rand() % 4 + 2;
+    float height = rand() % 400;
+    float speed = rand() % 5 + 1;
+
+    m_stars_ids.push(
+        instance.componentStorage.buildEntity()
+            .withComponent(Sprite("player_ships", 50))
+            .withComponent(Transform(Dimensional(1000, height), Dimensional(0, 0), Dimensional(scale, scale)))
+            .withComponent(Velocity(-1 * speed, 0))
+            .build()
+    );
+    while (m_stars_ids.size() > STAR_BUFFER_SIZE) {
+        instance.componentStorage.destroyEntity(m_stars_ids.front());
+        m_stars_ids.pop();
+    }
+}
 
 void LevelState::onStop(Game &instance)
 {}
