@@ -52,6 +52,7 @@ public:
     void set_placeholder_color(sf::Color color);
     void set_maxchar_limit(unsigned short newlimit);
     void submit();
+    void setText(const std::string &new_text);
 };
 
 #endif
