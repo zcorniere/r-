@@ -15,14 +15,14 @@
 class Console : public Iwidget {
     bool is_fold = false;
     static constexpr auto margin_height = 3;
-    static constexpr auto padding_left = -350;
+    static constexpr auto padding_left = -750;
     static constexpr auto border_thickness = 3;
-    static constexpr auto max_stack_limit = 33;
+    static constexpr auto max_stack_limit = 44;
     static constexpr auto log_character_height = 18;
     sf::Vector2<float> fold_pos = {0, 0};
     sf::Vector2<float> unfold_pos = {0, 0};
-    sf::Vector2<float> fold_size = {700, 25};
-    sf::Vector2<float> unfold_size = {700, 600};
+    sf::Vector2<float> fold_size = {1500, 25};
+    sf::Vector2<float> unfold_size = {1500, 800};
     std::array<WidgetText *, max_stack_limit> stack;
     sf::RectangleShape border;
     void onCreateView() final;

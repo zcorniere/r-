@@ -15,8 +15,10 @@
 #include "sdk/managers/event.hpp"
 
 namespace window {
-    constexpr auto WIDTH = 1000;
-    constexpr auto HEIGHT = 680;
+    constexpr auto WIDTH = 1800;
+    constexpr auto HEIGHT = 980;
+//    constexpr auto WIDTH = 1000;
+//    constexpr auto HEIGHT = 680;
     constexpr auto FRAMERATE = 60;
 }
 

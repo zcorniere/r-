@@ -29,7 +29,7 @@ TopBar::TopBar(std::optional<std::string> &intent_ref, bidimensional::Transform 
     add_widget<WidgetButtonText>("disconnect btn", reinterpret_cast<Itheme<Icolors *> *>(std::make_unique<Theme>().get()));
     disconnect = get_fragment<WidgetButtonText>("disconnect btn");
 //    disconnect->scale()
-    disconnect->move({100, 9});
+    disconnect->move({window::WIDTH / 2 - 300, 10});
 //    disconnect->scale({90, 30});
     disconnect->set_hover_color(Theme().getColor("buttons hover").value());
     disconnect->set_click_color(Theme().getColor("buttons click").value());
@@ -45,7 +45,7 @@ TopBar::TopBar(std::optional<std::string> &intent_ref, bidimensional::Transform 
     // add connect button
     add_widget<WidgetButtonText>("connect btn", reinterpret_cast<Itheme<Icolors *> *>(std::make_unique<Theme>().get()));
     connect = get_fragment<WidgetButtonText>("connect btn");
-    connect->move({window::WIDTH / 2 + 300, 9});
+    connect->move({window::WIDTH / 2 + 210, 10});
     connect->set_hover_color(Theme().getColor("buttons hover").value());
     connect->set_click_color(Theme().getColor("buttons click").value());
     connect->set_deactivate_color(Theme().getColor("buttons deactivate").value());
