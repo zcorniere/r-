@@ -63,7 +63,7 @@ int main(void)
     game.systemStorage.addSystem([]
     (IDisplayModule &display, const Transform &transform, const CollisionBox &box) {
         sf::RectangleShape rect;
-        rect.setPosition(transform.location.x + box.offset_x, transform.location.y + box.offset_y);
+        rect.setPosition(transform.location.x + box.offset_x * transform.scale.x, transform.location.y + box.offset_y * transform.scale.y);
         rect.setSize(sf::Vector2f(box.width * transform.scale.x, box.height * transform.scale.y))    ;
         dynamic_cast<SfmlModule &>(display).drawDebugBox(rect);
     });

@@ -7,7 +7,7 @@
 struct CollisionBox {
     float width;
     float height;
-    std::function<void(GameObject object)> onCollision;
+    std::function<void()> onCollision = [](){};
     float offset_x = 0;
     float offset_y = 0;
 };
