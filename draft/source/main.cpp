@@ -9,6 +9,7 @@
 #include "LevelState.hpp"
 #include <iostream>
 #include "systems/InputHandler.hpp"
+#include "systems/rtype_systems.h"
 #include <boost/dll/runtime_symbol_info.hpp>
 
 int main(void)
@@ -67,6 +68,9 @@ int main(void)
         rect.setSize(sf::Vector2f(box.width * transform.scale.x, box.height * transform.scale.y))    ;
         dynamic_cast<SfmlModule &>(display).drawDebugBox(rect);
     });
+
+    std::function<void(Game &)> collision_checker = &collisions_system;
+    game.systemStorage.addSystem(collision_checker);
 
     game.systemStorage.addSystem(createInputHandler(
         Input::Up, [](Transform &transform) { transform.location.y--; }));

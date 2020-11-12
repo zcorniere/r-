@@ -14,6 +14,7 @@ add_executable(r-type_server
                             source/GameServer.cpp
                             source/AssetsServer.cpp
                             source/Storage.cpp
+                            source/systems/collisions.cpp
 )
 
 target_link_libraries(r-type_server r-type_engine)
