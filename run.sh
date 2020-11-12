@@ -8,4 +8,4 @@ mkdir -p $BUILDPATH &&
 cd $BUILDPATH &&
 conan install .. -b missing &&
 cmake .. -G "Unix Makefiles" &&
-cmake --build .;
+cmake --build . -- -j$(nproc);
