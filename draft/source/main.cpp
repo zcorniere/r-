@@ -46,6 +46,7 @@ int main(void)
     game.componentStorage.registerComponent<Velocity>();
     game.componentStorage.registerComponent<CollisionBox>();
     game.componentStorage.registerComponent<GameObject>();
+    game.componentStorage.registerComponent<PlayerShipController>();
 
     // Systems Initialisation
     // System that displays entities with a transform and a sprite on screen
@@ -53,6 +54,15 @@ int main(void)
                                     const Transform &transform,
                                     const Sprite &sprite) {
                 display.drawSprite(sprite.name, transform, sprite.tile_id);
+    });
+
+    game.systemStorage.addSystem(playership_ct_input_getter);
+    game.systemStorage.addSystem([]
+    (Velocity &velocity, const PlayerShipController &controller) {
+        velocity.x = controller.moovingRight * controller.getSpeed() \
+        + controller.moovingLeft * -1 * controller.getSpeed();
+        velocity.y = controller.moovingDown * controller.getSpeed() \
+        + controller.moovingUp * -1 * controller.getSpeed();
     });
 
     // Velocity System
@@ -76,14 +86,7 @@ int main(void)
     std::function<void(Game &)> collision_checker = &collisions_system;
     game.systemStorage.addSystem(collision_checker);
 
-    game.systemStorage.addSystem(createInputHandler(
-        Input::Up, [](Transform &transform) { transform.location.y--; }));
-    game.systemStorage.addSystem(createInputHandler(
-        Input::Down, [](Transform &transform) { transform.location.y++; }));
-    game.systemStorage.addSystem(createInputHandler(
-        Input::Left, [](Transform &transform) { transform.location.x--; }));
-    game.systemStorage.addSystem(createInputHandler(
-        Input::Right, [](Transform &transform) { transform.location.x++; }));
+    game.systemStorage.addSystem(playership_animations);
 
     // States Initialisation
     std::unique_ptr<AState> level_state(new LevelState);

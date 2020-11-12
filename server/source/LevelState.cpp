@@ -1,7 +1,7 @@
 #include "Game.hpp"
 #include "LevelState.hpp"
 #include "components/Sprite.hpp"
-#include "components/PlayerControlled.hpp"
+#include "components/PlayerShipController.hpp"
 #include "components/Velocity.hpp"
 #include "components/CollisionBox.hpp"
 #include "components/GameObject.hpp"
@@ -27,7 +27,8 @@ void LevelState::onStart(Game &instance)
     instance.componentStorage.buildEntity()
         .withComponent(Sprite("player_ships", 2))
         .withComponent(Transform(Dimensional(10, 10), Dimensional(0, 0), Dimensional(1.5, 1.5)))
-        .withComponent(PlayerControlled{1})
+        .withComponent(PlayerShipController(0, 1))
+        .withComponent(Velocity(0, 0))
         .withComponent(GameObject::PlayerShip)
         .withComponent(CollisionBox(30, 10, [](){ std::cout << "gmal\n"; }, 0, 3))
         .build();
