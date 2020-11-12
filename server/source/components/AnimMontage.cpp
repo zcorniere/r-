@@ -21,6 +21,6 @@ AnimMontage::Status AnimMontage::getStatus() const
 
 void AnimMontage::update()
 {
-    if (ticksCount > duration * ids.size())
+    if (ticksCount >= duration * ids.size())
         m_status = Status::Terminated;
 }

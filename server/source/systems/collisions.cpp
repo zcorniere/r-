@@ -53,6 +53,10 @@ void collisions_update(Game &instance)
 
 void collision_damages(const CollisionBox &box, Destructible &destructible)
 {
-    if (box.collidingWith)
-        destructible.status = Destructible::Status::Dead;
+    if (box.collidingWith) {
+        if (destructible.hasDeathMontage)
+            destructible.status = Destructible::Status::Dying;
+        else
+            destructible.status = Destructible::Status::Dead;
+    }
 }

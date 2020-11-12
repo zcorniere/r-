@@ -7,6 +7,7 @@
 #include "components/GameObject.hpp"
 #include "components/CollisionBox.hpp"
 #include "components/Destructible.hpp"
+#include "components/AnimMontage.hpp"
 #include "LevelState.hpp"
 #include <iostream>
 #include "systems/InputHandler.hpp"
@@ -51,6 +52,7 @@ int main(void)
     game.componentStorage.registerComponent<Enemy>();
     game.componentStorage.registerComponent<AnimationLoop>();
     game.componentStorage.registerComponent<Destructible>();
+    game.componentStorage.registerComponent<AnimMontage>();
 
     // Systems Initialisation
     // System that displays entities with a transform and a sprite on screen
@@ -96,6 +98,8 @@ int main(void)
     game.systemStorage.addSystem(move_enemies);
     game.systemStorage.addSystem(run_animation_loops);
     game.systemStorage.addSystem(collision_damages);
+    game.systemStorage.addSystem(play_death_montages);
+    game.systemStorage.addSystem(draw_animmontages);
 
     // States Initialisation
     std::unique_ptr<AState> level_state(new LevelState);

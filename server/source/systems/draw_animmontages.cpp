@@ -1,5 +1,7 @@
 #include "components/AnimMontage.hpp"
+#include "components/Destructible.hpp"
 #include "Modules.hpp"
+#include <iostream>
 
 void draw_animmontages
 (IDisplayModule &display, const Transform &transform, AnimMontage &montage)
@@ -11,4 +13,18 @@ void draw_animmontages
         return;
     unsigned current = montage.ticksCount / montage.duration;
     display.drawSprite(montage.spritesheet, transform, montage.ids.at(current));
+    montage.ticksCount++;
+}
+
+void play_death_montages(Destructible &destructible, AnimMontage &montage)
+{
+    if (montage.getStatus() == AnimMontage::Status::Inactive \
+&& destructible.status == Destructible::Status::Dying) {
+        montage.play();
+        std::cout << "playing death montage\n";
+    }
+    if (montage.getStatus() == AnimMontage::Status::Terminated) {
+        std::cout << "Terminated\n";
+        destructible.status = Destructible::Status::Dead;
+    }
 }

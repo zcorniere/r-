@@ -8,6 +8,7 @@ struct Destructible {
         Dead,
     };
     unsigned health;
+    bool hasDeathMontage = false;
     Status status = Status::Alive;
 };
 
