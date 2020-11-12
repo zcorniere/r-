@@ -47,6 +47,8 @@ int main(void)
     game.componentStorage.registerComponent<CollisionBox>();
     game.componentStorage.registerComponent<GameObject>();
     game.componentStorage.registerComponent<PlayerShipController>();
+    game.componentStorage.registerComponent<Enemy>();
+    game.componentStorage.registerComponent<AnimationLoop>();
 
     // Systems Initialisation
     // System that displays entities with a transform and a sprite on screen
@@ -87,6 +89,8 @@ int main(void)
     game.systemStorage.addSystem(collision_checker);
 
     game.systemStorage.addSystem(playership_animations);
+    game.systemStorage.addSystem(move_enemies);
+    game.systemStorage.addSystem(run_animation_loops);
 
     // States Initialisation
     std::unique_ptr<AState> level_state(new LevelState);

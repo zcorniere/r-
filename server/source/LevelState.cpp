@@ -5,6 +5,8 @@
 #include "components/Velocity.hpp"
 #include "components/CollisionBox.hpp"
 #include "components/GameObject.hpp"
+#include "components/Enemy.hpp"
+#include "components/AnimationLoop.hpp"
 #include <iostream>
 #include <chrono>
 #include <cstdlib>
@@ -19,23 +21,27 @@ void LevelState::onStart(Game &instance)
     // Creating Back ground
     instance.componentStorage.buildEntity()
         .withComponent(Sprite("level1", 0))
-        .withComponent(Transform(Dimensional(10, 10), Dimensional(0, 0), Dimensional(4, 4)))
+        .withComponent(Transform(Dimensional(10, 10), Dimensional(0, 0),
+                                 Dimensional(4, 4)))
         .withComponent(Velocity(-0.5, 0))
         .build();
 
     // Creating Player Ship
     instance.componentStorage.buildEntity()
         .withComponent(Sprite("player_ships", 2))
-        .withComponent(Transform(Dimensional(10, 10), Dimensional(0, 0), Dimensional(3, 3)))
+        .withComponent(Transform(Dimensional(10, 10), Dimensional(0, 0),
+                                 Dimensional(3, 3)))
         .withComponent(PlayerShipController(0, 2.5))
         .withComponent(Velocity(0, 0))
         .withComponent(GameObject::PlayerShip)
-        .withComponent(CollisionBox(30, 10, [](){ std::cout << "gmal\n"; }, 0, 3))
+        .withComponent(CollisionBox(
+            30, 10, []() { std::cout << "gmal\n"; }, 0, 3))
         .build();
 
     // Floor CollisionBox
     instance.componentStorage.buildEntity()
-        .withComponent(Transform(Dimensional(0, 920), Dimensional(1, 1), Dimensional(1, 1)))
+        .withComponent(Transform(Dimensional(0, 920), Dimensional(1, 1),
+                                 Dimensional(1, 1)))
         .withComponent(GameObject::Wall)
         .withComponent(CollisionBox(2000, 60))
         .build();
@@ -45,6 +51,23 @@ void LevelState::onStart(Game &instance)
         .withComponent(Sprite("player_projectiles", 2))
         .withComponent(Transform(Dimensional(0, 200), Dimensional(0, 0), Dimensional(1, 1)))
         .withComponent(Velocity(7, 0))
+        .build();
+
+    // Example Enemy
+    instance.componentStorage.buildEntity()
+        .withComponent(Sprite{"player_ships", 1})
+        .withComponent(Transform({1000, 200}, {0, 0}, {1, 1}))
+        .withComponent(Velocity{0, 0})
+        .withComponent(Enemy{{Pattern{{-1, 1}, 60}, Pattern{{-1, -1}, 60}}, 10})
+        .withComponent(AnimationLoop{{{"enemy_flap", 0},
+                                      {"enemy_flap", 1},
+                                      {"enemy_flap", 2},
+                                      {"enemy_flap", 3},
+                                      {"enemy_flap", 4},
+                                      {"enemy_flap", 5},
+                                      {"enemy_flap", 6},
+                                      {"enemy_flap", 7}},
+                                     15})
         .build();
 }
 
