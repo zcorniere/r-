@@ -17,8 +17,7 @@ using boost::asio::ip::udp;
 
 namespace network {
     class UdpSockMngr {
-        bool is_connected = false;
-        Console *console = nullptr;
+        Console &console;
         boost::asio::io_context &context;
         udp::socket socket;
         udp::resolver resolver;
@@ -27,11 +26,8 @@ namespace network {
         void do_receive();
         void do_send(protocol::MessageToSend<UdpCode> message);
     public:
-        explicit UdpSockMngr(boost::asio::io_context &io_context);
-        void setConsole(Console *new_console);
-        void setHost(const std::string &ip, short port);
-        void reset();
-        [[nodiscard]] bool isConnected() const;
+        UdpSockMngr(Console &console, boost::asio::io_context &io_context, const std::string &ip, short port);
+        ~UdpSockMngr();
         void send(protocol::MessageToSend<UdpCode> message);
         std::vector<protocol::MessageReceived<UdpCode>> receive();
     };

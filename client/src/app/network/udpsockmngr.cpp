@@ -7,10 +7,18 @@
 
 #include "app/network/udpsockmngr.hpp"
 
-network::UdpSockMngr::UdpSockMngr(boost::asio::io_context &io_context) :
-    context(io_context), socket(context, udp::endpoint(udp::v4(), 0)) , resolver(context)
+network::UdpSockMngr::UdpSockMngr(Console &console, boost::asio::io_context &io_context, const std::string &ip, short port) :
+    console(console), context(io_context), socket(context, udp::endpoint(udp::v4(), 0)) , resolver(context)
 {
-    reset();
+    udp::resolver::query query(udp::v4(), ip, std::to_string(port));
+    endpoint = *resolver.resolve(query).begin();
+    do_receive();   // setup listening
+    context.run();
+}
+
+network::UdpSockMngr::~UdpSockMngr()
+{
+
 }
 
 void network::UdpSockMngr::do_receive()
@@ -50,41 +58,16 @@ void network::UdpSockMngr::do_send(protocol::MessageToSend<UdpCode> message)
 //    });
 }
 
-void network::UdpSockMngr::setConsole(Console *new_console)
-{
-    console = new_console;
-}
-void network::UdpSockMngr::setHost(const std::string &ip, short port)
-{
-    is_connected = true;
-    udp::resolver::query query(udp::v4(), ip, std::to_string(port));
-    endpoint = *resolver.resolve(query).begin();
-    do_receive();   // setup listening
-    context.run();
-}
-
-void network::UdpSockMngr::reset()
-{
-    is_connected = false;
-}
-
-bool network::UdpSockMngr::isConnected() const
-{
-    return is_connected;
-}
-
 void network::UdpSockMngr::send(protocol::MessageToSend<UdpCode> message)
 {
-    if (is_connected) {
-        do_send(std::move(message));
-    } else
-        if (console) console->log("Error [UDP] : Before sending data, you must setHost");
+    do_send(std::move(message));
 }
 
 std::vector<protocol::MessageReceived<UdpCode>> network::UdpSockMngr::receive()
 {
     return std::move(received_messages);
 }
+
 
 
 

@@ -8,6 +8,7 @@
 #ifndef _APP_NETWORK_CLIENT_HPP_
 #define _APP_NETWORK_CLIENT_HPP_
 
+#include <memory>
 #include <functional>
 #include <vector>
 #include <utility>
@@ -38,8 +39,8 @@ namespace network {
         std::vector<std::pair<long, bool>> assets_ids_list;
         std::vector<Asset> assets;
         boost::asio::io_context context;
-        network::UdpSockMngr udp;
-        network::TcpSockMngr tcp;
+        std::unique_ptr<network::UdpSockMngr> udp = nullptr;
+        std::unique_ptr<network::TcpSockMngr> tcp = nullptr;
         sf::Clock timeout_clock;
         static constexpr auto timeout = 10000;
         std::function<void(void)> onDisconnect_hdl = nullptr;
@@ -52,6 +53,7 @@ namespace network {
         void connect(const std::string &new_udp_server_address);
         void disconnect();
         void reset();
+        void stopSockManagers();
     };
 }
 

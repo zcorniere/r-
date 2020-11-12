@@ -21,9 +21,8 @@ using boost::property_tree::read_json;
 
 namespace network {
     class TcpSockMngr {
-        bool is_connected = false;
         bool is_download_finish = false;
-        Console *console = nullptr;
+        Console &console;
         boost::asio::io_context &context;
         tcp::socket socket;
         tcp::resolver resolver;
@@ -36,12 +35,8 @@ namespace network {
         void downloadAsset(long asset_id);
         void downloadAllAssets();
     public:
-        explicit TcpSockMngr(boost::asio::io_context &io_context);
-        void setConsole(Console *new_console);
-        void setHost(const std::string &ip, short port);
-        void reset();
-        [[nodiscard]] bool isConnected() const;
-        void set_assets_ids_list(std::vector<std::pair<long, bool>> new_assets_ids_list);
+        TcpSockMngr(Console &console, boost::asio::io_context &io_context, const std::string &ip, short port, std::vector<std::pair<long, bool>>);
+        ~TcpSockMngr();
         [[nodiscard]] bool isDownloadFinished() const;
         [[nodiscard]] std::vector<Asset> getAssets() const;
     };
