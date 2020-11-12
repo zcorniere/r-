@@ -3,7 +3,7 @@ project(r-type)
 
 # Conan configuration
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup(TARGETS)
+conan_basic_setup()
 # https://stackoverflow.com/questions/63290538/how-to-use-conan-to-handle-imgui-sfml-dependency-in-a-cmake-gcc-project-in-linux
 
 
@@ -14,11 +14,9 @@ conan_basic_setup(TARGETS)
 # contains include of the conan libs:
 include_directories(${CMAKE_INCLUDE_PATH})
 
-# Build the client
-add_subdirectory(client)
-
-# Build the server
+# Build the server & client
 link_libraries(${CONAN_LIBS})
+add_subdirectory(client)
 add_subdirectory(engine)
 add_subdirectory(server)
 add_subdirectory(draft)
