@@ -14,6 +14,7 @@ sfml:network=True
 [generators]
 cmake
 
+# If we want the executable to work on windows too, we need to copy libs in binary directory
 [imports]
 bin, *.dll -> ./bin
 lib, *.dylib* -> ./bin
