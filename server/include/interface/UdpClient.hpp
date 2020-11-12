@@ -52,7 +52,7 @@ class Client: public IClient<T> {
                [this](std::error_code ec, std::size_t len) {
                    (void)len;
                     if (!ec) {
-                        std::cout << "UDP read data from client" << std::endl;
+                        std::cout << "[CLIENT][UDP][HEADER] Read" << std::endl;
                         if (tmp.head.size > 0) {
                             tmp.body.resize(tmp.head.size);
                             readBody();
@@ -71,6 +71,7 @@ class Client: public IClient<T> {
                [this](std::error_code ec, std::size_t len) {
                    (void)len;
                     if (!ec) {
+                        std::cout << "[CLIENT][UDP][BODY] read" << std::endl;
                         addToMsgQueue();
                     } else {
                         std::cerr << "[" << this->getId() << "] Read Body failed: " << ec.message() << std::endl;
@@ -86,7 +87,7 @@ class Client: public IClient<T> {
                 [this](std::error_code ec, std::size_t len) {
                    (void)len;
                     if (!ec) {
-                        std::cout << "UDP send data to client" << std::endl;
+                        std::cout << "[CLIENT][UDP][HEADER] write" << std::endl;
                         if (q_out.front().body.size() > 0) {
                             writeBody();
                         } else {
@@ -107,6 +108,7 @@ class Client: public IClient<T> {
                 [this](std::error_code ec, std::size_t len) {
                    (void)len;
                     if (!ec) {
+                        std::cout << "[CLIENT][UDP][BODY] write" << std::endl;
                         q_out.pop_front();
                         if (!q_out.empty())
                             writeHeader();

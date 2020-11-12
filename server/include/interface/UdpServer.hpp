@@ -71,7 +71,7 @@ class Server: public IServer<T> {
                [this](std::error_code ec, std::size_t len) {
                    (void)len;
                     if (!ec) {
-//                        std::cout << "server received udp package" << std::endl;
+                        std::cout << "[SERVER][UDP][HEADER] read" << std::endl;
                         if (tmp.head.size > 0) {
                             tmp.body.resize(tmp.head.size);
                             readBody();
@@ -90,6 +90,7 @@ class Server: public IServer<T> {
                [this](std::error_code ec, std::size_t len) {
                    (void)len;
                     if (!ec) {
+                        std::cout << "[SERVER][UDP][BODY] read" << std::endl;
                         addToMsgQueue();
                     } else {
                         std::cerr << "[SERVER] ReadBody failed: " << ec.message() << std::endl;
