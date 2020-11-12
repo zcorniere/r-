@@ -24,7 +24,7 @@ namespace network {
         bool is_connected = false;
         bool is_download_finish = false;
         Console *console = nullptr;
-        boost::asio::io_context io_context;
+        boost::asio::io_context &context;
         tcp::socket socket;
         tcp::resolver resolver;
         tcp::endpoint endpoint;
@@ -36,7 +36,7 @@ namespace network {
         void downloadAsset(long asset_id);
         void downloadAllAssets();
     public:
-        TcpSockMngr();
+        explicit TcpSockMngr(boost::asio::io_context &io_context);
         void setConsole(Console *new_console);
         void setHost(const std::string &ip, short port);
         void reset();

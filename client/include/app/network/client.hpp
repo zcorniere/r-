@@ -11,6 +11,7 @@
 #include <functional>
 #include <vector>
 #include <utility>
+#include <boost/asio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Clock.hpp>
 #include "sdk/managers/inputs.hpp"
@@ -36,6 +37,7 @@ namespace network {
         short server_tcp_port;
         std::vector<std::pair<long, bool>> assets_ids_list;
         std::vector<Asset> assets;
+        boost::asio::io_context context;
         network::UdpSockMngr udp;
         network::TcpSockMngr tcp;
         sf::Clock timeout_clock;

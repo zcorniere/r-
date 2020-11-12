@@ -19,7 +19,7 @@ namespace network {
     class UdpSockMngr {
         bool is_connected = false;
         Console *console = nullptr;
-        boost::asio::io_context io_context;
+        boost::asio::io_context &context;
         udp::socket socket;
         udp::resolver resolver;
         udp::endpoint endpoint;
@@ -27,7 +27,7 @@ namespace network {
         void do_receive();
         void do_send(protocol::MessageToSend<UdpCode> message);
     public:
-        UdpSockMngr();
+        explicit UdpSockMngr(boost::asio::io_context &io_context);
         void setConsole(Console *new_console);
         void setHost(const std::string &ip, short port);
         void reset();

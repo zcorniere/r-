@@ -8,8 +8,8 @@
 #include <algorithm>
 #include "app/network/tcpsockmngr.hpp"
 
-network::TcpSockMngr::TcpSockMngr() :
-    socket(io_context), resolver(io_context)
+network::TcpSockMngr::TcpSockMngr(boost::asio::io_context &io_context) :
+    context(io_context), socket(context), resolver(context)
 {
     reset();
 }
@@ -197,7 +197,7 @@ void network::TcpSockMngr::reset()
 {
     is_connected = false;
     is_download_finish = false;
-    io_context.reset();
+    context.reset();
     socket.close();
     assets_ids_list.clear();
     assets.clear();

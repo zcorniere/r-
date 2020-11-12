@@ -11,7 +11,7 @@
 #include "app/network/client.hpp"
 
 network::Client::Client(sf::RenderWindow &p_window) :
-    window(p_window)
+    window(p_window), udp(context), tcp(context)
 {}
 
 void network::Client::update()
