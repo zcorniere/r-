@@ -5,6 +5,7 @@
 #include "components/Velocity.hpp"
 #include "components/CollisionBox.hpp"
 #include "components/GameObject.hpp"
+#include "components/Enemy.hpp"
 #include <iostream>
 #include <chrono>
 #include <cstdlib>
@@ -45,6 +46,14 @@ void LevelState::onStart(Game &instance)
         .withComponent(Sprite("player_projectiles", 2))
         .withComponent(Transform(Dimensional(0, 200), Dimensional(0, 0), Dimensional(1, 1)))
         .withComponent(Velocity(7, 0))
+        .build();
+
+    // Example Enemy
+    instance.componentStorage.buildEntity()
+        .withComponent(Sprite{"player_ships", 1})
+        .withComponent(Transform({1000, 200}, {0, 0}, {1, 1}))
+        .withComponent(Velocity{0, 0})
+        .withComponent(Enemy{{Pattern{{-1,1}, 60}, Pattern{{-1,-1}, 60}}, 10})
         .build();
 }
 
