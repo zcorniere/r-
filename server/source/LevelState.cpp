@@ -10,24 +10,24 @@
 #include <cstdlib>
 
 // Counted in milleseconds
-constexpr int STAR_SPAWN_DELAY = 300;
+constexpr int STAR_SPAWN_DELAY = 250;
 
-constexpr unsigned STAR_BUFFER_SIZE = 100;
+constexpr unsigned STAR_BUFFER_SIZE = 200;
 
 void LevelState::onStart(Game &instance)
 {
     // Creating Back ground
     instance.componentStorage.buildEntity()
         .withComponent(Sprite("level1", 0))
-        .withComponent(Transform(Dimensional(10, 10), Dimensional(0, 0), Dimensional(2, 2)))
+        .withComponent(Transform(Dimensional(10, 10), Dimensional(0, 0), Dimensional(4, 4)))
         .withComponent(Velocity(-0.5, 0))
         .build();
 
     // Creating Player Ship
     instance.componentStorage.buildEntity()
         .withComponent(Sprite("player_ships", 2))
-        .withComponent(Transform(Dimensional(10, 10), Dimensional(0, 0), Dimensional(1.5, 1.5)))
-        .withComponent(PlayerShipController(0, 1))
+        .withComponent(Transform(Dimensional(10, 10), Dimensional(0, 0), Dimensional(3, 3)))
+        .withComponent(PlayerShipController(0, 2.5))
         .withComponent(Velocity(0, 0))
         .withComponent(GameObject::PlayerShip)
         .withComponent(CollisionBox(30, 10, [](){ std::cout << "gmal\n"; }, 0, 3))
@@ -35,9 +35,9 @@ void LevelState::onStart(Game &instance)
 
     // Floor CollisionBox
     instance.componentStorage.buildEntity()
-        .withComponent(Transform(Dimensional(0, 460), Dimensional(1, 1), Dimensional(1, 1)))
+        .withComponent(Transform(Dimensional(0, 920), Dimensional(1, 1), Dimensional(1, 1)))
         .withComponent(GameObject::Wall)
-        .withComponent(CollisionBox(1000, 30))
+        .withComponent(CollisionBox(2000, 60))
         .build();
 
     // Example Projectile
@@ -63,14 +63,14 @@ void LevelState::onTick(Game &instance)
         return;
     last_update = std::chrono::system_clock::now();
 
-    float scale = rand() % 4 + 2;
-    float height = rand() % 400;
+    float scale = rand() % 4 + 3;
+    float height = rand() % 800;
     float speed = rand() % 5 + 1;
 
     m_stars_ids.push(
         instance.componentStorage.buildEntity()
             .withComponent(Sprite("player_ships", 50))
-            .withComponent(Transform(Dimensional(1000, height), Dimensional(0, 0), Dimensional(scale, scale)))
+            .withComponent(Transform(Dimensional(2000, height), Dimensional(0, 0), Dimensional(scale, scale)))
             .withComponent(Velocity(-1 * speed, 0))
             .build()
     );
