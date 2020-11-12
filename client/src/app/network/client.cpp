@@ -123,8 +123,9 @@ void network::Client::update()
         }
     }
     if (status == Status::DownloadAssets) {
-        if (!tcp)
-            tcp = std::make_unique<network::TcpSockMngr>(*console, context, server_ip, server_tcp_port, assets_ids_list);
+        if (!tcp) {
+            tcp = std::make_unique<network::TcpSockMngr>(*console, server_ip, server_tcp_port, assets_ids_list);
+        }
         if (tcp->isDownloadFinished()) {
             assets = tcp->getAssets();
             tcp.reset();
@@ -180,7 +181,7 @@ void network::Client::connect(const std::string &new_udp_server_address)
     server_ip = host.value().first;
     server_udp_port = host.value().second;
     if (console) console->log( "try to connect to : " + server_ip + ":" + std::to_string(server_udp_port));
-    udp = std::make_unique<network::UdpSockMngr>(*console, context, server_ip, server_udp_port);
+    udp = std::make_unique<network::UdpSockMngr>(*console, server_ip, server_udp_port);
     if (udp)
         status = Status::AskForAssets;
     timeout_clock.restart();

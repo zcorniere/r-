@@ -7,8 +7,8 @@
 
 #include "app/network/udpsockmngr.hpp"
 
-network::UdpSockMngr::UdpSockMngr(Console &console, boost::asio::io_context &io_context, const std::string &ip, short port) :
-    console(console), context(io_context), socket(context, udp::endpoint(udp::v4(), 0)) , resolver(context)
+network::UdpSockMngr::UdpSockMngr(Console &console, const std::string &ip, short port) :
+    console(console), socket(context, udp::endpoint(udp::v4(), 0)) , resolver(context), run_thread([this](){context.run();})
 {
     udp::resolver::query query(udp::v4(), ip, std::to_string(port));
     endpoint = *resolver.resolve(query).begin();
@@ -18,33 +18,35 @@ network::UdpSockMngr::UdpSockMngr(Console &console, boost::asio::io_context &io_
 
 network::UdpSockMngr::~UdpSockMngr()
 {
-
+    if (run_thread.joinable())
+        run_thread.join();
 }
+
+#include <iostream>
 
 void network::UdpSockMngr::do_receive()
 {
-//    socket.async_wait(udp::socket::wait_read, [&](const boost::system::error_code &error) {
-//        if (!is_connected)
-//            return;
-//        auto len = socket.available();
-//        if (error || len < sizeof(protocol::MessageHeader<UdpCode>))
-//            do_receive();
-//        std::vector<std::byte> buffer;
-//        buffer.resize(len);
-//        auto size = socket.receive(boost::asio::buffer(buffer, len));
-//        buffer.resize(size);
-//        protocol::MessageReceived<UdpCode> message(std::move(buffer));
-//        if (message.head().firstbyte != protocol::magic_number.first || message.head().secondbyte != protocol::magic_number.second)
-//            do_receive();
-//        if (!protocol::check_size(message.head().code, message.head().body_size)) {
-//            console->log("Error : UDP package has wrong body size");
-//            do_receive();
-//        }
-//        received_messages.push_back(std::move(message));
-//    });
+    socket.async_wait(udp::socket::wait_read, [&](const boost::system::error_code &error) {
+        auto len = socket.available();
+        if (error || len < sizeof(protocol::MessageHeader<UdpCode>))
+            do_receive();
+        std::cout << "client received udp package" << std::endl;
+        std::vector<std::byte> buffer;
+        buffer.resize(len);
+        auto size = socket.receive(boost::asio::buffer(buffer, len));
+        buffer.resize(size);
+        protocol::MessageReceived<UdpCode> message(std::move(buffer));
+        if (message.head().firstbyte != protocol::magic_number.first || message.head().secondbyte != protocol::magic_number.second)
+            do_receive();
+        if (!protocol::check_size(message.head().code, message.head().body_size)) {
+            console.log("Error : UDP package has wrong body size");
+            do_receive();
+        }
+        received_messages.push_back(std::move(message));
+    });
 }
 
-void network::UdpSockMngr::do_send(protocol::MessageToSend<UdpCode> message)
+void network::UdpSockMngr::send(protocol::MessageToSend<UdpCode> message)
 {
     std::size_t length = sizeof(message.head) + message.head.body_size;
     std::vector<std::byte> buffer;
@@ -56,11 +58,6 @@ void network::UdpSockMngr::do_send(protocol::MessageToSend<UdpCode> message)
 //        if (error || nbytes != length)
 //            console->log("Error [UDP]: send error");
 //    });
-}
-
-void network::UdpSockMngr::send(protocol::MessageToSend<UdpCode> message)
-{
-    do_send(std::move(message));
 }
 
 std::vector<protocol::MessageReceived<UdpCode>> network::UdpSockMngr::receive()

@@ -8,8 +8,8 @@
 #include <algorithm>
 #include "app/network/tcpsockmngr.hpp"
 
-network::TcpSockMngr::TcpSockMngr(Console &console, boost::asio::io_context &io_context, const std::string &ip, short port, std::vector<std::pair<long, bool>>) :
-    console(console), context(io_context), socket(context), resolver(context)
+network::TcpSockMngr::TcpSockMngr(Console &console, const std::string &ip, short port, std::vector<std::pair<long, bool>>) :
+    console(console), socket(context), resolver(context), run_thread([this](){context.run();})
 {
     // TODO
     downloadAllAssets();
@@ -17,7 +17,8 @@ network::TcpSockMngr::TcpSockMngr(Console &console, boost::asio::io_context &io_
 
 network::TcpSockMngr::~TcpSockMngr()
 {
-    // TODO
+    if (run_thread.joinable())
+        run_thread.join();
 }
 
 long network::TcpSockMngr::receiveAsset()

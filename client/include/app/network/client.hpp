@@ -38,7 +38,6 @@ namespace network {
         short server_tcp_port;
         std::vector<std::pair<long, bool>> assets_ids_list;
         std::vector<Asset> assets;
-        boost::asio::io_context context;
         std::unique_ptr<network::UdpSockMngr> udp = nullptr;
         std::unique_ptr<network::TcpSockMngr> tcp = nullptr;
         sf::Clock timeout_clock;

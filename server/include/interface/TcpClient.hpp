@@ -69,6 +69,7 @@ class Client: public IClient<T> {
                 [this](std::error_code ec, std::size_t len) {
                     (void)len;
                     if (!ec) {
+                        std::cout << "TCP read data from client" << std::endl;
                         addToMsgQueue();
                     } else {
                         std::cerr << "[" << this->getId() << "] Read body failed: " << ec.message() << std::endl;
@@ -82,6 +83,7 @@ class Client: public IClient<T> {
                 [this](std::error_code ec, std::size_t len) {
                     (void)len;
                     if (!ec) {
+                        std::cout << "TCP write data to client" << std::endl;
                         if (q_out.front().body.size() > 0) {
                             writeBody();
                         } else {

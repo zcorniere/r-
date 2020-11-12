@@ -52,6 +52,7 @@ class Client: public IClient<T> {
                [this](std::error_code ec, std::size_t len) {
                    (void)len;
                     if (!ec) {
+                        std::cout << "UDP read data from client" << std::endl;
                         if (tmp.head.size > 0) {
                             tmp.body.resize(tmp.head.size);
                             readBody();
@@ -85,6 +86,7 @@ class Client: public IClient<T> {
                 [this](std::error_code ec, std::size_t len) {
                    (void)len;
                     if (!ec) {
+                        std::cout << "UDP send data to client" << std::endl;
                         if (q_out.front().body.size() > 0) {
                             writeBody();
                         } else {
