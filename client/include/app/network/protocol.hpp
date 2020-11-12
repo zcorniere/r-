@@ -15,6 +15,8 @@
 #include <cstring>
 #include <boost/asio/buffer.hpp>
 
+// TODO Le client à besoin d'une table de liaison pour lier std::pair<long id_asset, long id_sprite> à sf::Sprite
+
 namespace protocol {
     namespace transform {
         struct Rotation {

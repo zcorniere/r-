@@ -43,11 +43,10 @@ void network::UdpSockMngr::do_send(protocol::MessageToSend<UdpCode> message)
     buffer.resize(length);
     std::memcpy(buffer.data(), &message.head, sizeof(message.head));
     std::memcpy(buffer.data() + sizeof(message.head), message.body.data(), message.head.body_size);
-    socket.send_to(boost::asio::buffer(buffer, length), endpoint);
-//    socket.async_send_to(boost::asio::buffer(buffer, length), endpoint, [&](boost::system::error_code error, std::size_t nbytes) {
-//        if (error || nbytes != length)
-//            console->log("Error [UDP]: send error");
-//    });
+    socket.async_send_to(boost::asio::buffer(buffer, length), endpoint, [&](boost::system::error_code error, std::size_t nbytes) {
+        if (error || nbytes != length)
+            console->log("Error [UDP]: send error");
+    });
 }
 
 void network::UdpSockMngr::setConsole(Console *new_console)
@@ -58,10 +57,8 @@ void network::UdpSockMngr::setConsole(Console *new_console)
 void network::UdpSockMngr::setHost(const std::string &ip, short port)
 {
     is_connected = true;
-    endpoint = *resolver.resolve(ip, std::to_string(port)).begin();
-    socket.open(udp::v4());
+    endpoint = resolver.resolve(ip, std::to_string(port))->endpoint();
     do_receive();   // start listening
-    io_context.run();
 }
 
 void network::UdpSockMngr::reset()

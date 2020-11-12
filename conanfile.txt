@@ -14,3 +14,7 @@ sfml:network=True
 [generators]
 cmake
 
+[imports]
+bin, *.dll -> ./bin
+lib, *.dylib* -> ./bin
+lib, *.lib* -> ./bin    # Because Boost .lib are dynamically linked

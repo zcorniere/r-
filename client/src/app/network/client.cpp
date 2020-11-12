@@ -60,9 +60,9 @@ void network::Client::update()
                     return true;
                 });
                 if (it != assets.end()) {
-                   it->sound.setPitch(sound.pitch);
-                   it->sound.setLoop(sound.isLooping);
-                   it->sound.play();
+                    it->sound.setPitch(sound.pitch);
+                    it->sound.setLoop(sound.isLooping);
+                    it->sound.play();
                 } else
                     console->log("Error [Play]: Sound specified not found");
             }
@@ -91,6 +91,7 @@ void network::Client::update()
             protocol::MessageToSend<UdpCode> message;
             message.head.code = protocol::udp::Code::AskAssetList;
             message.head.body_size = 0;
+            message.body.clear();
             udp.send(message);
             status = Status::WaitingForAssets;
             timeout_clock.restart();

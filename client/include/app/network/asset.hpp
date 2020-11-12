@@ -20,8 +20,8 @@ struct Asset {
     long id_tile;                  // if type is texture
     sf::Texture texture;           // if type is texture
     sf::Sprite sprite;             // if type is texture
-   sf::Sound sound;               // if type is Sound
-   sf::SoundBuffer sound_buffer;  // if type is Sound
+    sf::Sound sound;               // if type is Sound
+    sf::SoundBuffer sound_buffer;  // if type is Sound
 };
 
 #endif

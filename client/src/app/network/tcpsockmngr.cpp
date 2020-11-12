@@ -57,8 +57,8 @@ long network::TcpSockMngr::receiveAsset()
         Asset asset;
         asset.type = Asset::Type::Sound;
         asset.id_asset = body.id_asset;
-       asset.sound_buffer.loadFromMemory(body.data.data(), body.data.size());
-       asset.sound.setBuffer(asset.sound_buffer);
+        asset.sound_buffer.loadFromMemory(body.data.data(), body.data.size());
+        asset.sound.setBuffer(asset.sound_buffer);
         assets.push_back(asset);
     } else {    // Texture
         std::string config;
@@ -191,7 +191,6 @@ void network::TcpSockMngr::setHost(const std::string &ip, short port)
             });
         }
     });
-    io_context.run();
 }
 
 void network::TcpSockMngr::reset()
