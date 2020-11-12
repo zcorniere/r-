@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <cstring>
+#include <cstdint>
 #include <cstddef>
 #include <memory>
 #include <cstdint>
@@ -69,9 +70,18 @@ class Message {
 };
 
 template<typename T>
-struct OwnedMsg {
-    T msg;
-    std::shared_ptr<ecs::IClient<T>> remote;
-};
+std::ostream &operator<<(std::ostream &os, Message<T> msg) {
+    os << "Message { head: " << msg.head; // << ", body: " << msg.body << "}";
+    return os;
+}
+
+template<typename T>
+std::ostream &operator<<(std::ostream &os, MessageHeader<T> head) {
+    os << std::hex << "0x" << static_cast<unsigned char>(head.magic1)
+                   << "0x" << static_cast<unsigned char>(head.magic2)
+                   << "0x" << static_cast<unsigned char>(head.code)
+                   << "0x" << static_cast<unsigned char>(head.size);
+    return os;
+}
 
 #endif //_MESSAGE_HPP_
