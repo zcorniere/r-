@@ -20,6 +20,7 @@ network::UdpSockMngr::~UdpSockMngr()
 {
     if (run_thread.joinable())
         run_thread.join();
+    context.stop();
 }
 
 #include <iostream>
