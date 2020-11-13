@@ -61,7 +61,8 @@ int main(void)
     game.systemStorage.addSystem([](IDisplayModule &display,
                                     const Transform &transform,
                                     const Sprite &sprite) {
-                display.drawSprite(sprite.name, transform, sprite.tile_id);
+        if (!sprite.hidden)
+            display.drawSprite(sprite.name, transform, sprite.tile_id);
     });
 
     game.systemStorage.addSystem(playership_ct_input_getter);
@@ -106,6 +107,7 @@ int main(void)
     game.systemStorage.addSystem(draw_animmontages);
     game.systemStorage.addSystem(draw_deathmontages);
     game.systemStorage.addSystem(wave_cannon_input_getter);
+    game.systemStorage.addSystem(corpse_hider);
 
     // States Initialisation
     std::unique_ptr<AState> level_state(new LevelState);

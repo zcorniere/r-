@@ -39,7 +39,7 @@ void LevelState::onStart(Game &instance)
         .withComponent(GameObject::PlayerShip)
         .withComponent(CollisionBox(30, 10, 0, 3, 10))
         .withComponent(Destructible(1, true))
-        .withComponent(DeathMontage(AnimMontage("effects", {80, 81, 82, 83, 84}, 5)))
+        .withComponent(DeathMontage(AnimMontage("effects", {80, 81, 82, 83, 84}, 7)))
         .withComponent(WaveCannon())
         .build();
 
@@ -50,6 +50,18 @@ void LevelState::onStart(Game &instance)
         .withComponent(GameObject::Wall)
         .withComponent(CollisionBox(2000, 60, 0, 0, 1000))
         .build();
+
+    // Bugs Enemies
+    instance.componentStorage.buildEntity()
+        .withComponent(Sprite{"bug", 4})
+        .withComponent(Transform({1000, 400}, {0, 0}, {3, 3}))
+        .withComponent(Velocity{-1, 0})
+        .withComponent(Destructible(1, true))
+        .withComponent(CollisionBox(21, 20, 4, 2, 1))
+        .withComponent(DeathMontage(AnimMontage("explosions", {0, 1, 2, 3, 4, 5}, 7)))
+        .withComponent(GameObject::Enemy)
+        .build();
+
 
     // Example Enemy
     instance.componentStorage.buildEntity()

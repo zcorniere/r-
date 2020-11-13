@@ -5,6 +5,7 @@ enum class GameObject {
     PlayerShip,
     Wall,
     Projectile,
+    Enemy,
 };
 
 #endif

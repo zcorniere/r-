@@ -7,6 +7,7 @@
 struct Sprite {
     std::string name;
     unsigned tile_id;
+    bool hidden = false;
 };
 
 #endif // RTYPE_SPRITE_COMPONENT_H

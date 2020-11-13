@@ -20,6 +20,9 @@ void playership_animations(const PlayerShipController &controller, Sprite &sprit
 void move_enemies(Enemy &enemy, Velocity &velocity);
 void run_animation_loops(AnimationLoop &loop, Sprite &sprite);
 
+
+// reaper
+void corpse_hider(const Destructible &destructible, Sprite &sprite);
 void destructible_reaper(Game &instance);
 
 // anim montage
