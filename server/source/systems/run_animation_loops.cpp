@@ -10,5 +10,6 @@ void run_animation_loops(AnimationLoop &loop, Sprite &sprite)
         loop.duration_elapsed = 0;
         loop.current_frame = (loop.current_frame + 1) % loop.frames.size();
     }
-    sprite = loop.getCurrentFrame();
+    if (!sprite.hidden)
+        sprite = loop.getCurrentFrame();
 }
