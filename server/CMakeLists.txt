@@ -22,6 +22,7 @@ add_executable(r-type_server
                             source/GameServer.cpp
                             source/AssetsServer.cpp
                             source/Storage.cpp
+                            source/Enemies.cpp
                             ${components}
                             ${systems}
 )

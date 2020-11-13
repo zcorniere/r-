@@ -11,6 +11,7 @@
 #include "components/AnimMontage.hpp"
 #include "components/WaveCannon.hpp"
 #include "components/Trajectory.hpp"
+#include "Enemies.hpp"
 #include <iostream>
 #include <chrono>
 #include <cstdlib>
@@ -54,18 +55,9 @@ void LevelState::onStart(Game &instance)
         .build();
 
     // Bugs Enemies
-    instance.componentStorage.buildEntity()
-        .withComponent(Sprite{"bug", 4})
+    auto builder = instance.componentStorage.buildEntity();
+    Enemy::BUG.build(builder)
         .withComponent(Transform({2000, 400}, {0, 0}, {3, 3}))
-        .withComponent(Trajectory([]
-        (Transform &t) {
-            t.location.x -= 1;
-            t.location.y = std::cos(t.location.x * 0.01) * 200 + 300;
-        }))
-        .withComponent(Destructible(1, true))
-        .withComponent(CollisionBox(21, 20, 4, 2, 1))
-        .withComponent(DeathMontage("explosions", {0, 1, 2, 3, 4, 5}, 7))
-        .withComponent(GameObject::Enemy)
         .build();
 
 

@@ -14,7 +14,11 @@
 #include <typeindex>
 #include <vector>
 #include <stdexcept>
+#include <variant>
+#include <type_traits>
 #include <boost/type_index.hpp>
+
+class Enemy;
 
 class ComponentStorage {
 class EntityBuilder;
@@ -110,6 +114,7 @@ private:
 private:
 
     friend EntityBuilder;
+    friend Enemy;
     class EntityBuilder {
     private:
         unsigned m_id;
