@@ -5,6 +5,7 @@
 #include <filesystem>
 
 #include "AssetsServer.hpp"
+#include "Snitch.hpp"
 
 const std::unordered_map<std::string, protocol::tcp::AssetsPackage::Type> ext_to_type {
     {".png", protocol::tcp::AssetsPackage::Texture},
@@ -54,7 +55,7 @@ void AssetsServer::onMessage(Message<protocol::tcp::AssetsRequest> msg) {
                         rep.insert(reply);
                     }
                 } catch (const std::runtime_error &re) {
-                    std::cerr << "[SERVER]: Execption " << re.what() << std::endl;
+                    Snitch::msg("SERVER") << "Execption " << re.what() << Snitch::endl;
                 }
             } break;
             default: break;
@@ -85,7 +86,7 @@ std::string AssetsServer::getConfigForAssets(std::string path) {
     size_t dot = path.find_last_of('.');
     if (dot == std::string::npos)
         throw std::runtime_error("not dot");
-    path.replace(dot, 12, "_config.json");
+    path.replace(dot, 5, ".json");
     if (!std::filesystem::exists(path)) {
         throw std::runtime_error("Not a valid path");
     }

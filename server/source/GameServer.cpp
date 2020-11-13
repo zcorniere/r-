@@ -1,4 +1,5 @@
 #include "GameServer.hpp"
+#include "Snitch.hpp"
 
 using namespace protocol::udp;
 
@@ -21,7 +22,7 @@ void GameServer::update() {
 }
 
 void GameServer::onMessage(Message<RequestCode> msg) {
-    std::cout << "[UDP_SERVER]: " << msg << std::endl;
+    Snitch::msg("UDP_SERVER") << msg << Snitch::endl;
     if (msg.validMagic(protocol::MagicPair) && msg.remote) {
         if (!list.contains(msg.remote)) { list.insert({msg.remote, Player{}}); }
         switch (msg.head.code) {
