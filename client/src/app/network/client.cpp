@@ -127,7 +127,7 @@ void network::Client::stateWaitingForAssets()
 void network::Client::stateDownload()
 {
     if (!tcp) {
-        tcp = std::make_unique<network::TcpSockMngr>(*console, server_ip, server_tcp_port, assets_ids_list);
+        tcp = std::make_unique<network::TcpSockMngr>(timeout_clock, *console, server_ip, server_tcp_port, assets_ids_list);
         if (console) console->log("Start [DownloadAssets]");
     }
     if (tcp->isDownloadFinished()) {

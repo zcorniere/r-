@@ -8,12 +8,13 @@
 #include <algorithm>
 #include "app/network/tcpsockmngr.hpp"
 
-network::TcpSockMngr::TcpSockMngr(Console &console, const std::string &ip, short port, std::vector<std::pair<long, bool>> assetlist) :
-    console(console), ip(ip), port(port), socket(context), resolver(context), assets_ids_list(std::move(assetlist))
+network::TcpSockMngr::TcpSockMngr(sf::Clock &timeout, Console &console, const std::string &ip, short port, std::vector<std::pair<long, bool>> assetlist) :
+    timeout_clock(timeout), console(console), ip(ip), port(port), socket(context), resolver(context), assets_ids_list(std::move(assetlist))
 {
-    // TODO
-//    run_thread = std::thread([this](){context.run();});
-//    downloadAllAssets();
+    do_receive();
+    run_thread = std::thread([this](){context.run();});
+    boost::asio::connect(socket, resolver.resolve(ip, std::to_string(port)));
+    downloadAllAssets();
 }
 
 network::TcpSockMngr::~TcpSockMngr()
@@ -136,22 +137,32 @@ void network::TcpSockMngr::do_receive()
     });
 }
 
-void network::TcpSockMngr::do_send(protocol::MessageToSend<TcpCode> message)
+void network::TcpSockMngr::send(protocol::MessageToSend<TcpCode> message)
 {
     std::size_t length = sizeof(message.head) + message.head.body_size;
     std::vector<std::byte> buffer;
     buffer.resize(length);
     std::memcpy(buffer.data(), &message.head, sizeof(message.head));
     std::memcpy(buffer.data() + sizeof(message.head), message.body.data(), message.head.body_size);
-    boost::asio::async_write(socket, boost::asio::buffer(buffer, length),
-        [this](boost::system::error_code ec, std::size_t) {
-                if (ec) {
-                    console.log("Error [TCP]: Sending failed");
-                } else {
-                    do_receive();
-                }
-            });
+    boost::asio::write(socket, boost::asio::buffer(buffer, length));
 }
+
+//void network::TcpSockMngr::do_send(protocol::MessageToSend<TcpCode> message)
+//{
+//    std::size_t length = sizeof(message.head) + message.head.body_size;
+//    std::vector<std::byte> buffer;
+//    buffer.resize(length);
+//    std::memcpy(buffer.data(), &message.head, sizeof(message.head));
+//    std::memcpy(buffer.data() + sizeof(message.head), message.body.data(), message.head.body_size);
+//    boost::asio::async_write(socket, boost::asio::buffer(buffer, length),
+//        [this](boost::system::error_code ec, std::size_t) {
+//                if (ec) {
+//                    console.log("Error [TCP]: Sending failed");
+//                } else {
+//                    do_receive();
+//                }
+//            });
+//}
 
 void network::TcpSockMngr::downloadAsset(long asset_id) {
     protocol::MessageToSend<TcpCode> message;
@@ -159,7 +170,7 @@ void network::TcpSockMngr::downloadAsset(long asset_id) {
     protocol::tcp::AssetAsk asset_ask {asset_id};
     message.head.body_size = sizeof(asset_ask);
     std::memcpy(message.body.data(), &asset_ask, sizeof(asset_ask));
-    do_send(message);
+    send(message);
 }
 
 void network::TcpSockMngr::downloadAllAssets()
@@ -187,6 +198,9 @@ bool network::TcpSockMngr::isDownloadFinished() const
 
 std::vector<Asset> network::TcpSockMngr::getAssets() const
 {
+    if (!isDownloadFinished()) {
+        throw std::exception("Download is not finish");
+    }
     return assets;
 }
 
