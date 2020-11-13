@@ -8,12 +8,13 @@
 #include "components/PatternLoop.hpp"
 #include "components/Sprite.hpp"
 #include "components/Trajectory.hpp"
+#include "components/OrientedSprite.hpp"
 #include <variant>
 
 struct Enemy {
     CollisionBox collision;
     std::variant<Trajectory, PatternLoop> movement;
-    std::variant<Sprite, AnimationLoop> animation;
+    std::variant<Sprite, AnimationLoop, OrientedSprite> animation;
     int health;
     DeathMontage death_montage;
 

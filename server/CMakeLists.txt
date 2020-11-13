@@ -28,3 +28,7 @@ add_executable(r-type_server
 )
 
 target_link_libraries(r-type_server r-type_engine)
+
+add_executable(test_oriented_sprite
+  tests/src/test_oriented_sprite.cpp
+  source/components/OrientedSprite.cpp)

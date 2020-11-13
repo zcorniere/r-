@@ -30,6 +30,10 @@ ComponentStorage::EntityBuilder Enemy::build(
     if (auto animation = std::get_if<AnimationLoop>(&this->animation)) {
         builder.withComponent(animation->frames[0]);
     }
+    if (auto orientation = std::get_if<OrientedSprite>(&this->animation)) {
+        builder.withComponent(
+            Sprite{orientation->sprite, orientation->tiles[0].tile_id});
+    }
     if (std::holds_alternative<PatternLoop>(this->movement)) {
         builder.withComponent(Velocity{0, 0});
     }

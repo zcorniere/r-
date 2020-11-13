@@ -59,6 +59,7 @@ int main(void)
     game.componentStorage.registerComponent<Trajectory>();
     game.componentStorage.registerComponent<BydoShooter>();
     game.componentStorage.registerComponent<Lifetime>();
+    game.componentStorage.registerComponent<OrientedSprite>();
 
     /*
     ** SYSTEMS
@@ -113,6 +114,7 @@ int main(void)
 
     game.systemStorage.addSystem(run_animation_loops);
     game.systemStorage.addSystem(run_pattern_loops);
+    game.systemStorage.addSystem(select_oriented_sprite);
 
     // wave cannon
     std::function<void(Game &)> wave_cannon_projectile_system = wave_cannon_projectile_summoner;

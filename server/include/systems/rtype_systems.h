@@ -13,6 +13,7 @@
 #include "components/Trajectory.hpp"
 #include "components/BydoShooter.hpp"
 #include "components/Lifetime.hpp"
+#include "components/OrientedSprite.hpp"
 
 // collisions
 void collisions_update(Game &instance);
@@ -26,8 +27,12 @@ void velocity_applicator(Transform &transform, const Velocity &velocity);
 void playership_ct_input_getter(IInputModule &input, PlayerShipController &controller, const Destructible &destructible);
 void playership_animations(const PlayerShipController &controller, Sprite &sprite);
 
+// Sprite animation
 void run_pattern_loops(PatternLoop &loop, Velocity &velocity);
 void run_animation_loops(AnimationLoop &loop, Sprite &sprite);
+void select_oriented_sprite(Sprite &sprite, const Trajectory &trajectory,
+                            const Transform &transform,
+                            const OrientedSprite &oriented);
 
 // reaper
 void corpse_hider(const Destructible &destructible, Sprite &sprite);
