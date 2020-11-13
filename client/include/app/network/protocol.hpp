@@ -116,7 +116,7 @@ namespace protocol {
     constexpr std::pair<std::byte, std::byte> magic_number = {std::byte{0xFA}, std::byte{0xDA}};
     namespace udp {
         // UDP code
-        enum class Code {
+        enum class Code : uint8_t {
             Sprite = 1,         // from server
             Sound = 2,          // from server
             AssetList = 3,      // from server
@@ -157,7 +157,7 @@ namespace protocol {
     }
     namespace tcp {
         // TCP code
-        enum class Code {
+        enum class Code : uint8_t {
             AssetAsk = 1,       // from client
             AssetPackage = 2    // from server
         };
