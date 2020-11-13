@@ -14,7 +14,8 @@
 void collisions_update(Game &instance);
 void collision_damages(const CollisionBox &box, Destructible &destructible);
 
-void playership_ct_input_getter(IInputModule &input, PlayerShipController &controller);
+// playership
+void playership_ct_input_getter(IInputModule &input, PlayerShipController &controller, const Destructible &destructible);
 void playership_animations(const PlayerShipController &controller, Sprite &sprite);
 
 void move_enemies(Enemy &enemy, Velocity &velocity);
