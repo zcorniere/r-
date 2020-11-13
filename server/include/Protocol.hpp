@@ -19,15 +19,15 @@ namespace udp {
         Texture = 0x01,
         Sound = 0x02,
         AssetsList = 0x03,
-        AssestsAsk = 0x04,
+        AssetsAsk = 0x04,
         Ready = 0x05,
         Input = 0x06,
         Disconnect = 0x07,
     };
 
     struct AssetsList {
-        size_t size;
         unsigned port;
+        std::size_t size;
         std::vector<long> list;
     };
 

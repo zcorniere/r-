@@ -44,14 +44,21 @@ namespace network {
         static constexpr auto timeout = 10000;
         std::function<void(void)> onDisconnect_hdl = nullptr;
         Console *console = nullptr;
+        void statePlay();
+        void stateAskForAssets();
+        void stateWaitingForAssets();
+        void stateDownload();
+        void stateReady();
+        void stateTimeout();
     public:
-        explicit Client(sf::RenderWindow &p_window);
         void update();
+        explicit Client(sf::RenderWindow &p_window);
         void setConsole(Console *new_console);
         void set_onDisconnect(std::function<void(void)> functor);
         void connect(const std::string &new_udp_server_address);
         void disconnect();
         void reset();
+    private:
         void stopSockManagers();
     };
 }

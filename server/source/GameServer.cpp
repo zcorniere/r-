@@ -4,7 +4,7 @@
 using namespace protocol::udp;
 
 GameServer::GameServer(unsigned port, std::filesystem::path &p) :
-    Server(port), assets(port + 1, p)
+    Server(port), assets(port + 1, p), port(port)
 {
     this->stor = this->assets.getStorage();
     this->start();
@@ -22,7 +22,7 @@ void GameServer::update() {
 }
 
 void GameServer::onMessage(Message<RequestCode> msg) {
-    Snitch::msg("UDP_SERVER") << msg << Snitch::endl;
+    Snitch::msg("GAME_SERVER") << msg << Snitch::endl;
     if (msg.validMagic(protocol::MagicPair) && msg.remote) {
         if (!list.contains(msg.remote)) { list.insert({msg.remote, Player{}}); }
         switch (msg.head.code) {
@@ -42,7 +42,20 @@ void GameServer::onMessage(Message<RequestCode> msg) {
             list.at(msg.remote).cur_pos.y = std::move(body->pos.y);
             list.at(msg.remote).cur_pos.x = std::move(body->pos.x);
         } break;
-        default: break;
+        case RequestCode::AssetsAsk: {
+            Message<RequestCode> rep(protocol::MAGIC_NB_1, protocol::MAGIC_NB_2);
+            rep.head.code = RequestCode::AssetsList;
+            protocol::udp::AssetsList ass;
+            ass.port = port + 1;
+            for (const auto &[_, e]: stor->getStorage()) {
+                ass.list.push_back(e);
+            }
+            ass.size = ass.list.size();
+            rep.insert(ass);
+            msg.remote->send(rep);
+            Snitch::msg("GAME_SERVER") << "Replied RequestCode::AssetsList" << Snitch::endl;
+        } break;
+        default: Snitch::warn("GAME_SERVER") << "Unkown comand" << Snitch::endl; break;
         }
     }
 }
@@ -83,7 +96,7 @@ void GameServer::drawSprite(const std::string &name, const Transform &transf, un
 
 Dimensional GameServer::getCursorLocation(const unsigned player) {
     for (const auto &[e, i] : list) {
-        if (e->getId() == player) {
+        if (e->getId() == player && i.ready) {
             return i.cur_pos;
         }
     }
@@ -92,7 +105,7 @@ Dimensional GameServer::getCursorLocation(const unsigned player) {
 
 std::vector<::Input> GameServer::getInputEvents(const unsigned player) {
     for (auto &[e, i] : list) {
-        if (e->getId() == player) {
+        if (e->getId() == player && i.ready) {
             std::vector<::Input> ret = i.input;
             i.input.clear();
             return ret;
@@ -103,7 +116,7 @@ std::vector<::Input> GameServer::getInputEvents(const unsigned player) {
 
 bool GameServer::isKeyPressed(unsigned player, ::Input key) {
     for (const auto &[e, i]: list) {
-        if (e->getId() == player) {
+        if (e->getId() == player && i.ready) {
             return i.keys.contains(key);
         }
     }

@@ -28,8 +28,8 @@ class Message {
     public:
         Message() = default;
         Message(const uint8_t m1, const uint8_t m2) {
-            head.magic1(m1);
-            head.magic2(m2);
+            head.magic1 = m1;
+            head.magic2 = m2;
         }
         ~Message() {};
 
@@ -71,16 +71,16 @@ class Message {
 
 template<typename T>
 std::ostream &operator<<(std::ostream &os, Message<T> msg) {
-    os << "Message { head: " << msg.head; // << ", body: " << msg.body << "}";
+    os << "Message(head: " << msg.head << ", body: " << msg.body.size() << ")";
     return os;
 }
 
 template<typename T>
 std::ostream &operator<<(std::ostream &os, MessageHeader<T> head) {
-    os << std::hex << "0x" << static_cast<unsigned char>(head.magic1)
-                   << "0x" << static_cast<unsigned char>(head.magic2)
-                   << "0x" << static_cast<unsigned char>(head.code)
-                   << "0x" << static_cast<unsigned char>(head.size);
+    os << std::hex << "0x" << static_cast<unsigned>(head.magic1)
+                   << ":0x" << static_cast<unsigned>(head.magic2)
+                   << ":0x" << static_cast<unsigned>(head.code)
+                   << ":0x" << static_cast<unsigned>(head.size);
     return os;
 }
 
