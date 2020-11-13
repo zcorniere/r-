@@ -18,6 +18,7 @@ struct Enemy {
     DeathMontage death_montage;
 
     static const Enemy BUG;
+    static const Enemy FLAPPY;
 
     ComponentStorage::EntityBuilder build(
         ComponentStorage::EntityBuilder builder) const;
