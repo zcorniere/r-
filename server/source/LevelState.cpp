@@ -9,6 +9,7 @@
 #include "components/AnimationLoop.hpp"
 #include "components/Destructible.hpp"
 #include "components/AnimMontage.hpp"
+#include "components/WaveCannon.hpp"
 #include <iostream>
 #include <chrono>
 #include <cstdlib>
@@ -39,6 +40,7 @@ void LevelState::onStart(Game &instance)
         .withComponent(CollisionBox(30, 10, 0, 3))
         .withComponent(Destructible(1, true))
         .withComponent(AnimMontage("effects", {80, 81, 82, 83, 84}, 5))
+        .withComponent(WaveCannon())
         .build();
 
     // Floor CollisionBox

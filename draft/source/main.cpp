@@ -53,6 +53,7 @@ int main(void)
     game.componentStorage.registerComponent<AnimationLoop>();
     game.componentStorage.registerComponent<Destructible>();
     game.componentStorage.registerComponent<AnimMontage>();
+    game.componentStorage.registerComponent<WaveCannon>();
 
     // Systems Initialisation
     // System that displays entities with a transform and a sprite on screen
@@ -93,6 +94,8 @@ int main(void)
     game.systemStorage.addSystem(collision_system);
     std::function<void(Game &)> destructible_reaper_system = destructible_reaper;
     game.systemStorage.addSystem(destructible_reaper_system);
+    std::function<void(Game &)> wave_cannon_projectile_system = wave_cannon_projectile_summoner;
+    game.systemStorage.addSystem(wave_cannon_projectile_system);
 
     game.systemStorage.addSystem(playership_animations);
     game.systemStorage.addSystem(move_enemies);
@@ -100,6 +103,7 @@ int main(void)
     game.systemStorage.addSystem(collision_damages);
     game.systemStorage.addSystem(play_death_montages);
     game.systemStorage.addSystem(draw_animmontages);
+    game.systemStorage.addSystem(wave_cannon_input_getter);
 
     // States Initialisation
     std::unique_ptr<AState> level_state(new LevelState);
