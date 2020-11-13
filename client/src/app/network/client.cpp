@@ -10,6 +10,7 @@
 #include <utility>
 #include "app/network/client.hpp"
 
+// TODO
 void network::Client::statePlay()
 {
     auto message_list = udp->receive();
@@ -78,18 +79,19 @@ void network::Client::statePlay()
     return;
 }
 
+// DONE
 void network::Client::stateAskForAssets()
 {
     protocol::MessageToSend<UdpCode> message;
     message.head.code = protocol::udp::Code::AskAssetList;
     message.head.body_size = 0;
-    message.body.clear();
     udp->send(message);
     status = Status::WaitingForAssets;
     timeout_clock.restart();
     if (console) console->log("Success [AskForAssets]");
 }
 
+// DONE
 void network::Client::stateWaitingForAssets()
 {
     auto message_list = udp->receive();
@@ -103,8 +105,7 @@ void network::Client::stateWaitingForAssets()
                 std::memcpy(&assetlist.size, body.data(), sizeof(assetlist.size));
                 body += sizeof(assetlist.size);
                 assetlist.list.resize(assetlist.size);
-                std::memcpy(assetlist.list.data(), body.data(),
-                            assetlist.size * sizeof(assetlist.list.front()));
+                std::memcpy(assetlist.list.data(), body.data(),assetlist.size * sizeof(assetlist.list.front()));
                 server_tcp_port = static_cast<short>(assetlist.port);
                 for (auto i = 0; i < assetlist.size; ++i)
                     assets_ids_list.emplace_back(assetlist.list[i], false);
@@ -120,11 +121,11 @@ void network::Client::stateWaitingForAssets()
     }
 }
 
+// DONE
 void network::Client::stateDownload()
 {
-    if (!tcp) {
+    if (!tcp)
         tcp = std::make_unique<network::TcpSockMngr>(*console, server_ip, server_tcp_port, assets_ids_list);
-    }
     if (tcp->isDownloadFinished()) {
         assets = tcp->getAssets();
         tcp.reset();
@@ -134,6 +135,7 @@ void network::Client::stateDownload()
     }
 }
 
+// DONE
 void network::Client::stateReady()
 {
     protocol::MessageToSend<UdpCode> message;
@@ -145,6 +147,7 @@ void network::Client::stateReady()
     if (console) console->log("Success [Ready]");
 }
 
+// DONE
 void network::Client::stateTimeout()
 {
     disconnect();
@@ -163,7 +166,7 @@ void network::Client::update()
         stateAskForAssets();
     }
     if (status == Status::WaitingForAssets) {
-        if (console) console->log("State : WaitingForAssets");
+//        if (console) console->log("State : WaitingForAssets");
         stateWaitingForAssets();
     }
     if (status == Status::DownloadAssets) {
