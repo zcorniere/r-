@@ -19,7 +19,7 @@ void network::Client::update()
     if (status == Status::NotConnected)
         return;
     if (status == Status::Play) {
-        auto message_list = udp.receive();
+        auto message_list = udp->receive();
         if (message_list.empty())
             return;
         for (auto &message : message_list) {
@@ -60,9 +60,9 @@ void network::Client::update()
                     return true;
                 });
                 if (it != assets.end()) {
-//                    it->sound.setPitch(sound.pitch);
-//                    it->sound.setLoop(sound.isLooping);
-//                    it->sound.play();
+                    it->sound.setPitch(sound.pitch);
+                    it->sound.setLoop(sound.isLooping);
+                    it->sound.play();
                 } else
                     console->log("Error [Play]: Sound specified not found");
             }
@@ -81,60 +81,54 @@ void network::Client::update()
         }
         body.nb_keys = keys.size;
         std::memcpy(message.body.data(), &body, message.head.body_size);
-        udp.send(message);
+        udp->send(message);
         return;
     }
     if (status == Status::AskForAssets) {
-        if (!udp.isConnected())
-            udp.setHost(server_ip, server_udp_port);
-        if (udp.isConnected()) {
-            protocol::MessageToSend<UdpCode> message;
-            message.head.code = protocol::udp::Code::AskAssetList;
-            message.head.body_size = 0;
-            message.body.clear();
-            udp.send(message);
-            status = Status::WaitingForAssets;
-            timeout_clock.restart();
-            if (console) console->log("Success [AskForAssets]");
-        }
+        protocol::MessageToSend<UdpCode> message;
+        message.head.code = protocol::udp::Code::AskAssetList;
+        message.head.body_size = 0;
+        message.body.clear();
+        udp->send(message);
+        status = Status::WaitingForAssets;
+        timeout_clock.restart();
+        if (console) console->log("Success [AskForAssets]");
     }
     if (status == Status::WaitingForAssets) {
-        if (udp.isConnected()) {
-            auto message_list = udp.receive();
-            if (!message_list.empty()) {
-                for (auto &message : message_list) {
-                    if (message.head().code == UdpCode::AssetList) {
-                        protocol::udp::from_server::AssetList assetlist;
-                        auto body = message.body();
-                        std::memcpy(&assetlist.port, body.data(), sizeof(assetlist.port));
-                        body += sizeof(assetlist.port);
-                        std::memcpy(&assetlist.size, body.data(), sizeof(assetlist.size));
-                        body += sizeof(assetlist.size);
-                        assetlist.list.resize(assetlist.size);
-                        std::memcpy(assetlist.list.data(), body.data(),
-                                    assetlist.size * sizeof(assetlist.list.front()));
-                        server_tcp_port = static_cast<short>(assetlist.port);
-                        for (auto i = 0; i < assetlist.size; ++i)
-                            assets_ids_list.emplace_back(assetlist.list[i], false);
-                        status = Status::DownloadAssets;
-                        timeout_clock.restart();
-                        if (console) console->log("Success [WaitingForAssets]");
-                        break;
-                    } else {
-                        if (console) console->log("Error [WaitingForAssets] : Server sent wrong data");
-                        continue;
-                    }
+        auto message_list = udp->receive();
+        if (!message_list.empty()) {
+            for (auto &message : message_list) {
+                if (message.head().code == UdpCode::AssetList) {
+                    protocol::udp::from_server::AssetList assetlist;
+                    auto body = message.body();
+                    std::memcpy(&assetlist.port, body.data(), sizeof(assetlist.port));
+                    body += sizeof(assetlist.port);
+                    std::memcpy(&assetlist.size, body.data(), sizeof(assetlist.size));
+                    body += sizeof(assetlist.size);
+                    assetlist.list.resize(assetlist.size);
+                    std::memcpy(assetlist.list.data(), body.data(),
+                                assetlist.size * sizeof(assetlist.list.front()));
+                    server_tcp_port = static_cast<short>(assetlist.port);
+                    for (auto i = 0; i < assetlist.size; ++i)
+                        assets_ids_list.emplace_back(assetlist.list[i], false);
+                    status = Status::DownloadAssets;
+                    timeout_clock.restart();
+                    if (console) console->log("Success [WaitingForAssets]");
+                    break;
+                } else {
+                    if (console) console->log("Error [WaitingForAssets] : Server sent wrong data");
+                    continue;
                 }
             }
         }
     }
     if (status == Status::DownloadAssets) {
-        if (!tcp.isConnected())
-            tcp.setHost(server_ip, server_tcp_port);
-        if (tcp.isConnected())
-            tcp.set_assets_ids_list(assets_ids_list);
-        if (tcp.isDownloadFinished()) {
-            assets = tcp.getAssets();
+        if (!tcp) {
+            tcp = std::make_unique<network::TcpSockMngr>(*console, server_ip, server_tcp_port, assets_ids_list);
+        }
+        if (tcp->isDownloadFinished()) {
+            assets = tcp->getAssets();
+            tcp.reset();
             status = Status::Ready;
             timeout_clock.restart();
             if (console) console->log("Success [DownloadAssets]");
@@ -144,7 +138,7 @@ void network::Client::update()
         protocol::MessageToSend<UdpCode> message;
         message.head.code = protocol::udp::Code::Ready;
         message.head.body_size = 0;
-        udp.send(message);
+        udp->send(message);
         status = Status::Play;
         timeout_clock.restart();
         if (console) console->log("Success [Ready]");
@@ -158,8 +152,6 @@ void network::Client::update()
 void network::Client::setConsole(Console *new_console)
 {
     console = new_console;
-    udp.setConsole(console);
-    tcp.setConsole(console);
 }
 
 void network::Client::set_onDisconnect(std::function<void(void)> functor)
@@ -189,18 +181,17 @@ void network::Client::connect(const std::string &new_udp_server_address)
     server_ip = host.value().first;
     server_udp_port = host.value().second;
     if (console) console->log( "try to connect to : " + server_ip + ":" + std::to_string(server_udp_port));
-    status = Status::AskForAssets;
+    udp = std::make_unique<network::UdpSockMngr>(*console, server_ip, server_udp_port);
+    if (udp)
+        status = Status::AskForAssets;
     timeout_clock.restart();
 }
 
 void network::Client::disconnect()
 {
-    protocol::MessageToSend<UdpCode> message;
-    message.head.code = protocol::udp::Code::Disconnect;
-    message.head.body_size = 0;
-    if (udp.isConnected()) udp.send(message);
-    timeout_clock.restart();
+    stopSockManagers();
     status = Status::NotConnected;
+    timeout_clock.restart();
     onDisconnect_hdl();
     if (console) console->log("you have been disconnected");
     reset();
@@ -212,7 +203,11 @@ void network::Client::reset()
     server_udp_port = 0;
     server_tcp_port = 0;
     assets_ids_list.clear();
-    tcp.reset();
+}
+
+void network::Client::stopSockManagers()
+{
     udp.reset();
+    tcp.reset();
 }
 

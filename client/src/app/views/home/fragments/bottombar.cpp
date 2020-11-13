@@ -26,7 +26,7 @@ BottomBar::BottomBar(std::optional<std::string> &intent_ref, bidimensional::Tran
     extend_btn->set_handler([&](){
         console->flip();
     });
-    extend_btn->move({window::WIDTH / 2 + 350, 3});
+    extend_btn->move({window::WIDTH / 2 + 750, 3});
     extend_btn->set_size({25, 25});
 }
 

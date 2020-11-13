@@ -8,10 +8,18 @@
 #include <algorithm>
 #include "app/network/tcpsockmngr.hpp"
 
-network::TcpSockMngr::TcpSockMngr() :
-    socket(io_context), resolver(io_context)
+network::TcpSockMngr::TcpSockMngr(Console &console, const std::string &ip, short port, std::vector<std::pair<long, bool>>) :
+    console(console), socket(context), resolver(context), run_thread([this](){context.run();})
 {
-    reset();
+    // TODO
+    downloadAllAssets();
+}
+
+network::TcpSockMngr::~TcpSockMngr()
+{
+    if (run_thread.joinable())
+        run_thread.join();
+    context.stop();
 }
 
 long network::TcpSockMngr::receiveAsset()
@@ -57,8 +65,8 @@ long network::TcpSockMngr::receiveAsset()
         Asset asset;
         asset.type = Asset::Type::Sound;
         asset.id_asset = body.id_asset;
-//        asset.sound_buffer.loadFromMemory(body.data.data(), body.data.size());
-//        asset.sound.setBuffer(asset.sound_buffer);
+        asset.sound_buffer.loadFromMemory(body.data.data(), body.data.size());
+        asset.sound.setBuffer(asset.sound_buffer);
         assets.push_back(asset);
     } else {    // Texture
         std::string config;
@@ -69,7 +77,7 @@ long network::TcpSockMngr::receiveAsset()
         read_json(is, json);
         for (auto& v : json.get_child("sprites")) {
             if (v.first.empty()) {
-                console->log("Error [TCP]: Config file is incorrect");
+                console.log("Error [TCP]: Config file is incorrect");
                 break;
             }
             SpriteConfig config {};
@@ -95,8 +103,6 @@ long network::TcpSockMngr::receiveAsset()
 void network::TcpSockMngr::do_receive()
 {
     socket.async_wait(tcp::socket::wait_read, [&](const boost::system::error_code &error) {
-        if (!is_connected)
-            return;
         if (error || socket.available() < sizeof(protocol::MessageHeader<UdpCode>))
             do_receive();
         // Get the header
@@ -111,7 +117,7 @@ void network::TcpSockMngr::do_receive()
         if (header.firstbyte != protocol::magic_number.first || header.secondbyte != protocol::magic_number.second)
             do_receive();
         if (header.code != TcpCode::AssetPackage) {
-            console->log("Error [TCP]: Server sent wrong data");
+            console.log("Error [TCP]: Server sent wrong data");
             do_receive();
         }
         // get the body & work on it
@@ -121,7 +127,7 @@ void network::TcpSockMngr::do_receive()
             return asset_id_item.first == asset_id;
         });
         if (it == assets_ids_list.end()) {
-            console->log("Error [TCP]: Downloaded Asset is not present in assets_ids_list");
+            console.log("Error [TCP]: Downloaded Asset is not present in assets_ids_list");
             return;
         }
         it->second = true;
@@ -139,7 +145,7 @@ void network::TcpSockMngr::do_send(protocol::MessageToSend<TcpCode> message)
     boost::asio::async_write(socket, boost::asio::buffer(buffer, length),
         [this](boost::system::error_code ec, std::size_t) {
                 if (ec) {
-                    console->log("Error [TCP]: Sending failed");
+                    console.log("Error [TCP]: Sending failed");
                 } else {
                     do_receive();
                 }
@@ -161,63 +167,18 @@ void network::TcpSockMngr::downloadAllAssets()
         return !asset_id.second;
     });
     if (it == assets_ids_list.end()) {
-        console->log("Success [TCP]: All downloads are completed");
+        console.log("Success [TCP]: All downloads are completed");
         is_download_finish = true;
     } else {
-        console->log("[TCP]: Downloading asset " + std::to_string(it->first));
+        console.log("[TCP]: Downloading asset " + std::to_string(it->first));
         downloadAsset(it->first);
     }
-}
-
-void network::TcpSockMngr::setConsole(Console *new_console)
-{
-    console = new_console;
-}
-
-void network::TcpSockMngr::setHost(const std::string &ip, short port)
-{
-    is_connected = true;
-    tcp::resolver::query query(ip, std::to_string(port));
-    resolver.async_resolve(query, [&](const boost::system::error_code& ec, tcp::resolver::results_type results) {
-        if (ec) {
-            console->log("Error [TCP]: resolve failed");
-            return;
-        } else {
-            boost::asio::async_connect(socket, results, [&](const boost::system::error_code& ec, const tcp::endpoint& endpoint) {
-                if (ec) {
-                    console->log("Error [TCP]: connection failed");
-                    return;
-                }
-            });
-        }
-    });
-}
-
-void network::TcpSockMngr::reset()
-{
-    is_connected = false;
-    is_download_finish = false;
-    io_context.reset();
-    socket.close();
-    assets_ids_list.clear();
-    assets.clear();
-}
-
-bool network::TcpSockMngr::isConnected() const
-{
-    return is_connected;
-}
-
-void network::TcpSockMngr::set_assets_ids_list(std::vector<std::pair<long, bool>> new_assets_ids_list)
-{
-    assets_ids_list = std::move(new_assets_ids_list);
-    downloadAllAssets();
 }
 
 bool network::TcpSockMngr::isDownloadFinished() const
 {
     if (assets_ids_list.empty()) {
-        console->log("Error [TCP]: Download: assets_ids_list is empty");
+        console.log("Error [TCP]: Download: assets_ids_list is empty");
         return false;
     }
     return is_download_finish;
@@ -227,3 +188,5 @@ std::vector<Asset> network::TcpSockMngr::getAssets() const
 {
     return assets;
 }
+
+

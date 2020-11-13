@@ -210,6 +210,12 @@ void WidgetText_entry::submit()
     clear();
 }
 
+void WidgetText_entry::setText(const std::string &new_text)
+{
+    data = new_text;
+    reload();
+}
+
 
 
 
