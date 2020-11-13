@@ -10,8 +10,9 @@ struct CollisionBox {
     float height;
     float offset_x = 0;
     float offset_y = 0;
+    unsigned roughness = 1;
     std::optional<GameObject> collidingWith = {};
-    float buffer = 0;
+    float colliderRoughness = 0;
 };
 
 #endif

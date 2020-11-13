@@ -37,7 +37,7 @@ void LevelState::onStart(Game &instance)
         .withComponent(PlayerShipController(0, 2.5))
         .withComponent(Velocity(0, 0))
         .withComponent(GameObject::PlayerShip)
-        .withComponent(CollisionBox(30, 10, 0, 3))
+        .withComponent(CollisionBox(30, 10, 0, 3, 10))
         .withComponent(Destructible(1, true))
         .withComponent(AnimMontage("effects", {80, 81, 82, 83, 84}, 5))
         .withComponent(WaveCannon())
@@ -48,14 +48,7 @@ void LevelState::onStart(Game &instance)
         .withComponent(Transform(Dimensional(0, 920), Dimensional(1, 1),
                                  Dimensional(1, 1)))
         .withComponent(GameObject::Wall)
-        .withComponent(CollisionBox(2000, 60))
-        .build();
-
-    // Example Projectile
-    instance.componentStorage.buildEntity()
-        .withComponent(Sprite("player_projectiles", 2))
-        .withComponent(Transform(Dimensional(0, 200), Dimensional(0, 0), Dimensional(1, 1)))
-        .withComponent(Velocity(7, 0))
+        .withComponent(CollisionBox(2000, 60, 0, 0, 1000))
         .build();
 
     // Example Enemy

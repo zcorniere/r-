@@ -45,7 +45,9 @@ void collisions_update(Game &instance)
             auto &[o_box, o_transform, o_type] = other->second;
             if (are_colliding(transform, box, o_transform, o_box)) {
                 box.collidingWith = o_type;
+                box.colliderRoughness = o_box.roughness;
                 o_box.collidingWith = type;
+                o_box.colliderRoughness = box.roughness;
             }
         }
     }
@@ -54,6 +56,9 @@ void collisions_update(Game &instance)
 void collision_damages(const CollisionBox &box, Destructible &destructible)
 {
     if (box.collidingWith) {
+        destructible.health -= box.colliderRoughness;
+        if (destructible.health > 0)
+            return;
         if (destructible.hasDeathMontage)
             destructible.status = Destructible::Status::Dying;
         else
