@@ -19,8 +19,8 @@ struct Enemy {
 
     static const Enemy BUG;
 
-    ComponentStorage::EntityBuilder &build(
-        ComponentStorage::EntityBuilder &builder) const;
+    ComponentStorage::EntityBuilder build(
+        ComponentStorage::EntityBuilder builder) const;
 };
 
 #endif // RTYPE_ENEMIES_H_

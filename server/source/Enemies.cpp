@@ -9,9 +9,15 @@ const Enemy Enemy::BUG = {
     }},
     Sprite{"bug", 4}, 1, DeathMontage("explosions", {0, 1, 2, 3, 4, 5}, 7)};
 
-ComponentStorage::EntityBuilder &Enemy::build(
-    ComponentStorage::EntityBuilder &builder) const
+ComponentStorage::EntityBuilder Enemy::build(
+    ComponentStorage::EntityBuilder builder) const
 {
+    if (auto animation = std::get_if<AnimationLoop>(&this->animation)) {
+        builder.withComponent(animation->frames[0]);
+    }
+    if (std::holds_alternative<PatternLoop>(this->movement)) {
+        builder.withComponent(Velocity{0, 0});
+    }
     return builder.withComponent(this->collision)
         .withComponent(this->movement)
         .withComponent(this->animation)
