@@ -46,7 +46,7 @@ void wave_cannon_projectile_summoner(Game &instance)
                 .withComponent(CollisionBox(16, 4, 0, 0 ))
                 .withComponent(Destructible(1))
                 .withComponent(Velocity(WCP_SPEED, 0))
-                .withComponent(GameObject::Projectile)
+                .withComponent(GameObject::PlayerProjectile)
                 .build();
             cannon.status = WaveCannon::Status::Inactive;
         }

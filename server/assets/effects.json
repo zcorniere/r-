@@ -251,6 +251,13 @@
       "origin_y": 326,
       "width": 32,
       "height": 28
+    },
+    {
+        "id": 90,
+        "origin_x": 1,
+        "origin_y": 326,
+        "width": 32,
+        "height": 28
     }
   ]
 }

@@ -1,14 +1,6 @@
 #include "Game.hpp"
 #include "SfmlAudioModule.hpp"
 #include "SfmlModule.hpp"
-#include "components/Sprite.hpp"
-#include "components/PlayerControlled.hpp"
-#include "components/Velocity.hpp"
-#include "components/GameObject.hpp"
-#include "components/CollisionBox.hpp"
-#include "components/Destructible.hpp"
-#include "components/AnimMontage.hpp"
-#include "components/Trajectory.hpp"
 #include "LevelState.hpp"
 #include <iostream>
 #include "systems/InputHandler.hpp"
@@ -28,7 +20,11 @@ int main(void)
             .append("draft")
             .append("assets");
 
-    // Modules Initialisation and assignation
+    /*
+    ** MODULES
+    ** external objects to interact with the exterior
+    */
+
     std::unique_ptr<IModule> sfml_module(new SfmlModule(
         "R-Type SOLO v0.1",
         assets_location));
@@ -42,7 +38,11 @@ int main(void)
 
     srand(time(NULL));
 
-    // Components registering
+    /*
+    ** COMPONENTS
+    ** entity's'datas containers
+    */
+
     game.componentStorage.registerComponent<Transform>();
     game.componentStorage.registerComponent<Sprite>();
     game.componentStorage.registerComponent<PlayerControlled>();
@@ -57,9 +57,14 @@ int main(void)
     game.componentStorage.registerComponent<DeathMontage>();
     game.componentStorage.registerComponent<WaveCannon>();
     game.componentStorage.registerComponent<Trajectory>();
+    game.componentStorage.registerComponent<BydoShooter>();
 
-    // Systems Initialisation
-    // System that displays entities with a transform and a sprite on screen
+    /*
+    ** SYSTEMS
+    ** components's logic functions
+    */
+
+    // sprite_displayer
     game.systemStorage.addSystem([](IDisplayModule &display,
                                     const Transform &transform,
                                     const Sprite &sprite) {
@@ -67,6 +72,8 @@ int main(void)
             display.drawSprite(sprite.name, transform, sprite.tile_id);
     });
 
+    // playership
+    game.systemStorage.addSystem(playership_animations);
     game.systemStorage.addSystem(playership_ct_input_getter);
     game.systemStorage.addSystem([]
     (Velocity &velocity, const PlayerShipController &controller) {
@@ -77,7 +84,6 @@ int main(void)
     });
 
     // DEBUG Collision Displayer
-
     game.systemStorage.addSystem([]
     (IDisplayModule &display, const Transform &transform, const CollisionBox &box) {
         sf::RectangleShape rect;
@@ -86,28 +92,43 @@ int main(void)
         dynamic_cast<SfmlModule &>(display).drawDebugBox(rect);
     });
 
+    // collisions
     std::function<void(Game &)> collision_system = collisions_update;
     game.systemStorage.addSystem(collision_system);
+    game.systemStorage.addSystem(collision_damages);
+
+    // reaper
     std::function<void(Game &)> destructible_reaper_system = destructible_reaper;
     game.systemStorage.addSystem(destructible_reaper_system);
+    game.systemStorage.addSystem(corpse_hider);
+
+    // wave cannon
     std::function<void(Game &)> wave_cannon_projectile_system = wave_cannon_projectile_summoner;
     game.systemStorage.addSystem(wave_cannon_projectile_system);
+    game.systemStorage.addSystem(wave_cannon_input_getter);
 
     // movement
     game.systemStorage.addSystem(velocity_applicator);
     game.systemStorage.addSystem(trajectory_applicator);
 
-    game.systemStorage.addSystem(playership_animations);
-    game.systemStorage.addSystem(move_enemies);
-    game.systemStorage.addSystem(run_animation_loops);
-    game.systemStorage.addSystem(collision_damages);
+    // bydo shooter
+    std::function<void(Game &)> bydo_shooter_projectile_system = bydo_shooter_projectile_summoner;
+    game.systemStorage.addSystem(bydo_shooter_projectile_system);
+    void bydo_charger(BydoShooter &shooter);
+
+    // anim montages
     game.systemStorage.addSystem(play_deathmontages);
     game.systemStorage.addSystem(draw_animmontages);
     game.systemStorage.addSystem(draw_deathmontages);
-    game.systemStorage.addSystem(wave_cannon_input_getter);
-    game.systemStorage.addSystem(corpse_hider);
 
-    // States Initialisation
+    game.systemStorage.addSystem(move_enemies);
+    game.systemStorage.addSystem(run_animation_loops);
+
+    /*
+    ** STATES
+    ** game related logic
+    */
+
     std::unique_ptr<AState> level_state(new LevelState);
     game.stateMachine.setState(std::move(level_state));
 

@@ -11,7 +11,9 @@
 #include "components/AnimMontage.hpp"
 #include "components/WaveCannon.hpp"
 #include "components/Trajectory.hpp"
+#include "components/BydoShooter.hpp"
 
+// collisions
 void collisions_update(Game &instance);
 void collision_damages(const CollisionBox &box, Destructible &destructible);
 
@@ -26,7 +28,6 @@ void playership_animations(const PlayerShipController &controller, Sprite &sprit
 void move_enemies(Enemy &enemy, Velocity &velocity);
 void run_animation_loops(AnimationLoop &loop, Sprite &sprite);
 
-
 // reaper
 void corpse_hider(const Destructible &destructible, Sprite &sprite);
 void destructible_reaper(Game &instance);
@@ -39,5 +40,9 @@ void play_deathmontages(Destructible &destructible, DeathMontage &montage);
 // wave_cannon
 void wave_cannon_input_getter(WaveCannon &cannon, const PlayerShipController &controller);
 void wave_cannon_projectile_summoner(Game &instance);
+
+// bydo_shooter
+void bydo_shooter_projectile_summoner(Game &instance);
+void bydo_charger(BydoShooter &shooter);
 
 #endif

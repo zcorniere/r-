@@ -2,10 +2,11 @@
 #define GAME_OBJECT_HPP
 
 enum class GameObject {
-    PlayerShip,
     Wall,
-    Projectile,
+    PlayerShip,
+    PlayerProjectile,
     Enemy,
+    EnemyProjectile,
 };
 
 #endif
