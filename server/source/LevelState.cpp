@@ -5,7 +5,7 @@
 #include "components/Velocity.hpp"
 #include "components/CollisionBox.hpp"
 #include "components/GameObject.hpp"
-#include "components/Enemy.hpp"
+#include "components/PatternLoop.hpp"
 #include "components/AnimationLoop.hpp"
 #include "components/Destructible.hpp"
 #include "components/AnimMontage.hpp"
@@ -74,7 +74,7 @@ void LevelState::onStart(Game &instance)
         .withComponent(Sprite{"player_ships", 1})
         .withComponent(Transform({1000, 200}, {0, 0}, {1, 1}))
         .withComponent(Velocity{0, 0})
-        .withComponent(Enemy{{Pattern{{-1, 1}, 60}, Pattern{{-1, -1}, 60}}, 10})
+        .withComponent(PatternLoop{{Pattern{{-1, 1}, 60}, Pattern{{-1, -1}, 60}}})
         .withComponent(AnimationLoop{{{"enemy_flap", 0},
                                       {"enemy_flap", 1},
                                       {"enemy_flap", 2},

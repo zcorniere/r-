@@ -4,7 +4,7 @@
 #include "Game.hpp"
 #include "components/Sprite.hpp"
 #include "components/PlayerShipController.hpp"
-#include "components/Enemy.hpp"
+#include "components/PatternLoop.hpp"
 #include "components/AnimationLoop.hpp"
 #include "components/CollisionBox.hpp"
 #include "components/Destructible.hpp"
@@ -23,7 +23,7 @@ void velocity_applicator(Transform &transform, const Velocity &velocity);
 void playership_ct_input_getter(IInputModule &input, PlayerShipController &controller, const Destructible &destructible);
 void playership_animations(const PlayerShipController &controller, Sprite &sprite);
 
-void move_enemies(Enemy &enemy, Velocity &velocity);
+void run_pattern_loops(PatternLoop &loop, Velocity &velocity);
 void run_animation_loops(AnimationLoop &loop, Sprite &sprite);
 
 

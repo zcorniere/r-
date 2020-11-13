@@ -50,7 +50,7 @@ int main(void)
     game.componentStorage.registerComponent<CollisionBox>();
     game.componentStorage.registerComponent<GameObject>();
     game.componentStorage.registerComponent<PlayerShipController>();
-    game.componentStorage.registerComponent<Enemy>();
+    game.componentStorage.registerComponent<PatternLoop>();
     game.componentStorage.registerComponent<AnimationLoop>();
     game.componentStorage.registerComponent<Destructible>();
     game.componentStorage.registerComponent<AnimMontage>();
@@ -98,7 +98,7 @@ int main(void)
     game.systemStorage.addSystem(trajectory_applicator);
 
     game.systemStorage.addSystem(playership_animations);
-    game.systemStorage.addSystem(move_enemies);
+    game.systemStorage.addSystem(run_pattern_loops);
     game.systemStorage.addSystem(run_animation_loops);
     game.systemStorage.addSystem(collision_damages);
     game.systemStorage.addSystem(play_deathmontages);
