@@ -24,6 +24,8 @@ namespace network {
     class TcpSockMngr {
         bool is_download_finish = false;
         Console &console;
+        std::string ip;
+        short port;
         boost::asio::io_context context;
         tcp::socket socket;
         tcp::resolver resolver;

@@ -200,7 +200,7 @@ namespace protocol {
             return ret;
         }
         boost::asio::const_buffer body() const {
-            return {data.data(), head().body_size};
+            return {data.data() + sizeof(head()), head().body_size};
         }
     };
     template<typename T>

@@ -91,6 +91,8 @@ void network::Client::stateAskForAssets()
     if (console) console->log("Success [AskForAssets]");
 }
 
+#include <iostream>
+
 // DONE
 void network::Client::stateWaitingForAssets()
 {
@@ -124,8 +126,10 @@ void network::Client::stateWaitingForAssets()
 // DONE
 void network::Client::stateDownload()
 {
-    if (!tcp)
+    if (!tcp) {
         tcp = std::make_unique<network::TcpSockMngr>(*console, server_ip, server_tcp_port, assets_ids_list);
+        if (console) console->log("Start [DownloadAssets]");
+    }
     if (tcp->isDownloadFinished()) {
         assets = tcp->getAssets();
         tcp.reset();
@@ -150,6 +154,7 @@ void network::Client::stateReady()
 // DONE
 void network::Client::stateTimeout()
 {
+    if (console) console->log("Error : Timed out");
     disconnect();
 }
 
@@ -158,27 +163,21 @@ void network::Client::update()
     if (status == Status::NotConnected)
         return;
     if (status == Status::Play) {
-        if (console) console->log("State : Play");
         statePlay();
     }
     if (status == Status::AskForAssets) {
-        if (console) console->log("State : AskForAssets");
         stateAskForAssets();
     }
     if (status == Status::WaitingForAssets) {
-//        if (console) console->log("State : WaitingForAssets");
         stateWaitingForAssets();
     }
     if (status == Status::DownloadAssets) {
-        if (console) console->log("State : DownloadAssets");
         stateDownload();
     }
     if (status == Status::Ready) {
-        if (console) console->log("State : Ready");
         stateReady();
     }
     if (timeout_clock.getElapsedTime().asMilliseconds() >= timeout) {
-        if (console) console->log("State : Timed out");
         stateTimeout();
     }
 }

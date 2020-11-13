@@ -8,11 +8,12 @@
 #include <algorithm>
 #include "app/network/tcpsockmngr.hpp"
 
-network::TcpSockMngr::TcpSockMngr(Console &console, const std::string &ip, short port, std::vector<std::pair<long, bool>>) :
-    console(console), socket(context), resolver(context), run_thread([this](){context.run();})
+network::TcpSockMngr::TcpSockMngr(Console &console, const std::string &ip, short port, std::vector<std::pair<long, bool>> assetlist) :
+    console(console), ip(ip), port(port), socket(context), resolver(context), assets_ids_list(std::move(assetlist))
 {
     // TODO
-    downloadAllAssets();
+//    run_thread = std::thread([this](){context.run();});
+//    downloadAllAssets();
 }
 
 network::TcpSockMngr::~TcpSockMngr()
