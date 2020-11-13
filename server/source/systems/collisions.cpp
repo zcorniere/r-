@@ -3,6 +3,7 @@
 #include "components/CollisionBox.hpp"
 #include "components/GameObject.hpp"
 #include "components/Destructible.hpp"
+#include <algorithm>
 
 static bool are_colliding(Transform transform_a, CollisionBox box_a, \
 Transform transform_b, CollisionBox box_b) {
@@ -15,8 +16,6 @@ Transform transform_b, CollisionBox box_b) {
     float bound_b_x = origin_b_x + box_b.width * transform_b.scale.x;
     float bound_b_y = origin_b_y + box_b.height * transform_b.scale.y;
 
-    //std::cout << "Testing collisions between {" << origin_a_x << ", " << origin_a_y << ", " << bound_a_x << ", " << bound_a_y << "} and {";
-    //std::cout << origin_b_x << ", " << origin_b_y << ", " << bound_b_x << ", " << bound_b_y << "}\n";
     return !(
         origin_b_x >= bound_a_x || origin_a_x >= bound_b_x
         ||
@@ -55,7 +54,9 @@ void collisions_update(Game &instance)
 
 void collision_damages(const CollisionBox &box, Destructible &destructible)
 {
-    if (box.collidingWith) {
+    if (box.collidingWith &&
+std::find(box.ignoreList.begin(), box.ignoreList.end(), box.collidingWith.value())
+== box.ignoreList.end()) {
         destructible.health -= box.colliderRoughness;
         if (destructible.health > 0)
             return;

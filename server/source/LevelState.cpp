@@ -61,10 +61,9 @@ void LevelState::onStart(Game &instance)
         .withComponent(BydoShooter())
         .build();
 
-
     // Example Enemy
     Enemy::PATA_PATA.build(instance.componentStorage.buildEntity())
-        .withComponent(Transform({500, 200}, {0, 0}, {1, 1}))
+        .withComponent(Transform({500, 200}, {0, 0}, {3, 3}))
         .build();
 }
 

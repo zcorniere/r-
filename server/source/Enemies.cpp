@@ -3,14 +3,15 @@
 #include <cmath>
 
 const Enemy Enemy::BUG = {
-    CollisionBox{21, 20, 4, 2, 1}, Trajectory{[](Transform &t) {
+    CollisionBox{21, 20, 4, 2, 1, {GameObject::Enemy, GameObject::EnemyProjectile}},
+    Trajectory{[](Transform &t) {
         t.location.x -= 1;
         t.location.y = std::cos(t.location.x * 0.01) * 200 + 300;
     }},
     Sprite{"bug", 4}, 1, DeathMontage("explosions", {0, 1, 2, 3, 4, 5}, 7)};
 
 const Enemy Enemy::PATA_PATA = {
-    CollisionBox{21, 20, 4, 2, 1},
+    CollisionBox{21, 20, 4, 2, 1, {GameObject::Enemy, GameObject::EnemyProjectile}},
     PatternLoop{{Pattern{{-1, 1}, 60}, Pattern{{-1, -1}, 60}}},
     AnimationLoop{{{"enemy_flap", 0},
                    {"enemy_flap", 1},
