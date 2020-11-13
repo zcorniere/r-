@@ -56,7 +56,7 @@ void LevelState::onStart(Game &instance)
     // Bugs Enemies
     instance.componentStorage.buildEntity()
         .withComponent(Sprite{"bug", 4})
-        .withComponent(Transform({1000, 400}, {0, 0}, {3, 3}))
+        .withComponent(Transform({2000, 400}, {0, 0}, {3, 3}))
         .withComponent(Trajectory([]
         (Transform &t) {
             t.location.x -= 1;
