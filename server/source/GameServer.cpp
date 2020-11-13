@@ -52,10 +52,10 @@ void GameServer::onMessage(Message<RequestCode> msg) {
             }
             ass.size = ass.list.size();
             rep.insert(ass);
-            msg.remote->send(rep);
             Snitch::msg("GAME_SERVER") << "Replied RequestCode::AssetsList" << Snitch::endl;
+            msg.remote->send(rep);
         } break;
-        default: Snitch::warn("GAME_SERVER") << "Unkown comand" << Snitch::endl; break;
+        default: Snitch::warn("GAME_SERVER") << "Unknown comand" << Snitch::endl; break;
         }
     }
 }

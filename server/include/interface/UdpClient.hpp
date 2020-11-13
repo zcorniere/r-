@@ -47,39 +47,11 @@ class Client: public IClient<T> {
         }
 
     protected:
-        virtual void readHeader()final {
-            socket.async_receive_from(boost::asio::buffer(&tmp.head, sizeof(MessageHeader<T>)),
-               *remote_endpoint,
-               [this](std::error_code ec, std::size_t len) {
-                   (void)len;
-                    if (!ec) {
-                        if (tmp.head.size > 0) {
-                            tmp.body.resize(tmp.head.size);
-                            readBody();
-                        } else {
-                            addToMsgQueue();
-                        }
-                    } else {
-                        std::cerr << "[" << this->getId() << "] Read Header failed: " << ec.message() << std::endl;
-                        socket.close();
-                    }
-            });
-        }
-        virtual void readBody()final {
-            socket.async_receive_from(boost::asio::buffer(tmp.body.data(), tmp.body.size()),
-               *remote_endpoint,
-               [this](std::error_code ec, std::size_t len) {
-                   (void)len;
-                    if (!ec) {
-                        addToMsgQueue();
-                    } else {
-                        std::cerr << "[" << this->getId() << "] Read Body failed: " << ec.message() << std::endl;
-                        socket.close();
-                    }
-            });
-        }
+        virtual void readHeader()final {}
+        virtual void readBody()final {}
 
         virtual void writeHeader()final {
+            Snitch::warn("UdpClient_Header_Debug") << remote_endpoint << Snitch::endl;
             socket.async_send_to(
                 boost::asio::buffer(&q_out.front().head, sizeof(MessageHeader<T>)),
                 *remote_endpoint,
@@ -100,6 +72,7 @@ class Client: public IClient<T> {
             });
         }
         virtual void writeBody()final {
+            Snitch::warn("UdpClient_Body_Debug") << remote_endpoint << Snitch::endl;
             socket.async_send_to(
                 boost::asio::buffer(q_out.front().body.data(), q_out.front().body.size()),
                 *remote_endpoint,

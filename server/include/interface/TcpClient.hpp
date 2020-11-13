@@ -6,6 +6,7 @@
 #ifndef _TCPCLIENT_HPP_
 #define _TCPCLIENT_HPP_
 
+#include "Snitch.hpp"
 #include "MsgQueue.hpp"
 #include "Message.hpp"
 #include "interface/IClient.hpp"
@@ -58,7 +59,7 @@ class Client: public IClient<T> {
                             addToMsgQueue();
                         }
                     } else {
-                        std::cerr << "[" << this->getId() << "] Read Header failed: " << ec.message() << std::endl;
+                        Snitch::warn(std::to_string(this->getId())) << "Read Header failed: " << ec.message() << Snitch::endl;
                         socket.close();
                     }
             });
@@ -71,7 +72,7 @@ class Client: public IClient<T> {
                     if (!ec) {
                         addToMsgQueue();
                     } else {
-                        std::cerr << "[" << this->getId() << "] Read body failed: " << ec.message() << std::endl;
+                        Snitch::warn(std::to_string(this->getId())) << "Read Body failed: " << ec.message() << Snitch::endl;
                         socket.close();
                     }
             });
@@ -90,7 +91,7 @@ class Client: public IClient<T> {
                                 writeHeader();
                         }
                     } else {
-                        std::cerr << "[" << this->getId() << "] Write header failed: " << ec.message() << std::endl;
+                        Snitch::warn(std::to_string(this->getId())) << "Write header failed: " << ec.message() << Snitch::endl;
                         socket.close();
                     }
             });
@@ -105,7 +106,7 @@ class Client: public IClient<T> {
                         if (!q_out.empty())
                             writeHeader();
                     } else {
-                        std::cerr << "[" << this->getId() << "] Write header failed: " << ec.message() << std::endl;
+                        Snitch::warn(std::to_string(this->getId())) << "Write body failed: " << ec.message() << Snitch::endl;
                         socket.close();
                     }
             });

@@ -58,7 +58,7 @@ void AssetsServer::onMessage(Message<protocol::tcp::AssetsRequest> msg) {
                     Snitch::warn("ASSETS_SERVER") << "Execption " << re.what() << Snitch::endl;
                 }
             } break;
-            default: break;
+            default: Snitch::warn("ASSETS_SERVER") << "Unknown comand" << Snitch::endl; break;
         }
     }
     msg.remote->send(rep);
