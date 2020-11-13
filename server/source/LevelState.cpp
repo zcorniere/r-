@@ -72,20 +72,8 @@ void LevelState::onStart(Game &instance)
 
 
     // Example Enemy
-    instance.componentStorage.buildEntity()
-        .withComponent(Sprite{"player_ships", 1})
+    Enemy::FLAPPY.build(instance.componentStorage.buildEntity())
         .withComponent(Transform({1000, 200}, {0, 0}, {1, 1}))
-        .withComponent(Velocity{0, 0})
-        .withComponent(PatternLoop{{Pattern{{-1, 1}, 60}, Pattern{{-1, -1}, 60}}})
-        .withComponent(AnimationLoop{{{"enemy_flap", 0},
-                                      {"enemy_flap", 1},
-                                      {"enemy_flap", 2},
-                                      {"enemy_flap", 3},
-                                      {"enemy_flap", 4},
-                                      {"enemy_flap", 5},
-                                      {"enemy_flap", 6},
-                                      {"enemy_flap", 7}},
-                                     15})
         .build();
 }
 
