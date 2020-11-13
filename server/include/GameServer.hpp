@@ -13,8 +13,8 @@
 struct Player {
     bool ready = false;
     short nb_key = 0;
-    std::unordered_set<::Input> keys;
-    std::array<::Input, protocol::udp::keys::ArraySize> input;
+    std::unordered_set<protocol::udp::keys::Keys> keys;
+    std::vector<protocol::udp::keys::Keys> input;
     Dimensional cur_pos = {0, 0};
 };
 

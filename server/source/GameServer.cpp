@@ -32,12 +32,12 @@ void GameServer::onMessage(Message<RequestCode> msg) {
             auto body = reinterpret_cast<protocol::udp::Input *>(msg.body.data());
             if (!body) { break; }
             list.at(msg.remote).nb_key = std::move(body->nb_keys);
-            list.at(msg.remote).input = std::move(body->keys);
-            for (const auto &i: list.at(msg.remote).input) {
-                if (list.at(msg.remote).keys.contains(i))
-                    list.at(msg.remote).keys.erase(i);
+            for (const auto &i : body->keys ) {
+                list.at(msg.remote).input.push_back(i.key);
+                if (i.pressed)
+                    list.at(msg.remote).keys.insert(i.key);
                 else
-                    list.at(msg.remote).keys.insert(i);
+                    list.at(msg.remote).keys.erase(i.key);
             }
             list.at(msg.remote).cur_pos.y = std::move(body->pos.y);
             list.at(msg.remote).cur_pos.x = std::move(body->pos.x);
@@ -91,12 +91,10 @@ Dimensional GameServer::getCursorLocation(const unsigned player) {
 }
 
 std::vector<::Input> GameServer::getInputEvents(const unsigned player) {
-    for (const auto &[e, i] : list) {
+    for (auto &[e, i] : list) {
         if (e->getId() == player) {
-            std::vector<::Input> ret(i.input.size());
-            for (const auto &i: i.input) {
-                ret.emplace_back(i);
-            }
+            std::vector<::Input> ret = i.input;
+            i.input.clear();
             return ret;
         }
     }

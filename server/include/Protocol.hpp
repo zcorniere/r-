@@ -74,7 +74,7 @@ namespace udp {
     };
     struct Input {
         short nb_keys = 0;
-        std::array<::Input, keys::ArraySize> keys;
+        std::array<Event, keys::ArraySize> keys;
         MousePos pos;
     };
 }
