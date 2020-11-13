@@ -23,3 +23,7 @@ cmake-build-*
 
 # Ignore doc
 doc
+
+# Run scripts
+run.bat
+run.sh
