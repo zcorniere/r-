@@ -1,4 +1,5 @@
 #include "GameServer.hpp"
+#include "Snitch.hpp"
 
 using namespace protocol::udp;
 
@@ -14,7 +15,6 @@ GameServer::~GameServer()
     Message<RequestCode> msg;
     msg.head.code = RequestCode::Disconnect;
     this->msgAll(msg);
-    this->stop();
 };
 
 void GameServer::update() {
@@ -22,6 +22,7 @@ void GameServer::update() {
 }
 
 void GameServer::onMessage(Message<RequestCode> msg) {
+    Snitch::msg("UDP_SERVER") << msg << Snitch::endl;
     if (msg.validMagic(protocol::MagicPair) && msg.remote) {
         if (!list.contains(msg.remote)) { list.insert({msg.remote, Player{}}); }
         switch (msg.head.code) {
@@ -30,10 +31,16 @@ void GameServer::onMessage(Message<RequestCode> msg) {
         case RequestCode::Input: {
             auto body = reinterpret_cast<protocol::udp::Input *>(msg.body.data());
             if (!body) { break; }
-            list.at(msg.remote).nb_key = body->nb_keys;
-            list.at(msg.remote).input = body->keys;
-            list.at(msg.remote).cur_pos.y = body->pos.y;
-            list.at(msg.remote).cur_pos.x = body->pos.x;
+            list.at(msg.remote).nb_key = std::move(body->nb_keys);
+            list.at(msg.remote).input = std::move(body->keys);
+            for (const auto &i: list.at(msg.remote).input) {
+                if (list.at(msg.remote).keys.contains(i))
+                    list.at(msg.remote).keys.erase(i);
+                else
+                    list.at(msg.remote).keys.insert(i);
+            }
+            list.at(msg.remote).cur_pos.y = std::move(body->pos.y);
+            list.at(msg.remote).cur_pos.x = std::move(body->pos.x);
         } break;
         default: break;
         }
@@ -97,5 +104,10 @@ std::vector<::Input> GameServer::getInputEvents(const unsigned player) {
 }
 
 bool GameServer::isKeyPressed(unsigned player, ::Input key) {
+    for (const auto &[e, i]: list) {
+        if (e->getId() == player) {
+            return i.keys.contains(key);
+        }
+    }
     return false;
 }

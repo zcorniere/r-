@@ -1,5 +1,6 @@
 #include <array>
 #include <unordered_map>
+#include <unordered_set>
 
 #ifndef _GAMESERVER_HPP_
 #define _GAMESERVER_HPP_
@@ -12,6 +13,7 @@
 struct Player {
     bool ready = false;
     short nb_key = 0;
+    std::unordered_set<::Input> keys;
     std::array<::Input, protocol::udp::keys::ArraySize> input;
     Dimensional cur_pos = {0, 0};
 };

@@ -51,7 +51,6 @@ class Client: public IClient<T> {
                 [this](std::error_code ec, std::size_t len) {
                     (void)len;
                     if (!ec) {
-                        std::cout << "[CLIENT][TCP][HEADER] read" << std::endl;
                         if (tmp.head.size > 0) {
                             tmp.body.resize(tmp.head.size);
                             readBody();
@@ -70,7 +69,6 @@ class Client: public IClient<T> {
                 [this](std::error_code ec, std::size_t len) {
                     (void)len;
                     if (!ec) {
-                        std::cout << "[CLIENT][TCP][BODY] read" << std::endl;
                         addToMsgQueue();
                     } else {
                         std::cerr << "[" << this->getId() << "] Read body failed: " << ec.message() << std::endl;
@@ -84,7 +82,6 @@ class Client: public IClient<T> {
                 [this](std::error_code ec, std::size_t len) {
                     (void)len;
                     if (!ec) {
-                        std::cout << "[CLIENT][TCP][HEADER] write" << std::endl;
                         if (q_out.front().body.size() > 0) {
                             writeBody();
                         } else {
@@ -104,7 +101,6 @@ class Client: public IClient<T> {
                 [this](std::error_code ec, std::size_t len) {
                     (void)len;
                     if (!ec) {
-                        std::cout << "[CLIENT][TCP][BODY] write" << std::endl;
                         q_out.pop_front();
                         if (!q_out.empty())
                             writeHeader();

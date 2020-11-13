@@ -9,7 +9,7 @@
 
 
 SfmlModule::SfmlModule(const std::string &name, std::filesystem::path assets_path)
-: m_window(sf::VideoMode(1000, 600), name), m_assets_path(assets_path)
+: m_window(sf::VideoMode(1800, 900), name), m_assets_path(assets_path)
 {
     for (auto &file : std::filesystem::directory_iterator(m_assets_path)) {
         if (file.path().string().ends_with(".png"))

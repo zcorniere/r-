@@ -9,3 +9,9 @@ std::ostream &Snitch::warn()
     Snitch::output << "\e[33m[WARNING]: ";
     return Snitch::output;
 }
+
+std::ostream &Snitch::msg(const std::string &msg)
+{
+    Snitch::output << "[" << msg << "]: ";
+    return Snitch::output;
+}

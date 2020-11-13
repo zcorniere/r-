@@ -24,16 +24,16 @@ class Server: public IServer<T> {
                 waitForClientConnection();
                 context_thread = std::thread([this]() { asio_context.run(); });
             } catch (const std::exception &e) {
-                std::cerr << "[SERVER] Exception: " << e.what() << std::endl;
+                std::cerr << "[UDP_SERVER] Exception: " << e.what() << std::endl;
                 return false;
             }
-            std::cout << "[SERVER] Server Started" << std::endl;
+            std::cout << "[UDP_SERVER] Server Started" << std::endl;
             return true;
         }
         virtual void stop()final {
             asio_context.stop();
             if (context_thread.joinable()) { context_thread.join(); }
-            std::cout << "[SERVER]: Stopped..." << std::endl;
+            std::cout << "[UDP_SERVER]: Stopped..." << std::endl;
         }
         virtual void update(const size_t maxMessage = -1, const bool wait = false) {
             if (wait) msg_in.wait();
@@ -51,7 +51,7 @@ class Server: public IServer<T> {
             if (*cli) {
                 cli->send(msg);
             } else {
-                std::cerr << "[SERVER]: Sending to invalid client" << std::endl;
+                std::cerr << "[UDP_SERVER]: Sending to invalid client" << std::endl;
                 this->onClientDisconnect(cli);
                 client_list.erase(cli->remote_endpoint);
             }
@@ -66,12 +66,13 @@ class Server: public IServer<T> {
 
     private:
        void readHeader() {
+            std::cerr << "[UDP_SERVER]: Start to receive header" << std::endl;
             asio_acceptor.async_receive_from(boost::asio::buffer(&tmp.head, sizeof(MessageHeader<T>)),
                *tmp_end,
                [this](std::error_code ec, std::size_t len) {
-                   (void)len;
+                    (void)len;
+                    std::cout << "[UDP_SERVER] Readhead" << std::endl;
                     if (!ec) {
-                        std::cout << "[SERVER][UDP][HEADER] read" << std::endl;
                         if (tmp.head.size > 0) {
                             tmp.body.resize(tmp.head.size);
                             readBody();
@@ -79,7 +80,7 @@ class Server: public IServer<T> {
                             addToMsgQueue();
                         }
                     } else {
-                        std::cerr << "[SERVER] ReadBody failed: " << ec.message() << std::endl;
+                        std::cerr << "[UDP_SERVER] ReadHeader failed: " << ec.message() << std::endl;
                         asio_acceptor.close();
                     }
             });
@@ -90,10 +91,9 @@ class Server: public IServer<T> {
                [this](std::error_code ec, std::size_t len) {
                    (void)len;
                     if (!ec) {
-                        std::cout << "[SERVER][UDP][BODY] read" << std::endl;
                         addToMsgQueue();
                     } else {
-                        std::cerr << "[SERVER] ReadBody failed: " << ec.message() << std::endl;
+                        std::cerr << "[UDP_SERVER] ReadBody failed: " << ec.message() << std::endl;
                         asio_acceptor.close();
                     }
             });
@@ -106,6 +106,7 @@ class Server: public IServer<T> {
             tmp.remote = client_list.at(tmp_end);
             msg_in.push_back(tmp);
             tmp_end = std::make_shared<boost::asio::ip::udp::endpoint>();
+            waitForClientConnection();
         }
 
     private:
