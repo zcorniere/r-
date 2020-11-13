@@ -8,6 +8,7 @@
 #include "components/CollisionBox.hpp"
 #include "components/Destructible.hpp"
 #include "components/AnimMontage.hpp"
+#include "components/Trajectory.hpp"
 #include "LevelState.hpp"
 #include <iostream>
 #include "systems/InputHandler.hpp"
@@ -55,6 +56,7 @@ int main(void)
     game.componentStorage.registerComponent<AnimMontage>();
     game.componentStorage.registerComponent<DeathMontage>();
     game.componentStorage.registerComponent<WaveCannon>();
+    game.componentStorage.registerComponent<Trajectory>();
 
     // Systems Initialisation
     // System that displays entities with a transform and a sprite on screen
@@ -74,14 +76,6 @@ int main(void)
         + controller.moovingUp * -1 * controller.getSpeed();
     });
 
-    // Velocity System
-
-    game.systemStorage.addSystem([]
-    (Transform &transform, const Velocity &velocity) {
-        transform.location.x += velocity.x;
-        transform.location.y += velocity.y;
-    });
-
     // DEBUG Collision Displayer
 
     game.systemStorage.addSystem([]
@@ -98,6 +92,10 @@ int main(void)
     game.systemStorage.addSystem(destructible_reaper_system);
     std::function<void(Game &)> wave_cannon_projectile_system = wave_cannon_projectile_summoner;
     game.systemStorage.addSystem(wave_cannon_projectile_system);
+
+    // movement
+    game.systemStorage.addSystem(velocity_applicator);
+    game.systemStorage.addSystem(trajectory_applicator);
 
     game.systemStorage.addSystem(playership_animations);
     game.systemStorage.addSystem(move_enemies);

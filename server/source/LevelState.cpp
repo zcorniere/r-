@@ -10,9 +10,11 @@
 #include "components/Destructible.hpp"
 #include "components/AnimMontage.hpp"
 #include "components/WaveCannon.hpp"
+#include "components/Trajectory.hpp"
 #include <iostream>
 #include <chrono>
 #include <cstdlib>
+#include <cmath>
 
 // Counted in milleseconds
 constexpr int STAR_SPAWN_DELAY = 250;
@@ -55,7 +57,11 @@ void LevelState::onStart(Game &instance)
     instance.componentStorage.buildEntity()
         .withComponent(Sprite{"bug", 4})
         .withComponent(Transform({1000, 400}, {0, 0}, {3, 3}))
-        .withComponent(Velocity{-1, 0})
+        .withComponent(Trajectory([]
+        (Transform &t) {
+            t.location.x -= 1;
+            t.location.y = std::cos(t.location.x * 0.01) * 200 + 300;
+        }))
         .withComponent(Destructible(1, true))
         .withComponent(CollisionBox(21, 20, 4, 2, 1))
         .withComponent(DeathMontage(AnimMontage("explosions", {0, 1, 2, 3, 4, 5}, 7)))
