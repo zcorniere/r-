@@ -3,12 +3,14 @@
 #include <cmath>
 
 const Enemy Enemy::BUG = {
-    CollisionBox{21, 20, 4, 2, 1, {GameObject::Enemy, GameObject::EnemyProjectile}},
+    CollisionBox{27, 25, 4, 5, 1, {GameObject::Enemy, GameObject::EnemyProjectile}},
     Trajectory{[](Transform &t) {
         t.location.x -= 1;
         t.location.y = std::cos(t.location.x * 0.01) * 200 + 300;
     }},
-    Sprite{"bug", 4}, 1, DeathMontage("explosions", {0, 1, 2, 3, 4, 5}, 7)};
+    OrientedSprite("bug", std::array<unsigned, 16>{0, 1, 2, 3, 4, 5, 6, 7, 10,
+                                                   11, 12, 13, 14, 15, 16, 17}),
+    1, DeathMontage("explosions", {0, 1, 2, 3, 4, 5}, 7)};
 
 const Enemy Enemy::PATA_PATA = {
     CollisionBox{21, 20, 4, 2, 1, {GameObject::Enemy, GameObject::EnemyProjectile}},
