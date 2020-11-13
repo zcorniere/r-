@@ -11,10 +11,11 @@
 network::TcpSockMngr::TcpSockMngr(sf::Clock &timeout, Console &console, const std::string &ip, short port, std::vector<std::pair<long, bool>> assetlist) :
     timeout_clock(timeout), console(console), ip(ip), port(port), socket(context), resolver(context), assets_ids_list(std::move(assetlist))
 {
-    do_receive();
-    run_thread = std::thread([this](){context.run();});
-    boost::asio::connect(socket, resolver.resolve(ip, std::to_string(port)));
-    downloadAllAssets();
+    // TODO
+//    do_receive();
+//    run_thread = std::thread([this](){context.run();});
+//    boost::asio::connect(socket, resolver.resolve(ip, std::to_string(port)));
+//    downloadAllAssets();
 }
 
 network::TcpSockMngr::~TcpSockMngr()

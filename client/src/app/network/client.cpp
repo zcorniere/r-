@@ -160,22 +160,25 @@ void network::Client::stateTimeout()
 
 void network::Client::update()
 {
-    if (status == Status::NotConnected)
-        return;
-    if (status == Status::Play) {
-        statePlay();
-    }
-    if (status == Status::AskForAssets) {
-        stateAskForAssets();
-    }
-    if (status == Status::WaitingForAssets) {
-        stateWaitingForAssets();
-    }
-    if (status == Status::DownloadAssets) {
-        stateDownload();
-    }
-    if (status == Status::Ready) {
-        stateReady();
+    switch (status) {
+        case Status::NotConnected:
+            return;
+        case Status::Play:
+            statePlay();
+            return;
+        case Status::AskForAssets:
+            stateAskForAssets();
+            break;
+        case Status::WaitingForAssets:
+            stateWaitingForAssets();
+            break;
+        case Status::DownloadAssets:
+            stateDownload();
+            break;
+        case Status::Ready:
+            stateReady();
+            break;
+        default: break;
     }
     if (timeout_clock.getElapsedTime().asMilliseconds() >= timeout) {
         stateTimeout();
