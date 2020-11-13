@@ -4,6 +4,7 @@
 #include "MsgQueue.hpp"
 #include "Protocol.hpp"
 #include "interface/IClient.hpp"
+#include "Snitch.hpp"
 
 #include <iostream>
 #include <boost/asio.hpp>
@@ -93,7 +94,7 @@ class Client: public IClient<T> {
                                 writeHeader();
                         }
                     } else {
-                        std::cerr << "[" << this->getId() << "] Write Header failed: " << ec.message() << std::endl;
+                        Snitch::warn(std::to_string(this->getId())) << "Write Header failed: " << ec.message() << Snitch::endl;
                         socket.close();
                     }
             });
@@ -109,7 +110,7 @@ class Client: public IClient<T> {
                         if (!q_out.empty())
                             writeHeader();
                     } else {
-                        std::cerr << "[" << this->getId() << "] Write Body failed: " << ec.message() << std::endl;
+                        Snitch::warn(std::to_string(this->getId())) << "Write Header failed: " << ec.message() << Snitch::endl;
                         socket.close();
                     }
             });
