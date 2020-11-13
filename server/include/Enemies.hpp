@@ -18,7 +18,7 @@ struct Enemy {
     DeathMontage death_montage;
 
     static const Enemy BUG;
-    static const Enemy FLAPPY;
+    static const Enemy PATA_PATA;
 
     ComponentStorage::EntityBuilder build(
         ComponentStorage::EntityBuilder builder) const;

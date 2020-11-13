@@ -9,7 +9,7 @@ const Enemy Enemy::BUG = {
     }},
     Sprite{"bug", 4}, 1, DeathMontage("explosions", {0, 1, 2, 3, 4, 5}, 7)};
 
-const Enemy Enemy::FLAPPY = {
+const Enemy Enemy::PATA_PATA = {
     CollisionBox{21, 20, 4, 2, 1},
     PatternLoop{{Pattern{{-1, 1}, 60}, Pattern{{-1, -1}, 60}}},
     AnimationLoop{{{"enemy_flap", 0},

@@ -56,24 +56,15 @@ void LevelState::onStart(Game &instance)
         .build();
 
     // Bugs Enemies
-    auto builder = instance.componentStorage.buildEntity();
-    Enemy::BUG.build(builder)
-        .withComponent(Transform({2000, 400}, {0, 0}, {3, 3}))
-        .withComponent(Trajectory([]
-        (Transform &t) {
-            t.location.x -= 1;
-            t.location.y = std::cos(t.location.x * 0.01) * 200 + 300;
-        }))
-        .withComponent(Destructible(1, true))
-        .withComponent(CollisionBox(21, 20, 4, 2, 1))
-        .withComponent(DeathMontage("explosions", {0, 1, 2, 3, 4, 5}, 7))
-        .withComponent(GameObject::Enemy)
-        .withComponent(BydoShooter());
+    Enemy::BUG.build(instance.componentStorage.buildEntity())
+        .withComponent(Transform({1000, 400}, {0, 0}, {3, 3}))
+        .withComponent(BydoShooter())
+        .build();
 
 
     // Example Enemy
-    Enemy::FLAPPY.build(instance.componentStorage.buildEntity())
-        .withComponent(Transform({1000, 200}, {0, 0}, {1, 1}))
+    Enemy::PATA_PATA.build(instance.componentStorage.buildEntity())
+        .withComponent(Transform({500, 200}, {0, 0}, {1, 1}))
         .build();
 }
 
