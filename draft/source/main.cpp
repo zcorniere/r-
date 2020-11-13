@@ -72,6 +72,11 @@ int main(void)
             display.drawSprite(sprite.name, transform, sprite.tile_id);
     });
 
+    // reaper
+    std::function<void(Game &)> destructible_reaper_system = destructible_reaper;
+    game.systemStorage.addSystem(destructible_reaper_system);
+    game.systemStorage.addSystem(corpse_hider);
+
     // playership
     game.systemStorage.addSystem(playership_animations);
     game.systemStorage.addSystem(playership_ct_input_getter);
@@ -83,7 +88,7 @@ int main(void)
         + controller.moovingUp * -1 * controller.getSpeed();
     });
 
-    // DEBUG Collision Displayer
+    // DEBUG dollision displayer
     game.systemStorage.addSystem([]
     (IDisplayModule &display, const Transform &transform, const CollisionBox &box) {
         sf::RectangleShape rect;
@@ -97,10 +102,13 @@ int main(void)
     game.systemStorage.addSystem(collision_system);
     game.systemStorage.addSystem(collision_damages);
 
-    // reaper
-    std::function<void(Game &)> destructible_reaper_system = destructible_reaper;
-    game.systemStorage.addSystem(destructible_reaper_system);
-    game.systemStorage.addSystem(corpse_hider);
+    // anim montages
+    game.systemStorage.addSystem(play_deathmontages);
+    game.systemStorage.addSystem(draw_animmontages);
+    game.systemStorage.addSystem(draw_deathmontages);
+
+    game.systemStorage.addSystem(run_animation_loops);
+    game.systemStorage.addSystem(run_pattern_loops);
 
     // wave cannon
     std::function<void(Game &)> wave_cannon_projectile_system = wave_cannon_projectile_summoner;
@@ -114,15 +122,7 @@ int main(void)
     // bydo shooter
     std::function<void(Game &)> bydo_shooter_projectile_system = bydo_shooter_projectile_summoner;
     game.systemStorage.addSystem(bydo_shooter_projectile_system);
-    void bydo_charger(BydoShooter &shooter);
-
-    // anim montages
-    game.systemStorage.addSystem(play_deathmontages);
-    game.systemStorage.addSystem(draw_animmontages);
-    game.systemStorage.addSystem(draw_deathmontages);
-
-    game.systemStorage.addSystem(run_animation_loops);
-    game.systemStorage.addSystem(run_pattern_loops);
+    game.systemStorage.addSystem(bydo_charger);
 
     /*
     ** STATES

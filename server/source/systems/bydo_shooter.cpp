@@ -42,9 +42,9 @@ void bydo_shooter_projectile_summoner(Game &instance)
                         transform.location.y + BSP_OFFSET_Y * transform.scale.y
                     ),
                     Dimensional(0, 0),
-                    transform.scale
+                    Dimensional(0.25, 0.25)
                 ))
-                .withComponent(CollisionBox(4, 4, 0, 0 ))
+                .withComponent(CollisionBox(4, 4))
                 .withComponent(Destructible(1))
                 .withComponent(Velocity({
                     shooter.aim_direction.x * shooter.projectile_speed,

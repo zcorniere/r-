@@ -11,6 +11,7 @@
 #include "components/AnimMontage.hpp"
 #include "components/WaveCannon.hpp"
 #include "components/Trajectory.hpp"
+#include "components/BydoShooter.hpp"
 #include <iostream>
 #include <chrono>
 #include <cstdlib>
@@ -66,6 +67,7 @@ void LevelState::onStart(Game &instance)
         .withComponent(CollisionBox(21, 20, 4, 2, 1))
         .withComponent(DeathMontage(AnimMontage("explosions", {0, 1, 2, 3, 4, 5}, 7)))
         .withComponent(GameObject::Enemy)
+        .withComponent(BydoShooter())
         .build();
 
 

@@ -34,10 +34,8 @@ void play_deathmontages(Destructible &destructible, DeathMontage &montage)
     if (montage.getStatus() == AnimMontage::Status::Inactive \
 && destructible.status == Destructible::Status::Dying) {
         montage.play();
-        std::cout << "playing death montage\n";
     }
     if (montage.getStatus() == AnimMontage::Status::Terminated) {
-        std::cout << "Terminated\n";
         destructible.status = Destructible::Status::Dead;
     }
 }
