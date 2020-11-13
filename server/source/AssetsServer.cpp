@@ -55,7 +55,7 @@ void AssetsServer::onMessage(Message<protocol::tcp::AssetsRequest> msg) {
                         rep.insert(reply);
                     }
                 } catch (const std::runtime_error &re) {
-                    Snitch::msg("SERVER") << "Execption " << re.what() << Snitch::endl;
+                    Snitch::warn("ASSETS_SERVER") << "Execption " << re.what() << Snitch::endl;
                 }
             } break;
             default: break;

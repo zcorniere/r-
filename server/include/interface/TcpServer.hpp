@@ -1,6 +1,7 @@
 #include "MsgQueue.hpp"
 #include "TcpClient.hpp"
 #include "interface/IServer.hpp"
+#include "Snitch.hpp"
 
 #ifndef _TCPSERVER_HPP_
 #define _TCPSERVER_HPP_
@@ -22,16 +23,16 @@ class Server: public IServer<T> {
                 waitForClientConnection();
                 context_thread = std::thread([this]() { asio_context.run(); } );
             } catch (const std::exception &e) {
-                std::cerr << "[SERVER] Exception: " << e.what() << std::endl;
+                Snitch::warn("TCP_SERVER") << "Exception: " << e.what() << Snitch::endl;
                 return false;
             }
-            std::cout << "[SERVER] Server Started" << std::endl;
+            Snitch::msg("TCP_SERVER") << "Server Started" << Snitch::endl;
             return true;
         }
         virtual void stop()final {
             asio_context.stop();
             if (context_thread.joinable()) { context_thread.join(); }
-            std::cout << "[SERVER]: Stopped..." << std::endl;
+            Snitch::msg("TCP_SERVER") << "Stopped..." << Snitch::endl;
         }
         virtual void update(const size_t maxMessage = -1, const bool wait = false) {
             if (wait) q_in.wait();
@@ -45,15 +46,15 @@ class Server: public IServer<T> {
             asio_acceptor.async_accept(
                 [this](std::error_code ec, boost::asio::ip::tcp::socket socket) {
                     if (!ec) {
-                        std::cout << "[SERVER] New Connection: " << socket.remote_endpoint() << std::endl;
+                        Snitch::msg("TCP_SERVER") << " New Connection: " << socket.remote_endpoint() << Snitch::endl;
                         auto new_client = std::make_shared<Client<T>>(asio_context, std::move(socket), q_in);
                         if (this->onClientConnect(new_client)) {
                             clients.push_back(std::move(new_client));
                             clients.back()->giveId(base_id++);
-                            std::cout << "[" << clients.back()->getId() << "] Connection Approved" << std::endl;
+                            Snitch::msg(std::to_string(clients.back()->getId())) << "Connection Approved" << Snitch::endl;
                         }
                     } else {
-                        std::cerr << "[SERVER]: Connection Error: " << ec.message() << std::endl;
+                        Snitch::warn("TCP_SERVER") << "Connection Error: " << ec.message() << Snitch::endl;
                     }
             });
         }
