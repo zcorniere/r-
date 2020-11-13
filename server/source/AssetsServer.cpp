@@ -34,7 +34,7 @@ AssetsServer::~AssetsServer()
 }
 
 void AssetsServer::onMessage(Message<protocol::tcp::AssetsRequest> msg) {
-    Message<protocol::tcp::AssetsRequest> rep;
+    Message<protocol::tcp::AssetsRequest> rep(protocol::MAGIC_NB_1, protocol::MAGIC_NB_2);
     if (msg.validMagic(protocol::MagicPair) && msg.remote) {
         switch (msg.head.code) {
             case protocol::tcp::AssetsRequest::AskAssets: {

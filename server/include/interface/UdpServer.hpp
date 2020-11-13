@@ -6,6 +6,7 @@
 #include "interface/IServer.hpp"
 #include "UdpClient.hpp"
 #include "Protocol.hpp"
+#include "Snitch.hpp"
 
 namespace ecs {
 namespace udp {
@@ -24,16 +25,16 @@ class Server: public IServer<T> {
                 waitForClientConnection();
                 context_thread = std::thread([this]() { asio_context.run(); });
             } catch (const std::exception &e) {
-                std::cerr << "[UDP_SERVER] Exception: " << e.what() << std::endl;
+                Snitch::warn("UDP_SERVER") << "Exception: " << e.what() << Snitch::endl;
                 return false;
             }
-            std::cout << "[UDP_SERVER] Server Started" << std::endl;
+            Snitch::msg("UDP_SERVER") << "Server Started" << Snitch::endl;
             return true;
         }
         virtual void stop()final {
             asio_context.stop();
             if (context_thread.joinable()) { context_thread.join(); }
-            std::cout << "[UDP_SERVER]: Stopped..." << std::endl;
+            Snitch::msg("UDP_SERVER") << "Stopped..." << Snitch::endl;
         }
         virtual void update(const size_t maxMessage = -1, const bool wait = false) {
             if (wait) msg_in.wait();
@@ -51,7 +52,7 @@ class Server: public IServer<T> {
             if (*cli) {
                 cli->send(msg);
             } else {
-                std::cerr << "[UDP_SERVER]: Sending to invalid client" << std::endl;
+                Snitch::warn("UDP_SERVER") << "Sending to invalid client" << Snitch::endl;
                 this->onClientDisconnect(cli);
                 client_list.erase(cli->remote_endpoint);
             }
@@ -66,12 +67,13 @@ class Server: public IServer<T> {
 
     private:
        void readHeader() {
-            std::cerr << "[UDP_SERVER]: Start to receive header" << std::endl;
+            Snitch::msg("UDP_SERVER") << "Start to receive header" << std::endl;
             asio_acceptor.async_receive_from(boost::asio::buffer(&tmp.head, sizeof(MessageHeader<T>)),
                *tmp_end,
                [this](std::error_code ec, std::size_t len) {
                     (void)len;
-                    std::cout << "[UDP_SERVER] Readhead" << std::endl;
+                    Snitch::msg("UDP_SERVER") << "Readhead" << Snitch::endl;
+                    Snitch::msg("UDP_SERVER_DEBUG") << tmp.head << Snitch::endl;
                     if (!ec) {
                         if (tmp.head.size > 0) {
                             tmp.body.resize(tmp.head.size);
@@ -80,12 +82,12 @@ class Server: public IServer<T> {
                             addToMsgQueue();
                         }
                     } else {
-                        std::cerr << "[UDP_SERVER] ReadHeader failed: " << ec.message() << std::endl;
-                        asio_acceptor.close();
+                        Snitch::warn("UDP_SERVER") << "ReadHeader failed: " << ec.message() << Snitch::endl;
                     }
             });
         }
         void readBody() {
+            Snitch::msg("UDP_SERVER") << "ReadBody" << std::endl;
             asio_acceptor.async_receive_from(boost::asio::buffer(tmp.body.data(), tmp.body.size()),
                *tmp_end,
                [this](std::error_code ec, std::size_t len) {
@@ -93,8 +95,7 @@ class Server: public IServer<T> {
                     if (!ec) {
                         addToMsgQueue();
                     } else {
-                        std::cerr << "[UDP_SERVER] ReadBody failed: " << ec.message() << std::endl;
-                        asio_acceptor.close();
+                        Snitch::warn("UDP_SERVER") << "ReadBody failed: " << ec.message() << Snitch::endl;
                     }
             });
         }

@@ -50,7 +50,7 @@ class GameServer:
         std::shared_ptr<Storage> stor;
         std::unordered_map<std::shared_ptr<ecs::IClient<protocol::udp::RequestCode>>, Player> list;
         std::string path;
-
+        unsigned port;
 };
 
 #endif //_GAMESERVER_HPP_

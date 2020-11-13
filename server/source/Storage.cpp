@@ -1,10 +1,13 @@
+#include "Snitch.hpp"
 #include "Storage.hpp"
 
 Storage::Storage(const std::string &base, std::function<bool(std::filesystem::path)> selector) : base_path(base)
 {
     for (const auto &e: std::filesystem::directory_iterator(base)) {
-        if (selector(e.path()))
+        if (selector(e.path())) {
+            Snitch::msg("STORAGE") << "File Indexed : " << e << Snitch::endl;
             storage_map.insert({e.path().string(), base_id++});
+        }
     }
 }
 
