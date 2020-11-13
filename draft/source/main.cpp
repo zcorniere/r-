@@ -53,6 +53,7 @@ int main(void)
     game.componentStorage.registerComponent<AnimationLoop>();
     game.componentStorage.registerComponent<Destructible>();
     game.componentStorage.registerComponent<AnimMontage>();
+    game.componentStorage.registerComponent<DeathMontage>();
     game.componentStorage.registerComponent<WaveCannon>();
 
     // Systems Initialisation
@@ -101,8 +102,9 @@ int main(void)
     game.systemStorage.addSystem(move_enemies);
     game.systemStorage.addSystem(run_animation_loops);
     game.systemStorage.addSystem(collision_damages);
-    game.systemStorage.addSystem(play_death_montages);
+    game.systemStorage.addSystem(play_deathmontages);
     game.systemStorage.addSystem(draw_animmontages);
+    game.systemStorage.addSystem(draw_deathmontages);
     game.systemStorage.addSystem(wave_cannon_input_getter);
 
     // States Initialisation

@@ -22,8 +22,10 @@ void run_animation_loops(AnimationLoop &loop, Sprite &sprite);
 
 void destructible_reaper(Game &instance);
 
+// anim montage
 void draw_animmontages(IDisplayModule &display, const Transform &transform, AnimMontage &montage);
-void play_death_montages(Destructible &destructible, AnimMontage &montage);
+void draw_deathmontages(IDisplayModule &display, const Transform &transform, DeathMontage &montage);
+void play_deathmontages(Destructible &destructible, DeathMontage &montage);
 
 // wave_cannon
 void wave_cannon_input_getter(WaveCannon &cannon, const PlayerShipController &controller);

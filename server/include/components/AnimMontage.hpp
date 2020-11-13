@@ -12,7 +12,7 @@ public:
         Paused,
         Terminated,
     };
-private:
+protected:
     Status m_status;
 public:
     std::string spritesheet;
@@ -25,5 +25,7 @@ public:
     void update();
     Status getStatus() const;
 };
+
+class DeathMontage : public AnimMontage {};
 
 #endif

@@ -43,7 +43,7 @@ void wave_cannon_projectile_summoner(Game &instance)
                     transform.scale
                 ))
                 .withComponent(CollisionBox(16, 4, 0, 0 ))
-                .withComponent(Velocity(WCP_SPEED, 1))
+                .withComponent(Velocity(WCP_SPEED, 0))
                 .build();
             cannon.status = WaveCannon::Status::Inactive;
         }

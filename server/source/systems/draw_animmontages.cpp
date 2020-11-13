@@ -16,7 +16,20 @@ void draw_animmontages
     montage.ticksCount++;
 }
 
-void play_death_montages(Destructible &destructible, AnimMontage &montage)
+void draw_deathmontages
+(IDisplayModule &display, const Transform &transform, DeathMontage &montage)
+{
+    if (montage.getStatus() != AnimMontage::Status::Playing)
+        return;
+    montage.update();
+    if (montage.getStatus() != AnimMontage::Status::Playing)
+        return;
+    unsigned current = montage.ticksCount / montage.duration;
+    display.drawSprite(montage.spritesheet, transform, montage.ids.at(current));
+    montage.ticksCount++;
+}
+
+void play_deathmontages(Destructible &destructible, DeathMontage &montage)
 {
     if (montage.getStatus() == AnimMontage::Status::Inactive \
 && destructible.status == Destructible::Status::Dying) {

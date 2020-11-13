@@ -39,7 +39,7 @@ void LevelState::onStart(Game &instance)
         .withComponent(GameObject::PlayerShip)
         .withComponent(CollisionBox(30, 10, 0, 3, 10))
         .withComponent(Destructible(1, true))
-        .withComponent(AnimMontage("effects", {80, 81, 82, 83, 84}, 5))
+        .withComponent(DeathMontage(AnimMontage("effects", {80, 81, 82, 83, 84}, 5)))
         .withComponent(WaveCannon())
         .build();
 
