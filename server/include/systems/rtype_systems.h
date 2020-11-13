@@ -12,6 +12,7 @@
 #include "components/WaveCannon.hpp"
 #include "components/Trajectory.hpp"
 #include "components/BydoShooter.hpp"
+#include "components/Lifetime.hpp"
 
 // collisions
 void collisions_update(Game &instance);
@@ -31,6 +32,8 @@ void run_animation_loops(AnimationLoop &loop, Sprite &sprite);
 // reaper
 void corpse_hider(const Destructible &destructible, Sprite &sprite);
 void destructible_reaper(Game &instance);
+void lifetime_ager(Lifetime &lifetime);
+void lifetime_reaper(Game &instance);
 
 // anim montage
 void draw_animmontages(IDisplayModule &display, const Transform &transform, AnimMontage &montage);

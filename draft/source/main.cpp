@@ -58,6 +58,7 @@ int main(void)
     game.componentStorage.registerComponent<WaveCannon>();
     game.componentStorage.registerComponent<Trajectory>();
     game.componentStorage.registerComponent<BydoShooter>();
+    game.componentStorage.registerComponent<Lifetime>();
 
     /*
     ** SYSTEMS
@@ -76,6 +77,9 @@ int main(void)
     std::function<void(Game &)> destructible_reaper_system = destructible_reaper;
     game.systemStorage.addSystem(destructible_reaper_system);
     game.systemStorage.addSystem(corpse_hider);
+    std::function<void(Game &)> lifetime_reaper_system = lifetime_reaper;
+    game.systemStorage.addSystem(lifetime_reaper_system);
+    game.systemStorage.addSystem(lifetime_ager);
 
     // playership
     game.systemStorage.addSystem(playership_animations);

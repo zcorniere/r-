@@ -4,7 +4,9 @@
 #include "components/Velocity.hpp"
 #include "components/Destructible.hpp"
 #include "components/GameObject.hpp"
+#include "components/Lifetime.hpp"
 #include "Game.hpp"
+#include <cstdlib>
 
 // Bydo Shooter Projectile params
 constexpr char BSP_SPRITESHEET[] = "effects";
@@ -34,6 +36,8 @@ void bydo_shooter_projectile_summoner(Game &instance)
     for (auto &[id, param] : shooter_params) {
         auto &[shooter, transform] = param;
         if (shooter.status == BydoShooter::Status::Firing) {
+            if (rand() % 100 < shooter.fire_probability * 100)
+                continue;
             instance.componentStorage.buildEntity()
                 .withComponent(Sprite(BSP_SPRITESHEET, BSP_ID))
                 .withComponent(Transform(
@@ -48,9 +52,11 @@ void bydo_shooter_projectile_summoner(Game &instance)
                 .withComponent(Destructible(1))
                 .withComponent(Velocity({
                     shooter.aim_direction.x * shooter.projectile_speed,
-                    shooter.aim_direction.y * shooter.projectile_speed
+                    (shooter.aim_direction.y + (1 - shooter.precision) * (rand() % 2 - 1))
+                    * shooter.projectile_speed
                 }))
                 .withComponent(GameObject::EnemyProjectile)
+                .withComponent(Lifetime(500))
                 .build();
             shooter.status = BydoShooter::Status::Charging;
         }
