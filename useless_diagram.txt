@@ -1,3 +1,0 @@
-@startuml
-PlantUml -> Pratique : "c'est"
-@enduml
