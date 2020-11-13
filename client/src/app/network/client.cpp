@@ -79,7 +79,6 @@ void network::Client::statePlay()
     return;
 }
 
-// DONE
 void network::Client::stateAskForAssets()
 {
     protocol::MessageToSend<UdpCode> message;
@@ -93,7 +92,6 @@ void network::Client::stateAskForAssets()
 
 #include <iostream>
 
-// DONE
 void network::Client::stateWaitingForAssets()
 {
     auto message_list = udp->receive();
@@ -123,7 +121,6 @@ void network::Client::stateWaitingForAssets()
     }
 }
 
-// DONE
 void network::Client::stateDownload()
 {
     if (!tcp) {
@@ -139,7 +136,6 @@ void network::Client::stateDownload()
     }
 }
 
-// DONE
 void network::Client::stateReady()
 {
     protocol::MessageToSend<UdpCode> message;
@@ -151,7 +147,6 @@ void network::Client::stateReady()
     if (console) console->log("Success [Ready]");
 }
 
-// DONE
 void network::Client::stateTimeout()
 {
     if (console) console->log("Error : Timed out");
