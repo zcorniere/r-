@@ -29,3 +29,9 @@ INetworkModule &getModule(Game &game)
 {
     return game.networkModule.value().get();
 }
+
+template <>
+Game &getModule(Game &game)
+{
+    return game;
+}
