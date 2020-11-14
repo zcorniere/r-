@@ -9,6 +9,8 @@ public:
     static std::ostream &output;
     static std::string endl;
     static std::ostream &warn(const std::string &msg = "WARNING");
+    static std::ostream &err(const std::string &msg = "ERROR");
+    static std::ostream &debug(const std::string &msg = "ERROR");
     static std::ostream &msg(const std::string &msg);
 };
 
