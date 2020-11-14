@@ -51,13 +51,13 @@ class Client: public IClient<T> {
         virtual void readBody()final {}
 
         virtual void writeHeader()final {
-            Snitch::warn("UdpClient_Header_Debug") << remote_endpoint << Snitch::endl;
             socket.async_send_to(
                 boost::asio::buffer(&q_out.front().head, sizeof(MessageHeader<T>)),
                 *remote_endpoint,
                 [this](std::error_code ec, std::size_t len) {
                    (void)len;
                     if (!ec) {
+                        Snitch::msg("UDP_CLIENT") << "msgHeader send" <<Snitch::endl;
                         if (q_out.front().body.size() > 0) {
                             writeBody();
                         } else {
@@ -72,13 +72,13 @@ class Client: public IClient<T> {
             });
         }
         virtual void writeBody()final {
-            Snitch::warn("UdpClient_Body_Debug") << remote_endpoint << Snitch::endl;
             socket.async_send_to(
                 boost::asio::buffer(q_out.front().body.data(), q_out.front().body.size()),
                 *remote_endpoint,
                 [this](std::error_code ec, std::size_t len) {
                    (void)len;
                     if (!ec) {
+                        Snitch::msg("UDP_CLIENT") << "msgBody send" <<Snitch::endl;
                         q_out.pop_front();
                         if (!q_out.empty())
                             writeHeader();

@@ -43,7 +43,6 @@ class Server: public IServer<T> {
                 this->onMessage(msg);
             }
         }
-        MsgQueue<Message<T>> &getMsgIn() { return msg_in; };
 
     protected:
         virtual void waitForClientConnection()final { readHeader(); }
@@ -83,7 +82,7 @@ class Server: public IServer<T> {
                             addToMsgQueue();
                         }
                     } else {
-                        Snitch::warn("UDP_SERVER") << "ReadHeader failed: " << ec.message() << Snitch::endl;
+                        Snitch::err("UDP_SERVER") << "ReadHeader failed: " << ec.message() << Snitch::endl;
                     }
             });
         }

@@ -22,7 +22,7 @@ void GameServer::update() {
 }
 
 void GameServer::onMessage(Message<RequestCode> msg) {
-    Snitch::msg("GAME_SERVER") << msg << Snitch::endl;
+    Snitch::debug("GAME_SERVER") << msg << Snitch::endl;
     if (msg.validMagic(protocol::MagicPair) && msg.remote) {
         if (!list.contains(msg.remote)) { list.insert({msg.remote, Player{}}); }
         switch (msg.head.code) {
@@ -72,7 +72,11 @@ void GameServer::playSound(const std::string &name, float volume, float pitch) {
     auto v = stor->getIdFromPath(name);
     s.id = v ? *v : -1;
     rep.insert(s);
-    this->msgAll(rep);
+    for (const auto &[i, e]: list) {
+        if (e.ready) {
+            i->send(rep);
+        }
+    }
 }
 
 void GameServer::drawSprite(const std::string &name, const Transform &transf, unsigned int tile_id) {
@@ -91,7 +95,11 @@ void GameServer::drawSprite(const std::string &name, const Transform &transf, un
     s.id_assets = v ? *v : -1;
     s.id_rectangle = tile_id;
     rep.insert(s);
-    this->msgAll(rep);
+    for (const auto &[i, e]: list) {
+        if (e.ready) {
+            i->send(rep);
+        }
+    }
 }
 
 Dimensional GameServer::getCursorLocation(const unsigned player) {
