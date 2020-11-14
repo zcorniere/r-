@@ -12,6 +12,7 @@
 #include "components/WaveCannon.hpp"
 #include "components/Trajectory.hpp"
 #include "components/BydoShooter.hpp"
+#include "components/PlayerScanner.hpp"
 #include "Enemies.hpp"
 #include <iostream>
 #include <chrono>
@@ -57,8 +58,9 @@ void LevelState::onStart(Game &instance)
 
     // Bugs Enemies
     Enemy::BUG.build(instance.componentStorage.buildEntity())
-        .withComponent(Transform({1000, 400}, {0, 0}, {3, 3}))
+        .withComponent(Transform({2000, 400}, {0, 0}, {3, 3}))
         .withComponent(BydoShooter())
+        .withComponent(PlayerScanner(1500))
         .build();
 
     // Example Enemy

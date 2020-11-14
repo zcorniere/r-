@@ -14,6 +14,7 @@
 #include "components/BydoShooter.hpp"
 #include "components/Lifetime.hpp"
 #include "components/OrientedSprite.hpp"
+#include "components/PlayerScanner.hpp"
 
 // collisions
 void collisions_update(Game &instance);
@@ -52,5 +53,8 @@ void wave_cannon_projectile_summoner(Game &instance);
 // bydo_shooter
 void bydo_shooter_projectile_summoner(Game &instance);
 void bydo_charger(BydoShooter &shooter);
+void player_scanner_detector(Game &instance);
+void bydo_shooter_apply_scanner
+(BydoShooter &shooter, const PlayerScanner &scanner, const Transform &transform);
 
 #endif

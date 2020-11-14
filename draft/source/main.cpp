@@ -60,6 +60,7 @@ int main(void)
     game.componentStorage.registerComponent<BydoShooter>();
     game.componentStorage.registerComponent<Lifetime>();
     game.componentStorage.registerComponent<OrientedSprite>();
+    game.componentStorage.registerComponent<PlayerScanner>();
 
     /*
     ** SYSTEMS
@@ -129,6 +130,10 @@ int main(void)
     std::function<void(Game &)> bydo_shooter_projectile_system = bydo_shooter_projectile_summoner;
     game.systemStorage.addSystem(bydo_shooter_projectile_system);
     game.systemStorage.addSystem(bydo_charger);
+    std::function<void(Game &)> player_scanner_detector_system = player_scanner_detector;
+    game.systemStorage.addSystem(player_scanner_detector_system);
+    game.systemStorage.addSystem(bydo_shooter_apply_scanner);
+
 
     /*
     ** STATES
