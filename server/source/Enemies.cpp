@@ -14,7 +14,7 @@ const Enemy Enemy::BUG = {
 
 const Enemy Enemy::PATA_PATA = {
     CollisionBox{21, 20, 4, 2, 1, {GameObject::Enemy, GameObject::EnemyProjectile}},
-    PatternLoop{{Pattern{{-1, 1}, 60}, Pattern{{-1, -1}, 60}}},
+    PatternLoop{{Pattern{{-2, 2}, 60}, Pattern{{-2, -2}, 60}}},
     AnimationLoop{{{"enemy_flap", 0},
                    {"enemy_flap", 1},
                    {"enemy_flap", 2},

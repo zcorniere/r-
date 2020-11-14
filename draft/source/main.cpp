@@ -63,6 +63,7 @@ int main(void)
     game.componentStorage.registerComponent<PlayerScanner>();
     game.componentStorage.registerComponent<ShootMontage>();
     game.componentStorage.registerComponent<RestrictionBox>();
+    game.componentStorage.registerComponent<EnemyGroup>();
 
     /*
     ** SYSTEMS
@@ -139,6 +140,7 @@ int main(void)
     game.systemStorage.addSystem(player_scanner_detector_system);
     game.systemStorage.addSystem(bydo_shooter_apply_scanner);
 
+    game.systemStorage.addSystem(run_enemy_group);
 
     /*
     ** STATES

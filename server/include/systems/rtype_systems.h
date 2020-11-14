@@ -16,6 +16,7 @@
 #include "components/OrientedSprite.hpp"
 #include "components/PlayerScanner.hpp"
 #include "components/RestrictionBox.hpp"
+#include "components/EnemyGroup.hpp"
 
 // collisions
 void collisions_update(Game &instance);
@@ -60,5 +61,9 @@ void bydo_charger(BydoShooter &shooter);
 void player_scanner_detector(Game &instance);
 void bydo_shooter_apply_scanner
 (BydoShooter &shooter, const PlayerScanner &scanner, const Transform &transform);
+
+// Enemies
+void run_enemy_group(Game &game, EnemyGroup &group, Transform &transform,
+                     Destructible &destructible);
 
 #endif

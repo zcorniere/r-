@@ -14,6 +14,7 @@
 #include "components/BydoShooter.hpp"
 #include "components/PlayerScanner.hpp"
 #include "components/RestrictionBox.hpp"
+#include "components/EnemyGroup.hpp"
 #include "Enemies.hpp"
 #include <iostream>
 #include <chrono>
@@ -69,6 +70,13 @@ void LevelState::onStart(Game &instance)
     // Example Enemy
     Enemy::PATA_PATA.build(instance.componentStorage.buildEntity())
         .withComponent(Transform({500, 200}, {0, 0}, {3, 3}))
+        .build();
+
+    // Example Enemy group
+    instance.componentStorage.buildEntity()
+        .withComponent(EnemyGroup{Enemy::PATA_PATA, 10, 60})
+        .withComponent(Transform({2000, 400}, {0, 0}, {3, 3}))
+        .withComponent(Destructible{0})
         .build();
 }
 
