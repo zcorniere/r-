@@ -11,6 +11,14 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
+struct SpriteConfig {
+    int id;
+    int origin_x;
+    int origin_y;
+    int width;
+    int height;
+};
+
 struct Asset {
     enum class Type {
         Sound = 1,
@@ -20,6 +28,7 @@ struct Asset {
     long id_tile;                  // if type is texture
     sf::Texture texture;           // if type is texture
     sf::Sprite sprite;             // if type is texture
+    SpriteConfig config;           // if type is texture
     sf::Sound sound;               // if type is Sound
     sf::SoundBuffer sound_buffer;  // if type is Sound
 };

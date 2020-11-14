@@ -23,26 +23,25 @@ network::UdpSockMngr::~UdpSockMngr()
     context.stop();
 }
 
-#include <iostream>
-
 void network::UdpSockMngr::do_receive()
 {
     socket.async_wait(udp::socket::wait_read, [&](const boost::system::error_code &error) {
         auto len = socket.available();
         if (error || len < sizeof(protocol::MessageHeader<UdpCode>))
-            return;
+            do_receive();
         std::vector<std::byte> buffer;
         buffer.resize(len);
         auto size = socket.receive(boost::asio::buffer(buffer, len));
         buffer.resize(size);
         protocol::MessageReceived<UdpCode> message(std::move(buffer));
         if (message.head().firstbyte != protocol::magic_number.first || message.head().secondbyte != protocol::magic_number.second)
-            return;
+            do_receive();
         if (!protocol::check_size(message.head().code, message.head().body_size)) {
             console.log("Error : UDP package has wrong body size");
-            return;
+            do_receive();
         }
         received_messages.push_back(std::move(message));
+        do_receive();
     });
 }
 

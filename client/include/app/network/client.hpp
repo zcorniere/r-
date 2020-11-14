@@ -24,7 +24,6 @@
 
 namespace network {
     class Client {
-        sf::RenderWindow &window;
         enum class Status {
             NotConnected,
             AskForAssets,
@@ -41,9 +40,10 @@ namespace network {
         std::unique_ptr<network::UdpSockMngr> udp = nullptr;
         std::unique_ptr<network::TcpSockMngr> tcp = nullptr;
         sf::Clock timeout_clock;
-        static constexpr auto timeout = 10000;
+        static constexpr auto timeout = 60000;
         std::function<void(void)> onDisconnect_hdl = nullptr;
         Console *console = nullptr;
+        std::vector<sf::Sprite> sprites;
         void statePlay();
         void stateAskForAssets();
         void stateWaitingForAssets();
@@ -52,12 +52,12 @@ namespace network {
         void stateTimeout();
     public:
         void update();
-        explicit Client(sf::RenderWindow &p_window);
         void setConsole(Console *new_console);
         void set_onDisconnect(std::function<void(void)> functor);
         void connect(const std::string &new_udp_server_address);
         void disconnect();
         void reset();
+        [[nodiscard]] std::vector<sf::Sprite> getSprites();
     private:
         void stopSockManagers();
     };

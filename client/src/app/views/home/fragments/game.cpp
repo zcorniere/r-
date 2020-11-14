@@ -12,7 +12,7 @@
 #include "app/window.hpp"
 
 Game::Game(std::optional<std::string> &intent_ref, bidimensional::Transform &parent_trans, sf::RenderWindow &window) :
-        Ifragment(intent_ref, parent_trans, window), client(window)
+        Ifragment(intent_ref, parent_trans, window)
 {
     transform.position = {0, TopBar::bar_height};
     transform.scale = {window::WIDTH, window::HEIGHT - TopBar::bar_height - BottomBar::bar_height};
@@ -35,6 +35,9 @@ void Game::onUpdateView()
     } catch (std::exception e) {
         console->log("EXCEPTION : " + std::string(e.what()));
         disconnect();
+    }
+    for (auto &sprite : client.getSprites()) {
+        window.draw(sprite);
     }
 }
 

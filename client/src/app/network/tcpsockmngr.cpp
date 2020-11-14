@@ -11,11 +11,10 @@
 network::TcpSockMngr::TcpSockMngr(sf::Clock &timeout, Console &console, const std::string &ip, short port, std::vector<std::pair<long, bool>> assetlist) :
     timeout_clock(timeout), console(console), ip(ip), port(port), socket(context), resolver(context), assets_ids_list(std::move(assetlist))
 {
-    // TODO
-//    do_receive();
-//    run_thread = std::thread([this](){context.run();});
-//    boost::asio::connect(socket, resolver.resolve(ip, std::to_string(port)));
-//    downloadAllAssets();
+    boost::asio::connect(socket, resolver.resolve(ip, std::to_string(port)));
+    do_receive();
+    run_thread = std::thread([this](){context.run();});
+    downloadAllAssets();
 }
 
 network::TcpSockMngr::~TcpSockMngr()
@@ -55,12 +54,14 @@ long network::TcpSockMngr::receiveAsset()
     len = body.size_data;
     buff.resize(len);
     size = socket.receive(boost::asio::buffer(buff, len));
+    body.data.resize(size);
     std::memcpy(body.data.data(), buff.data(), size);
     if (body.type == protocol::tcp::AssetPackage::Type::Texture) {
         // body config
         len = body.size_config;
         buff.resize(len);
         size = socket.receive(boost::asio::buffer(buff, len));
+        body.config.resize(size);
         std::memcpy(body.config.data(), buff.data(), size);
     }
     // body is build
@@ -69,34 +70,26 @@ long network::TcpSockMngr::receiveAsset()
         asset.type = Asset::Type::Sound;
         asset.id_asset = body.id_asset;
         asset.sound_buffer.loadFromMemory(body.data.data(), body.data.size());
-        asset.sound.setBuffer(asset.sound_buffer);
         assets.push_back(asset);
     } else {    // Texture
-        std::string config;
-        config.resize(body.size_config);
-        std::memcpy(config.data(), body.config.data(), body.size_config);
-        std::istringstream is(config);
+        std::string config_str;
+        config_str.resize(body.size_config);
+        std::memcpy(config_str.data(), body.config.data(), body.size_config);
+        std::istringstream is(config_str);
         ptree json;
         read_json(is, json);
-        for (auto& v : json.get_child("sprites")) {
-            if (v.first.empty()) {
-                console.log("Error [TCP]: Config file is incorrect");
-                break;
-            }
-            SpriteConfig config {};
-            config.id = v.second.get<int>("id");
-            config.origin_x = v.second.get<int>("origin_x");
-            config.origin_y = v.second.get<int>("origin_y");
-            config.width = v.second.get<int>("width");
-            config.height = v.second.get<int>("height");
-            // config is build
+        auto sprites = json.find("sprites");
+        for (auto& v : sprites->second) {
             Asset asset;
+            asset.config.id = v.second.get<int>("id");
+            asset.config.origin_x = v.second.get<int>("origin_x");
+            asset.config.origin_y = v.second.get<int>("origin_y");
+            asset.config.width = v.second.get<int>("width");
+            asset.config.height = v.second.get<int>("height");
             asset.type = Asset::Type::Texture;
             asset.id_asset = body.id_asset;
             asset.texture.loadFromMemory(body.data.data(), body.data.size());
-            asset.id_tile = static_cast<long>(config.id);
-            asset.sprite.setTexture(asset.texture);
-            asset.sprite.setTextureRect({config.origin_x, config.origin_y, config.width, config.height});
+            asset.id_tile = static_cast<long>(asset.config.id);
             assets.push_back(asset);
         }
     }
@@ -107,7 +100,7 @@ void network::TcpSockMngr::do_receive()
 {
     socket.async_wait(tcp::socket::wait_read, [&](const boost::system::error_code &error) {
         if (error || socket.available() < sizeof(protocol::MessageHeader<UdpCode>))
-            do_receive();
+            return;
         // Get the header
         protocol::MessageHeader<TcpCode> header;
         auto len = sizeof(header);
@@ -118,10 +111,10 @@ void network::TcpSockMngr::do_receive()
         std::memcpy(&header, buff.data(), size);
         // check the header
         if (header.firstbyte != protocol::magic_number.first || header.secondbyte != protocol::magic_number.second)
-            do_receive();
+            return;
         if (header.code != TcpCode::AssetPackage) {
             console.log("Error [TCP]: Server sent wrong data");
-            do_receive();
+            return;
         }
         // get the body & work on it
         auto asset_id = receiveAsset();
@@ -146,6 +139,7 @@ void network::TcpSockMngr::send(protocol::MessageToSend<TcpCode> message)
     std::memcpy(buffer.data(), &message.head, sizeof(message.head));
     std::memcpy(buffer.data() + sizeof(message.head), message.body.data(), message.head.body_size);
     boost::asio::write(socket, boost::asio::buffer(buffer, length));
+    do_receive();
 }
 
 //void network::TcpSockMngr::do_send(protocol::MessageToSend<TcpCode> message)
@@ -170,7 +164,8 @@ void network::TcpSockMngr::downloadAsset(long asset_id) {
     message.head.code = TcpCode::AssetAsk;
     protocol::tcp::AssetAsk asset_ask {asset_id};
     message.head.body_size = sizeof(asset_ask);
-    std::memcpy(message.body.data(), &asset_ask, sizeof(asset_ask));
+    message.body.resize(message.head.body_size);
+    std::memcpy(message.body.data(), &asset_ask, message.head.body_size);
     send(message);
 }
 
@@ -184,6 +179,7 @@ void network::TcpSockMngr::downloadAllAssets()
         is_download_finish = true;
     } else {
         console.log("[TCP]: Downloading asset " + std::to_string(it->first));
+        timeout_clock.restart();
         downloadAsset(it->first);
     }
 }

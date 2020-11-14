@@ -9,6 +9,7 @@
 #define _APP_NETWORK_TCPSOCKMNGR_HPP_
 
 #include <thread>
+#include <iostream>
 #include <boost/asio.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -48,13 +49,5 @@ namespace network {
         [[nodiscard]] std::vector<Asset> getAssets() const;
     };
 }
-
-struct SpriteConfig {
-    int id;
-    int origin_x;
-    int origin_y;
-    int width;
-    int height;
-};
 
 #endif
