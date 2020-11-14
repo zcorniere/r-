@@ -30,4 +30,8 @@ class DeathMontage : public AnimMontage {
         using AnimMontage::AnimMontage;
 };
 
+class ShootMontage : public AnimMontage {
+        using AnimMontage::AnimMontage;
+};
+
 #endif

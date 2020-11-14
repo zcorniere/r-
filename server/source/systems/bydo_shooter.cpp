@@ -86,7 +86,6 @@ void bydo_shooter_apply_scanner
 {
     float distance = scanner.distanceToClosestPlayer(transform.location);
 
-    std::cout << "Player distance: " << distance << std::endl;
     if (distance == -1 || distance > scanner.range) {
         shooter.status = BydoShooter::Status::Disabled;
         return;

@@ -44,11 +44,13 @@ void lifetime_reaper(Game &instance);
 // anim montage
 void draw_animmontages(IDisplayModule &display, const Transform &transform, AnimMontage &montage);
 void draw_deathmontages(IDisplayModule &display, const Transform &transform, DeathMontage &montage);
+void draw_shootmontages(IDisplayModule &display, const Transform &transform, ShootMontage &montage);
 void play_deathmontages(Destructible &destructible, DeathMontage &montage);
 
 // wave_cannon
 void wave_cannon_input_getter(WaveCannon &cannon, const PlayerShipController &controller);
 void wave_cannon_projectile_summoner(Game &instance);
+void wave_cannon_montage_player(const WaveCannon &cannon, ShootMontage &montage);
 
 // bydo_shooter
 void bydo_shooter_projectile_summoner(Game &instance);

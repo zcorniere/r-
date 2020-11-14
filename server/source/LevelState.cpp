@@ -45,6 +45,7 @@ void LevelState::onStart(Game &instance)
         .withComponent(CollisionBox(30, 10, 0, 3, 10))
         .withComponent(Destructible(1, true))
         .withComponent(DeathMontage("effects", {80, 81, 82, 83, 84}, 7))
+        .withComponent(ShootMontage("effects", {20, 21}, 7))
         .withComponent(WaveCannon())
         .build();
 

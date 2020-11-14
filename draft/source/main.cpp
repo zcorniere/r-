@@ -61,6 +61,7 @@ int main(void)
     game.componentStorage.registerComponent<Lifetime>();
     game.componentStorage.registerComponent<OrientedSprite>();
     game.componentStorage.registerComponent<PlayerScanner>();
+    game.componentStorage.registerComponent<ShootMontage>();
 
     /*
     ** SYSTEMS
@@ -112,6 +113,7 @@ int main(void)
     game.systemStorage.addSystem(play_deathmontages);
     game.systemStorage.addSystem(draw_animmontages);
     game.systemStorage.addSystem(draw_deathmontages);
+    game.systemStorage.addSystem(draw_shootmontages);
 
     game.systemStorage.addSystem(run_animation_loops);
     game.systemStorage.addSystem(run_pattern_loops);
@@ -119,6 +121,7 @@ int main(void)
 
     // wave cannon
     std::function<void(Game &)> wave_cannon_projectile_system = wave_cannon_projectile_summoner;
+    game.systemStorage.addSystem(wave_cannon_montage_player);
     game.systemStorage.addSystem(wave_cannon_projectile_system);
     game.systemStorage.addSystem(wave_cannon_input_getter);
 
