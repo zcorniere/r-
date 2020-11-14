@@ -7,13 +7,14 @@
 #include "components/Lifetime.hpp"
 #include "components/PlayerScanner.hpp"
 #include "components/PlayerShipController.hpp"
+#include "components/AnimationLoop.hpp"
 #include "Game.hpp"
 #include <cstdlib>
 #include <iostream>
 
 // Bydo Shooter Projectile params
-constexpr char BSP_SPRITESHEET[] = "effects";
-constexpr unsigned BSP_ID = 90;
+constexpr char BSP_SPRITESHEET[] = "enemy_projectiles";
+constexpr unsigned BSP_ID = 0;
 constexpr float BSP_OFFSET_X = 5;
 constexpr float BSP_OFFSET_Y = 10;
 constexpr unsigned BSP_ROUGHNESS = 1;
@@ -43,13 +44,19 @@ void bydo_shooter_projectile_summoner(Game &instance)
                 continue;
             instance.componentStorage.buildEntity()
                 .withComponent(Sprite(BSP_SPRITESHEET, BSP_ID))
+                .withComponent(AnimationLoop({
+                    Sprite(BSP_SPRITESHEET, BSP_ID),
+                    Sprite(BSP_SPRITESHEET, BSP_ID + 1),
+                    Sprite(BSP_SPRITESHEET, BSP_ID + 2),
+                    Sprite(BSP_SPRITESHEET, BSP_ID + 3)
+                }, 10))
                 .withComponent(Transform(
                     Dimensional(
                         transform.location.x + BSP_OFFSET_X * transform.scale.x,
                         transform.location.y + BSP_OFFSET_Y * transform.scale.y
                     ),
                     Dimensional(0, 0),
-                    Dimensional(0.25, 0.25)
+                    Dimensional(2, 2)
                 ))
                 .withComponent(CollisionBox(4, 4, 0, 0, 1, {GameObject::EnemyProjectile, GameObject::Enemy}))
                 .withComponent(Destructible(1))
