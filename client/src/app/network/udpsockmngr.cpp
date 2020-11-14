@@ -18,9 +18,9 @@ network::UdpSockMngr::UdpSockMngr(Console &console, const std::string &ip, short
 
 network::UdpSockMngr::~UdpSockMngr()
 {
+    context.stop();
     if (run_thread.joinable())
         run_thread.join();
-    context.stop();
 }
 
 void network::UdpSockMngr::do_receive()
@@ -28,7 +28,7 @@ void network::UdpSockMngr::do_receive()
     socket.async_wait(udp::socket::wait_read, [&](const boost::system::error_code &error) {
         auto len = socket.available();
         if (error || len < sizeof(protocol::MessageHeader<UdpCode>))
-            do_receive();
+            return;
         std::vector<std::byte> buffer;
         buffer.resize(len);
         auto size = socket.receive(boost::asio::buffer(buffer, len));

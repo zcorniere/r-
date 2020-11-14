@@ -25,6 +25,7 @@ using boost::property_tree::read_json;
 namespace network {
     class TcpSockMngr {
         bool is_download_finish = false;
+        bool is_connection_failed = false;
         Console &console;
         std::string ip;
         short port;
@@ -46,6 +47,7 @@ namespace network {
         TcpSockMngr(sf::Clock &timeout, Console &console, const std::string &ip, short port, std::vector<std::pair<long, bool>>);
         ~TcpSockMngr();
         [[nodiscard]] bool isDownloadFinished() const;
+        [[nodiscard]] bool isConnectionFailed() const;
         [[nodiscard]] std::vector<Asset> getAssets() const;
     };
 }

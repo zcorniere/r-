@@ -130,6 +130,12 @@ void network::Client::stateDownload()
         if (console) console->log("Start [DownloadAssets]");
         tcp = std::make_unique<network::TcpSockMngr>(timeout_clock, *console, server_ip, server_tcp_port, assets_ids_list);
     }
+    if (tcp->isConnectionFailed()) {
+        tcp.reset();
+        if (console) console->log("[TCP] Error : connection failed");
+        disconnect();
+        return;
+    }
     if (tcp->isDownloadFinished()) {
         assets = tcp->getAssets();
         // connect sprite to text and sound to buffer
@@ -255,8 +261,10 @@ std::vector<sf::Sprite> network::Client::getSprites()
 
 void network::Client::stopSockManagers()
 {
-    udp.reset();
-    tcp.reset();
+    if (udp)
+        udp.reset();
+    if (tcp)
+        tcp.reset();
 }
 
 

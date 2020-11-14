@@ -11,7 +11,12 @@
 network::TcpSockMngr::TcpSockMngr(sf::Clock &timeout, Console &console, const std::string &ip, short port, std::vector<std::pair<long, bool>> assetlist) :
     timeout_clock(timeout), console(console), ip(ip), port(port), socket(context), resolver(context), assets_ids_list(std::move(assetlist))
 {
-    boost::asio::connect(socket, resolver.resolve(ip, std::to_string(port)));
+    try {
+        boost::asio::connect(socket, resolver.resolve(ip, std::to_string(port)));
+    } catch (std::exception) {
+        is_connection_failed = true;
+        return;
+    }
     do_receive();
     run_thread = std::thread([this](){context.run();});
     downloadAllAssets();
@@ -19,9 +24,9 @@ network::TcpSockMngr::TcpSockMngr(sf::Clock &timeout, Console &console, const st
 
 network::TcpSockMngr::~TcpSockMngr()
 {
+    context.stop();
     if (run_thread.joinable())
         run_thread.join();
-    context.stop();
 }
 
 long network::TcpSockMngr::receiveAsset()
@@ -193,6 +198,11 @@ bool network::TcpSockMngr::isDownloadFinished() const
     return is_download_finish;
 }
 
+bool network::TcpSockMngr::isConnectionFailed() const
+{
+    return is_connection_failed;
+}
+
 std::vector<Asset> network::TcpSockMngr::getAssets() const
 {
     if (!isDownloadFinished()) {
@@ -200,5 +210,6 @@ std::vector<Asset> network::TcpSockMngr::getAssets() const
     }
     return assets;
 }
+
 
 
