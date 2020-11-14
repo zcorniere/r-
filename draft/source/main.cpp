@@ -62,6 +62,7 @@ int main(void)
     game.componentStorage.registerComponent<OrientedSprite>();
     game.componentStorage.registerComponent<PlayerScanner>();
     game.componentStorage.registerComponent<ShootMontage>();
+    game.componentStorage.registerComponent<RestrictionBox>();
 
     /*
     ** SYSTEMS
@@ -128,6 +129,7 @@ int main(void)
     // movement
     game.systemStorage.addSystem(velocity_applicator);
     game.systemStorage.addSystem(trajectory_applicator);
+    game.systemStorage.addSystem(restriction_applicator);
 
     // bydo shooter
     std::function<void(Game &)> bydo_shooter_projectile_system = bydo_shooter_projectile_summoner;

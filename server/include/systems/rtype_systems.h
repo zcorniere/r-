@@ -15,6 +15,7 @@
 #include "components/Lifetime.hpp"
 #include "components/OrientedSprite.hpp"
 #include "components/PlayerScanner.hpp"
+#include "components/RestrictionBox.hpp"
 
 // collisions
 void collisions_update(Game &instance);
@@ -23,6 +24,7 @@ void collision_damages(const CollisionBox &box, Destructible &destructible);
 // movements
 void trajectory_applicator(Transform &transform, const Trajectory &trajectory);
 void velocity_applicator(Transform &transform, const Velocity &velocity);
+void restriction_applicator(Transform &transform, const RestrictionBox &box);
 
 // playership
 void playership_ct_input_getter(IInputModule &input, PlayerShipController &controller, const Destructible &destructible);

@@ -13,6 +13,7 @@
 #include "components/Trajectory.hpp"
 #include "components/BydoShooter.hpp"
 #include "components/PlayerScanner.hpp"
+#include "components/RestrictionBox.hpp"
 #include "Enemies.hpp"
 #include <iostream>
 #include <chrono>
@@ -46,6 +47,7 @@ void LevelState::onStart(Game &instance)
         .withComponent(Destructible(1, true))
         .withComponent(DeathMontage("effects", {80, 81, 82, 83, 84}, 7))
         .withComponent(ShootMontage("effects", {20, 21}, 7))
+        .withComponent(RestrictionBox(0, 0, 1850, 1080))
         .withComponent(WaveCannon())
         .build();
 
