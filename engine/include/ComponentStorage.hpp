@@ -131,11 +131,9 @@ private:
         template <typename... Variants>
         EntityBuilder &withComponent(std::variant<Variants...> component)
         {
-            std::clog << "variant withComponents" << std::endl;
             std::visit(
                 [this](auto &&component) {
                     using T = std::decay_t<decltype(component)>;
-                    std::clog << boost::typeindex::type_id_with_cvr<T>().pretty_name() << std::endl;
                     m_dest.storeComponent<T>(
                         component, m_id);
                 },
