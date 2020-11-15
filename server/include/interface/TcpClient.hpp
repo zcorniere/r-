@@ -82,6 +82,7 @@ class Client: public IClient<T> {
                 boost::asio::buffer(&q_out.front().head, sizeof(MessageHeader<T>)),
                 [this](std::error_code ec, std::size_t len) {
                     (void)len;
+                    Snitch::debug() << "header_send " << len << Snitch::endl;
                     if (!ec) {
                         if (q_out.front().body.size() > 0) {
                             writeBody();
@@ -101,6 +102,7 @@ class Client: public IClient<T> {
                 boost::asio::buffer(q_out.front().body.data(), q_out.front().body.size()),
                 [this](std::error_code ec, std::size_t len) {
                     (void)len;
+                    Snitch::debug() << "body send " << len << Snitch::endl;
                     if (!ec) {
                         q_out.pop_front();
                         if (!q_out.empty())

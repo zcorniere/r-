@@ -38,6 +38,7 @@ class Server: public IServer<T> {
             if (wait) q_in.wait();
             for (size_t i = 0; i < maxMessage && !q_in.empty(); i++) {
                 auto msg = q_in.pop_front();
+                Snitch::debug() << msg << Snitch::endl;
                 this->onMessage(msg);
             }
         }
