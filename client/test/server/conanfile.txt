@@ -1,0 +1,13 @@
+[requires]
+zlib/1.2.11@conan/stable
+bzip2/1.0.6@conan/stable
+boost/1.74.0
+
+[generators]
+cmake
+
+# If we want the executable to work on windows too, we need to copy libs in binary directory
+[imports]
+bin, *.dll -> ./bin
+lib, *.dylib* -> ./bin
+lib, *.lib* -> ./bin    # Because Boost .lib are dynamically linked
