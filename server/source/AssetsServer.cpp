@@ -56,7 +56,6 @@ void AssetsServer::onMessage(Message<AssetsRequest> msg) {
                         reply.size_config = reply.config.size();
                         reply.id = body->id;
                         reply.type = assets_map.at(body->id);
-                        rep.head.code = msg.head.code;
                         rep.insert(reply.type);
                         rep.insert(reply.id);
                         rep.insert(reply.size_data);
