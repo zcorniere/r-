@@ -92,7 +92,7 @@ std::ostream &operator<<(std::ostream &os, MessageHeader<T> head) {
     os << std::hex << "0x" << static_cast<unsigned>(head.magic1)
                    << ":0x" << static_cast<unsigned>(head.magic2)
                    << ":0x" << static_cast<unsigned>(head.code)
-                   << ":0x" << static_cast<unsigned>(head.size);
+                   << ":0x" << static_cast<unsigned>(head.size) << std::dec;
     return os;
 }
 

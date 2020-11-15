@@ -85,12 +85,12 @@ namespace tcp {
         AskAssets = 0x01,
         AssetsPackage = 0x02,
     };
-    struct AssetsAsk { long id; };
+    struct AssetsAsk { uint64_t id; };
 
     // Reply by the server
     struct AssetsPackage {
-        enum Type {Sound = 0x01, Texture = 0x02} type;
-        long id;
+        enum Type: bool {Sound = 0x00, Texture = 0x01} type;
+        uint64_t id;
         std::size_t size_data;
         std::size_t size_config;
         std::vector<uint8_t> data;
