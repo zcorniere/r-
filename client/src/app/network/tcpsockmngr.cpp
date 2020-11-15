@@ -206,7 +206,7 @@ bool network::TcpSockMngr::isConnectionFailed() const
 std::vector<Asset> network::TcpSockMngr::getAssets() const
 {
     if (!isDownloadFinished()) {
-        throw std::exception("Download is not finish");
+        throw ("Download is not finish");
     }
     return assets;
 }
