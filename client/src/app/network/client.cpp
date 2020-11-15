@@ -111,7 +111,7 @@ void network::Client::stateWaitingForAssets()
                 std::memcpy(assetlist.list.data(), body.data(),assetlist.size * sizeof(assetlist.list.front()));
                 server_tcp_port = static_cast<short>(assetlist.port);
                 for (auto i = 0; i < assetlist.size; ++i)
-                    assets_ids_list.emplace_back(assetlist.list[i], false);
+                    assets_ids_list.emplace_back(static_cast<long>(assetlist.list[i]), false);
                 status = Status::DownloadAssets;
                 timeout_clock.restart();
                 if (console) console->log("Success [WaitingForAssets]");

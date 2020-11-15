@@ -27,7 +27,6 @@ void network::UdpSockMngr::do_receive()
 {
     socket.async_wait(udp::socket::wait_read, [&](const boost::system::error_code &error) {
         auto len = socket.available();
-        console.log("UDP Debug [RECEIVE] : " + std::to_string(len) + "bits");
         if (error || len < sizeof(protocol::MessageHeader<UdpCode>))
             return;
         std::vector<std::byte> buffer;
@@ -38,7 +37,6 @@ void network::UdpSockMngr::do_receive()
         if (message.head().firstbyte != protocol::magic_number.first || message.head().secondbyte != protocol::magic_number.second)
             do_receive();
         if (!protocol::check_size(message.head().code, message.head().body_size)) {
-            console.log("DEBUG: sizeof(protocol::udp::AssetList) : " + std::to_string(sizeof(protocol::udp::from_server::AssetList::port) + sizeof(protocol::udp::from_server::AssetList::size) ) + " body.size: " + std::to_string(message.head().body_size));
             console.log("Error : UDP package has wrong body size");
             do_receive();
         }

@@ -125,21 +125,21 @@ namespace protocol {
         };
         namespace from_server {
             struct Sprite {
-                long id_asset;     // the tilesheet
-                long id_sprite;    // the sprite id of the tilesheet
+                uint64_t id_asset;     // the tilesheet
+                uint64_t id_sprite;    // the sprite id of the tilesheet
                 transform::Rotation rot;
                 transform::Position pos;
                 transform::Scale scale;
             };
             struct Sound {
-                long id;
+                uint64_t id;
                 float pitch;
                 bool isLooping;
             };
             struct AssetList {
                 unsigned port;          // port of the tcp server (same ip)
                 std::size_t size;       // size of list
-                std::vector<long> list; // list of asset ids
+                std::vector<uint64_t> list; // list of asset ids
             };
         }
         namespace from_client {

@@ -146,7 +146,6 @@ void network::TcpSockMngr::send(protocol::MessageToSend<TcpCode> message)
     std::memcpy(buffer.data(), &message.head, sizeof(message.head));
     std::memcpy(buffer.data() + sizeof(message.head), message.body.data(), message.head.body_size);
     boost::asio::write(socket, boost::asio::buffer(buffer, length));
-    std::cout << "Debug [TCP] send : " << length << std::endl;
     for (auto i = 0; i < length; ++i) {
         std::cout << reinterpret_cast<char*>(buffer.data())[i] << " ";
     }
