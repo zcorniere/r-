@@ -25,7 +25,7 @@ class Server: public IServer<T> {
                 waitForClientConnection();
                 context_thread = std::thread([this]() { asio_context.run(); });
             } catch (const std::exception &e) {
-                Snitch::warn("UDP_SERVER") << "Exception: " << e.what() << Snitch::endl;
+                Snitch::err("UDP_SERVER") << "Exception: " << e.what() << Snitch::endl;
                 return false;
             }
             Snitch::info("UDP_SERVER") << "Server Started" << Snitch::endl;
@@ -66,14 +66,12 @@ class Server: public IServer<T> {
 
     private:
        void readHeader() {
-            Snitch::info("UDP_SERVER") << "Start to receive header" << std::endl;
             asio_acceptor.async_receive_from(
                 boost::asio::buffer(&tmp.head, sizeof(MessageHeader<T>)),
                tmp_end,
                [this](std::error_code ec, std::size_t len) {
                     (void)len;
-                    Snitch::info("UDP_SERVER") << "Readhead" << Snitch::endl;
-                    Snitch::info("UDP_SERVER_DEBUG") << tmp.head << Snitch::endl;
+                    Snitch::debug("UDP_SERVER_DEBUG") << tmp.head << Snitch::endl;
                     if (!ec) {
                         if (tmp.head.size > 0) {
                             tmp.body.resize(tmp.head.size);

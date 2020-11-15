@@ -50,35 +50,19 @@ class Client: public IClient<T> {
         virtual void readHeader()final {}
         virtual void readBody()final {}
 
-        virtual void writeHeader()final {
-            socket.async_send_to(
-                boost::asio::buffer(&q_out.front().head, sizeof(MessageHeader<T>)),
-                *remote_endpoint,
-                [this](std::error_code ec, std::size_t len) {
-                   (void)len;
-                    if (!ec) {
-                        Snitch::info("UDP_CLIENT") << "msgHeader send" <<Snitch::endl;
-                        if (q_out.front().body.size() > 0) {
-                            writeBody();
-                        } else {
-                            q_out.pop_front();
-                            if (!q_out.empty())
-                                writeHeader();
-                        }
-                    } else {
-                        Snitch::err(std::to_string(this->getId())) << "Write Header failed: " << ec.message() << Snitch::endl;
-                        socket.close();
-                    }
-            });
-        }
+        virtual void writeHeader()final { writeBody(); }
         virtual void writeBody()final {
+            auto len = sizeof(q_out.front().head) + q_out.front().head.size;
+            std::vector<std::byte> buffer;
+            buffer.resize(len);
+            std::memcpy(buffer.data(), &q_out.front().head, sizeof(q_out.front().head));
+            std::memcpy(buffer.data() + sizeof(q_out.front().head), q_out.front().body.data(), q_out.front().body.size());
             socket.async_send_to(
-                boost::asio::buffer(q_out.front().body.data(), q_out.front().body.size()),
+                boost::asio::buffer(buffer, buffer.size()),
                 *remote_endpoint,
                 [this](std::error_code ec, std::size_t len) {
                    (void)len;
                     if (!ec) {
-                        Snitch::debug("UDP_CLIENT") << "msgBody send" <<Snitch::endl;
                         q_out.pop_front();
                         if (!q_out.empty())
                             writeHeader();

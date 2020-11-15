@@ -21,7 +21,7 @@ class Client: public IClient<T> {
                boost::asio::ip::tcp::socket _socket,
                MsgQueue<Message<T>> &_q_in) :
                socket(std::move(_socket)), context(io_context), q_in(_q_in)
-        {};
+       { readHeader(); };
         virtual ~Client() { this->disconnect(); };
 
         virtual void disconnect()final {

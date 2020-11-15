@@ -20,6 +20,7 @@ GameServer::~GameServer()
 
 void GameServer::update() {
     this->Server::update();
+    assets.update(2);
 }
 
 void GameServer::onMessage(Message<RequestCode> msg) {
@@ -55,7 +56,7 @@ void GameServer::onMessage(Message<RequestCode> msg) {
             rep.insert(ass.port);
             rep.insert(ass.size);
             rep.insert(ass.list);
-            Snitch::info("GAME_SERVER") << "Replied RequestCode::AssetsList" << Snitch::endl;
+            Snitch::debug("GAME_SERVER") << "Replied RequestCode::AssetsList" << Snitch::endl;
             msg.remote->send(rep);
         } break;
         default: Snitch::warn("GAME_SERVER") << "Unknown comand" << Snitch::endl; break;

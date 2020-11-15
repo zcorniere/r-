@@ -41,7 +41,6 @@ class MsgQueue {
             q.clear();
         }
         T pop_front() {
-            Snitch::debug("MsgQueue") << "pop_front: " << q.size() << Snitch::endl;
             if (this->size() == 0) {
                 throw std::runtime_error("queue is empty");
             }

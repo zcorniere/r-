@@ -7,10 +7,12 @@
 #include "AssetsServer.hpp"
 #include "Snitch.hpp"
 
+using namespace protocol::tcp;
+
 const std::unordered_map<std::string, protocol::tcp::AssetsPackage::Type> ext_to_type {
-    {".png", protocol::tcp::AssetsPackage::Texture},
-    {".gif", protocol::tcp::AssetsPackage::Texture},
-    {".mp3", protocol::tcp::AssetsPackage::Sound}
+    {".png", AssetsPackage::Texture},
+    {".gif", AssetsPackage::Texture},
+    {".mp3", AssetsPackage::Sound}
 };
 
 AssetsServer::AssetsServer(const unsigned port, const std::string &path):
@@ -33,17 +35,20 @@ AssetsServer::~AssetsServer()
     this->stop();
 }
 
-void AssetsServer::onMessage(Message<protocol::tcp::AssetsRequest> msg) {
-    Message<protocol::tcp::AssetsRequest> rep(protocol::MAGIC_NB_1, protocol::MAGIC_NB_2);
+void AssetsServer::onMessage(Message<AssetsRequest> msg) {
+    Message<AssetsRequest> rep(protocol::MAGIC_NB_1, protocol::MAGIC_NB_2);
     if (msg.validMagic(protocol::MagicPair) && msg.remote) {
         switch (msg.head.code) {
-            case protocol::tcp::AssetsRequest::AskAssets: {
+            case AssetsRequest::AskAssets: {
+                rep.head.code = protocol::tcp::AssetsRequest::AssetsPackage;
                 auto body = reinterpret_cast<protocol::tcp::AssetsAsk *>(msg.body.data());
-                protocol::tcp::AssetsPackage reply;
+               AssetsPackage reply;
                 try {
                     auto path_data = stor->getPathFromId(body->id);
-                    if (!path_data)
+                    if (!path_data) {
+                        Snitch::warn("ASSETS_SERVER") << "Invalid data: " << body->id << Snitch::endl;
                         break;
+                    }
                     reply.data = this->getFileAt(*path_data);
                     reply.config = this->getFileAt(this->getConfigForAssets(*path_data));
                     if (reply.data.size() != 0 && reply.config.size() != 0) {
@@ -60,7 +65,7 @@ void AssetsServer::onMessage(Message<protocol::tcp::AssetsRequest> msg) {
                         rep.insert(reply.config);
                     }
                 } catch (const std::runtime_error &re) {
-                    Snitch::warn("ASSETS_SERVER") << "Exeception " << re.what() << Snitch::endl;
+                    Snitch::err("ASSETS_SERVER") << "Exception " << re.what() << Snitch::endl;
                 }
             } break;
             default: Snitch::warn("ASSETS_SERVER") << "Unknown comand" << Snitch::endl; break;
