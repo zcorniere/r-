@@ -25,6 +25,7 @@ add_executable(r-type_local
                             ../server/source/AssetsServer.cpp
                             ../server/source/Storage.cpp
                             ../server/source/Enemies.cpp
+                            ../server/source/load_game.cpp
                             ${server_components}
                             ${server_systems}
 )
