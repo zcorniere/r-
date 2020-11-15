@@ -73,7 +73,7 @@ long network::TcpSockMngr::receiveAsset()
     if (body.type == protocol::tcp::AssetPackage::Type::Sound) {  // Sound
         Asset asset;
         asset.type = Asset::Type::Sound;
-        asset.id_asset = body.id_asset;
+        asset.id_asset = static_cast<long>(body.id_asset);
         asset.sound_buffer.loadFromMemory(body.data.data(), body.data.size());
         assets.push_back(asset);
     } else {    // Texture
@@ -92,13 +92,13 @@ long network::TcpSockMngr::receiveAsset()
             asset.config.width = v.second.get<int>("width");
             asset.config.height = v.second.get<int>("height");
             asset.type = Asset::Type::Texture;
-            asset.id_asset = body.id_asset;
+            asset.id_asset = static_cast<long>(body.id_asset);
             asset.texture.loadFromMemory(body.data.data(), body.data.size());
             asset.id_tile = static_cast<long>(asset.config.id);
             assets.push_back(asset);
         }
     }
-    return body.id_asset;
+    return static_cast<long>(body.id_asset);
 }
 
 void network::TcpSockMngr::do_receive()
@@ -138,12 +138,18 @@ void network::TcpSockMngr::do_receive()
 
 void network::TcpSockMngr::send(protocol::MessageToSend<TcpCode> message)
 {
+    std::cout << "sizeof(protocol::tcp::AssetAsk) : " << sizeof(protocol::tcp::AssetAsk) << std::endl;     // zac a 8
+    std::cout << "sizeof(protocol::tcp::AssetPackage) : " << sizeof(protocol::tcp::AssetPackage) << std::endl; // zac a 80
     std::size_t length = sizeof(message.head) + message.head.body_size;
     std::vector<std::byte> buffer;
     buffer.resize(length);
     std::memcpy(buffer.data(), &message.head, sizeof(message.head));
     std::memcpy(buffer.data() + sizeof(message.head), message.body.data(), message.head.body_size);
     boost::asio::write(socket, boost::asio::buffer(buffer, length));
+    std::cout << "Debug [TCP] send : " << length << std::endl;
+    for (auto i = 0; i < length; ++i) {
+        std::cout << reinterpret_cast<char*>(buffer.data())[i] << " ";
+    }
     do_receive();
 }
 
@@ -167,7 +173,7 @@ void network::TcpSockMngr::send(protocol::MessageToSend<TcpCode> message)
 void network::TcpSockMngr::downloadAsset(long asset_id) {
     protocol::MessageToSend<TcpCode> message;
     message.head.code = TcpCode::AssetAsk;
-    protocol::tcp::AssetAsk asset_ask {asset_id};
+    protocol::tcp::AssetAsk asset_ask {static_cast<uint64_t>(asset_id)};
     message.head.body_size = sizeof(asset_ask);
     message.body.resize(message.head.body_size);
     std::memcpy(message.body.data(), &asset_ask, message.head.body_size);

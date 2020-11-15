@@ -160,14 +160,14 @@ namespace protocol {
             AssetPackage = 2    // from server
         };
         struct AssetAsk {
-            long id;
+            uint64_t id;
         };
         struct AssetPackage {
-            enum class Type {
-                Sound = 1,
-                Texture = 2
+            enum class Type : bool {
+                Sound = 0,
+                Texture = 1
             } type;
-            long id_asset;
+            uint64_t id_asset;
             std::size_t size_data;
             std::size_t size_config;
             /**
