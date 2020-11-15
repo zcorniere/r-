@@ -8,30 +8,27 @@
 #include "app/network/udpsockmngr.hpp"
 
 network::UdpSockMngr::UdpSockMngr(Console &console, const std::string &ip, short port) :
-    console(console), socket(context, udp::endpoint(udp::v4(), 0)) , resolver(context), run_thread([this](){context.run();})
+    console(console), socket(context, udp::endpoint(udp::v4(), 0)) , resolver(context)
 {
     udp::resolver::query query(udp::v4(), ip, std::to_string(port));
     endpoint = *resolver.resolve(query).begin();
-    do_receive();   // setup listening
-    context.run();
+    do_receive();
+    run_thread = std::thread([this](){context.run();});
 }
 
 network::UdpSockMngr::~UdpSockMngr()
 {
+    context.stop();
     if (run_thread.joinable())
         run_thread.join();
-    context.stop();
 }
-
-#include <iostream>
 
 void network::UdpSockMngr::do_receive()
 {
     socket.async_wait(udp::socket::wait_read, [&](const boost::system::error_code &error) {
         auto len = socket.available();
         if (error || len < sizeof(protocol::MessageHeader<UdpCode>))
-            do_receive();
-        std::cout << "client received udp package" << std::endl;
+            return;
         std::vector<std::byte> buffer;
         buffer.resize(len);
         auto size = socket.receive(boost::asio::buffer(buffer, len));
@@ -44,6 +41,7 @@ void network::UdpSockMngr::do_receive()
             do_receive();
         }
         received_messages.push_back(std::move(message));
+        do_receive();
     });
 }
 
@@ -55,10 +53,6 @@ void network::UdpSockMngr::send(protocol::MessageToSend<UdpCode> message)
     std::memcpy(buffer.data(), &message.head, sizeof(message.head));
     std::memcpy(buffer.data() + sizeof(message.head), message.body.data(), message.head.body_size);
     socket.send_to(boost::asio::buffer(buffer, length), endpoint);
-//    socket.async_send_to(boost::asio::buffer(buffer, length), endpoint, [&](boost::system::error_code error, std::size_t nbytes) {
-//        if (error || nbytes != length)
-//            console->log("Error [UDP]: send error");
-//    });
 }
 
 std::vector<protocol::MessageReceived<UdpCode>> network::UdpSockMngr::receive()

@@ -10,7 +10,6 @@
 #include <utility>
 #include "app/network/client.hpp"
 
-// TODO
 void network::Client::statePlay()
 {
     auto message_list = udp->receive();
@@ -38,8 +37,8 @@ void network::Client::statePlay()
             if (it != assets.end()) {
                 it->sprite.setRotation(sprite.rot.x);
                 it->sprite.setPosition(sprite.pos.x, sprite.pos.y);
-                it->sprite.scale(sprite.scale.x, sprite.scale.y);
-                window.draw(it->sprite);
+                it->sprite.setScale(sprite.scale.x, sprite.scale.y);
+                sprites.push_back(it->sprite);
             } else
                 console->log("Error [Play]: Sprite specified not found");
         }
@@ -63,23 +62,28 @@ void network::Client::statePlay()
     }
     // send input
     protocol::MessageToSend<UdpCode> message;
-    message.head.code = protocol::udp::Code::Input;
-    message.head.body_size = sizeof(protocol::udp::from_client::Input);
-    protocol::udp::from_client::Input body;
+    protocol::udp::from_client::Input body_input;
     auto mouse = Input::getMouse();
     auto keys = Input::getKeysQueue();
-    body.pos = {static_cast<short>(mouse.x), static_cast<short>(mouse.y)};
+    body_input.pos = {static_cast<short>(mouse.x), static_cast<short>(mouse.y)};
     for (auto i = 0; i < keys.size; ++i) {
-        body.keys[i].key = static_cast<protocol::input::Keys>(keys.data[i].key);
-        body.keys[i].pressed = keys.data[i].pressed;
+        body_input.keys[i].key = static_cast<protocol::input::Keys>(keys.data[i].key);
+        body_input.keys[i].pressed = keys.data[i].pressed;
     }
-    body.nb_keys = keys.size;
-    std::memcpy(message.body.data(), &body, message.head.body_size);
-    udp->send(message);
-    return;
+    body_input.nb_keys = keys.size;
+    message.head.code = protocol::udp::Code::Input;
+    auto keys_size = static_cast<std::uint32_t>(sizeof(protocol::input::KeysEvent) * body_input.keys.size());
+    message.head.body_size = sizeof(body_input.nb_keys) + keys_size + sizeof(body_input.pos);
+    message.body.resize(message.head.body_size);
+    auto offset = 0;
+    std::memcpy(message.body.data(), &body_input.nb_keys, sizeof(body_input.nb_keys));
+    offset += sizeof(body_input.nb_keys);
+    std::memcpy(message.body.data() + offset, body_input.keys.data(), keys_size);
+    offset += keys_size;
+    std::memcpy(message.body.data() + offset, &body_input.pos, sizeof(body_input.pos));
+    udp->send(std::move(message));
 }
 
-// DONE
 void network::Client::stateAskForAssets()
 {
     protocol::MessageToSend<UdpCode> message;
@@ -91,7 +95,6 @@ void network::Client::stateAskForAssets()
     if (console) console->log("Success [AskForAssets]");
 }
 
-// DONE
 void network::Client::stateWaitingForAssets()
 {
     auto message_list = udp->receive();
@@ -121,13 +124,29 @@ void network::Client::stateWaitingForAssets()
     }
 }
 
-// DONE
 void network::Client::stateDownload()
 {
-    if (!tcp)
-        tcp = std::make_unique<network::TcpSockMngr>(*console, server_ip, server_tcp_port, assets_ids_list);
+    if (!tcp) {
+        if (console) console->log("Start [DownloadAssets]");
+        tcp = std::make_unique<network::TcpSockMngr>(timeout_clock, *console, server_ip, server_tcp_port, assets_ids_list);
+    }
+    if (tcp->isConnectionFailed()) {
+        tcp.reset();
+        if (console) console->log("[TCP] Error : connection failed");
+        disconnect();
+        return;
+    }
     if (tcp->isDownloadFinished()) {
         assets = tcp->getAssets();
+        // connect sprite to text and sound to buffer
+        for (auto &asset : assets) {
+            if (asset.type == Asset::Type::Sound) {
+                asset.sound.setBuffer(asset.sound_buffer);
+            } else if (asset.type == Asset::Type::Texture) {
+                asset.sprite.setTexture(asset.texture);
+                asset.sprite.setTextureRect({asset.config.origin_x, asset.config.origin_y, asset.config.width, asset.config.height});
+            }
+        }
         tcp.reset();
         status = Status::Ready;
         timeout_clock.restart();
@@ -135,7 +154,6 @@ void network::Client::stateDownload()
     }
 }
 
-// DONE
 void network::Client::stateReady()
 {
     protocol::MessageToSend<UdpCode> message;
@@ -147,45 +165,38 @@ void network::Client::stateReady()
     if (console) console->log("Success [Ready]");
 }
 
-// DONE
 void network::Client::stateTimeout()
 {
+    if (console) console->log("Error : Timed out");
     disconnect();
 }
 
 void network::Client::update()
 {
-    if (status == Status::NotConnected)
-        return;
-    if (status == Status::Play) {
-        if (console) console->log("State : Play");
-        statePlay();
-    }
-    if (status == Status::AskForAssets) {
-        if (console) console->log("State : AskForAssets");
-        stateAskForAssets();
-    }
-    if (status == Status::WaitingForAssets) {
-//        if (console) console->log("State : WaitingForAssets");
-        stateWaitingForAssets();
-    }
-    if (status == Status::DownloadAssets) {
-        if (console) console->log("State : DownloadAssets");
-        stateDownload();
-    }
-    if (status == Status::Ready) {
-        if (console) console->log("State : Ready");
-        stateReady();
+    switch (status) {
+        case Status::NotConnected:
+            return;
+        case Status::Play:
+            statePlay();
+            return;
+        case Status::AskForAssets:
+            stateAskForAssets();
+            break;
+        case Status::WaitingForAssets:
+            stateWaitingForAssets();
+            break;
+        case Status::DownloadAssets:
+            stateDownload();
+            break;
+        case Status::Ready:
+            stateReady();
+            break;
+        default: break;
     }
     if (timeout_clock.getElapsedTime().asMilliseconds() >= timeout) {
-        if (console) console->log("State : Timed out");
         stateTimeout();
     }
 }
-
-network::Client::Client(sf::RenderWindow &p_window) :
-        window(p_window)
-{}
 
 void network::Client::setConsole(Console *new_console)
 {
@@ -231,6 +242,12 @@ void network::Client::disconnect()
     status = Status::NotConnected;
     timeout_clock.restart();
     onDisconnect_hdl();
+    for (auto &asset : assets) {
+        if (asset.type == Asset::Type::Sound) {
+            asset.sound.stop();
+        }
+    }
+    assets.clear();
     if (console) console->log("you have been disconnected");
     reset();
 }
@@ -243,10 +260,18 @@ void network::Client::reset()
     assets_ids_list.clear();
 }
 
+std::vector<sf::Sprite> network::Client::getSprites()
+{
+    return std::move(sprites);
+}
+
 void network::Client::stopSockManagers()
 {
-    udp.reset();
-    tcp.reset();
+    if (udp)
+        udp.reset();
+    if (tcp)
+        tcp.reset();
 }
+
 
 

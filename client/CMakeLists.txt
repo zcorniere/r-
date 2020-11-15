@@ -4,11 +4,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if (WIN32)
-    # SFML static link fix
+    # Boost static link fix
     add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
     add_compile_options(
             $<$<CONFIG:>:/MD> #---------|
-            $<$<CONFIG:Debug>:/MD> #----|-- Statically link the runtime libraries (sfml fix)
+            $<$<CONFIG:Debug>:/MD> #----|-- Statically link the runtime libraries (boost fix)
             $<$<CONFIG:Release>:/MD> #--|
     )
     add_definitions(-D_WIN32_WINNT=0x0601)

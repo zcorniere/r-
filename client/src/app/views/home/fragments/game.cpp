@@ -12,7 +12,7 @@
 #include "app/window.hpp"
 
 Game::Game(std::optional<std::string> &intent_ref, bidimensional::Transform &parent_trans, sf::RenderWindow &window) :
-        Ifragment(intent_ref, parent_trans, window), client(window)
+        Ifragment(intent_ref, parent_trans, window)
 {
     transform.position = {0, TopBar::bar_height};
     transform.scale = {window::WIDTH, window::HEIGHT - TopBar::bar_height - BottomBar::bar_height};
@@ -20,6 +20,7 @@ Game::Game(std::optional<std::string> &intent_ref, bidimensional::Transform &par
     z_index = 1;
     client.set_onDisconnect([&](){
         is_connect = false;
+        sprites.clear();
     });
 }
 
@@ -35,6 +36,13 @@ void Game::onUpdateView()
     } catch (std::exception e) {
         console->log("EXCEPTION : " + std::string(e.what()));
         disconnect();
+    }
+    auto new_sprites = client.getSprites();
+    if (!new_sprites.empty()) {
+        sprites = new_sprites;
+    }
+    for (auto &sprite : sprites) {
+        window.draw(sprite);
     }
 }
 
