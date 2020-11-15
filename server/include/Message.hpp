@@ -61,9 +61,9 @@ class Message {
 
         template<isLayoutStd D>
         void insert(const std::vector<D> &data) {
-            size_t i = body.size();
-            body.resize(data.size() * sizeof(D));
-            std::memcpy(body.data() + i, data.data(), data.size() * sizeof(D));
+            for (const auto &i: data) {
+                this->insert(i);
+            }
             head.size = body.size();
         };
 
