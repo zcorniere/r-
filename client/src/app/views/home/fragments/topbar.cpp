@@ -83,7 +83,8 @@ TopBar::TopBar(std::optional<std::string> &intent_ref, bidimensional::Transform 
 void TopBar::onCreateView()
 {
 //    ip_entry->setText("10.62.105.147:25555");   // TODO temp code for debug
-    ip_entry->setText("127.0.0.1:25555");   // TODO temp code for debug
+    ip_entry->setText("10.62.105.183:25555");   // TODO temp code for debug
+//    ip_entry->setText("127.0.0.1:25555");   // TODO temp code for debug
 }
 
 void TopBar::onUpdateView()
