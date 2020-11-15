@@ -78,28 +78,34 @@ class Client: public IClient<T> {
             });
         }
         virtual void writeHeader()final {
-            boost::asio::async_write(socket,
-                boost::asio::buffer(&q_out.front().head, sizeof(MessageHeader<T>)),
-                [this](std::error_code ec, std::size_t len) {
-                    (void)len;
-                    Snitch::debug() << "header_send " << len << Snitch::endl;
-                    if (!ec) {
-                        if (q_out.front().body.size() > 0) {
-                            writeBody();
-                        } else {
-                            q_out.pop_front();
-                            if (!q_out.empty())
-                                writeHeader();
-                        }
-                    } else {
-                        Snitch::err(std::to_string(this->getId())) << "Write header failed: " << ec.message() << Snitch::endl;
-                        socket.close();
-                    }
-            });
+           writeBody();
+           // boost::asio::async_write(socket,
+           //     boost::asio::buffer(&q_out.front().head, sizeof(MessageHeader<T>)),
+           //     [this](std::error_code ec, std::size_t len) {
+           //         (void)len;
+           //         Snitch::debug() << "header_send " << len << Snitch::endl;
+           //         if (!ec) {
+           //             if (q_out.front().body.size() > 0) {
+           //                 writeBody();
+           //             } else {
+           //                 q_out.pop_front();
+           //                 if (!q_out.empty())
+           //                     writeHeader();
+           //             }
+           //         } else {
+           //             Snitch::err(std::to_string(this->getId())) << "Write header failed: " << ec.message() << Snitch::endl;
+           //             socket.close();
+           //         }
+           // });
         }
         virtual void writeBody()final {
+            auto len = sizeof(q_out.front().head) + q_out.front().head.size;
+            std::vector<std::byte> buffer;
+            buffer.resize(len);
+            std::memcpy(buffer.data(), &q_out.front().head, sizeof(q_out.front().head));
+            std::memcpy(buffer.data() + sizeof(q_out.front().head), q_out.front().body.data(), q_out.front().body.size());
             boost::asio::async_write(socket,
-                boost::asio::buffer(q_out.front().body.data(), q_out.front().body.size()),
+                boost::asio::buffer(buffer, buffer.size()),
                 [this](std::error_code ec, std::size_t len) {
                     (void)len;
                     Snitch::debug() << "body send " << len << Snitch::endl;

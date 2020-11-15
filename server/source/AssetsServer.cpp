@@ -86,7 +86,6 @@ std::vector<uint8_t> AssetsServer::getFileAt(const std::string &path) {
                   std::back_inserter(ret));
         file.close();
     }
-    std::string h(ret.begin(), ret.end());
     Snitch::debug(path) << ret.size() << Snitch::endl;
     return ret;
 }
