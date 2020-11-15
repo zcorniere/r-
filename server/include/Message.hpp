@@ -48,24 +48,25 @@ class Message {
         }
 
         template<isLayoutStd D>
-        void insert(D &data) {
+        void insert(const D &data) {
             this->insert(&data);
         };
         template<isLayoutStd D>
-        void insert(std::vector<D> &data) {
-            size_t i = body.size();
-            body.resize(data.size());
-            std::memcpy(data.data(), body.data() + i, data.size());
-            head.size = body.size();
-        };
-
-        template<isLayoutStd D>
-        void insert(D *data) {
+        void insert(const D *data) {
             size_t i = body.size();
             body.resize(i + sizeof(D));
             std::memcpy(body.data() + i, data, sizeof(D));
             head.size = body.size();
         };
+
+        template<isLayoutStd D>
+        void insert(const std::vector<D> &data) {
+            size_t i = body.size();
+            body.resize(data.size());
+            std::memcpy(body.data() + i, data.data(), data.size() * sizeof(D));
+            head.size = body.size() * sizeof(D);
+        };
+
         // extract data from the end of the buffer
         template<isLayoutStd D>
         void extract(D &data) {

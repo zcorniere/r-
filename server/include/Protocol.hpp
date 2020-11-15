@@ -28,7 +28,7 @@ namespace udp {
     struct AssetsList {
         unsigned port;
         std::size_t size;
-        std::vector<long> list;
+        std::vector<uint64_t> list;
     };
 
     namespace transform {
@@ -46,15 +46,15 @@ namespace udp {
         };
     }
     struct Sprite {
-        long id_rectangle;
-        long id_assets;
+        uint64_t id_rectangle;
+        uint64_t id_assets;
         transform::Rotation rot;
         transform::Position pos;
         transform::Scale scale;
     };
 
     struct Sound {
-        long id;
+        uint64_t id;
         float volume;
         float pitch;
         bool isLooping;
