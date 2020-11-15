@@ -28,13 +28,13 @@ class Server: public IServer<T> {
                 Snitch::warn("UDP_SERVER") << "Exception: " << e.what() << Snitch::endl;
                 return false;
             }
-            Snitch::msg("UDP_SERVER") << "Server Started" << Snitch::endl;
+            Snitch::info("UDP_SERVER") << "Server Started" << Snitch::endl;
             return true;
         }
         virtual void stop()final {
             asio_context.stop();
             if (context_thread.joinable()) { context_thread.join(); }
-            Snitch::msg("UDP_SERVER") << "Stopped..." << Snitch::endl;
+            Snitch::info("UDP_SERVER") << "Stopped..." << Snitch::endl;
         }
         virtual void update(const size_t maxMessage = -1, const bool wait = false) {
             if (wait) msg_in.wait();
@@ -66,14 +66,14 @@ class Server: public IServer<T> {
 
     private:
        void readHeader() {
-            Snitch::msg("UDP_SERVER") << "Start to receive header" << std::endl;
+            Snitch::info("UDP_SERVER") << "Start to receive header" << std::endl;
             asio_acceptor.async_receive_from(
                 boost::asio::buffer(&tmp.head, sizeof(MessageHeader<T>)),
                tmp_end,
                [this](std::error_code ec, std::size_t len) {
                     (void)len;
-                    Snitch::msg("UDP_SERVER") << "Readhead" << Snitch::endl;
-                    Snitch::msg("UDP_SERVER_DEBUG") << tmp.head << Snitch::endl;
+                    Snitch::info("UDP_SERVER") << "Readhead" << Snitch::endl;
+                    Snitch::info("UDP_SERVER_DEBUG") << tmp.head << Snitch::endl;
                     if (!ec) {
                         if (tmp.head.size > 0) {
                             tmp.body.resize(tmp.head.size);
@@ -87,7 +87,7 @@ class Server: public IServer<T> {
             });
         }
         void readBody() {
-            Snitch::msg("UDP_SERVER") << "ReadBody" << std::endl;
+            Snitch::info("UDP_SERVER") << "ReadBody" << std::endl;
             asio_acceptor.async_receive_from(
                 boost::asio::buffer(tmp.body.data(), tmp.body.size()),
                tmp_end,
@@ -96,7 +96,7 @@ class Server: public IServer<T> {
                     if (!ec) {
                         addToMsgQueue();
                     } else {
-                        Snitch::warn("UDP_SERVER") << "ReadBody failed: " << ec.message() << Snitch::endl;
+                        Snitch::err("UDP_SERVER") << "ReadBody failed: " << ec.message() << Snitch::endl;
                     }
             });
         }

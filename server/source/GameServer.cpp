@@ -1,5 +1,6 @@
 #include "GameServer.hpp"
 #include "Snitch.hpp"
+#include <vector>
 
 using namespace protocol::udp;
 
@@ -51,8 +52,10 @@ void GameServer::onMessage(Message<RequestCode> msg) {
                 ass.list.push_back(e);
             }
             ass.size = ass.list.size();
-            rep.insert(ass);
-            Snitch::msg("GAME_SERVER") << "Replied RequestCode::AssetsList" << Snitch::endl;
+            rep.insert(ass.port);
+            rep.insert(ass.size);
+            rep.insert(ass.list);
+            Snitch::info("GAME_SERVER") << "Replied RequestCode::AssetsList" << Snitch::endl;
             msg.remote->send(rep);
         } break;
         default: Snitch::warn("GAME_SERVER") << "Unknown comand" << Snitch::endl; break;

@@ -59,7 +59,7 @@ class Client: public IClient<T> {
                             addToMsgQueue();
                         }
                     } else {
-                        Snitch::warn(std::to_string(this->getId())) << "Read Header failed: " << ec.message() << Snitch::endl;
+                        Snitch::err(std::to_string(this->getId())) << "Read Header failed: " << ec.message() << Snitch::endl;
                         socket.close();
                     }
             });
@@ -72,7 +72,7 @@ class Client: public IClient<T> {
                     if (!ec) {
                         addToMsgQueue();
                     } else {
-                        Snitch::warn(std::to_string(this->getId())) << "Read Body failed: " << ec.message() << Snitch::endl;
+                        Snitch::err(std::to_string(this->getId())) << "Read Body failed: " << ec.message() << Snitch::endl;
                         socket.close();
                     }
             });
@@ -91,7 +91,7 @@ class Client: public IClient<T> {
                                 writeHeader();
                         }
                     } else {
-                        Snitch::warn(std::to_string(this->getId())) << "Write header failed: " << ec.message() << Snitch::endl;
+                        Snitch::err(std::to_string(this->getId())) << "Write header failed: " << ec.message() << Snitch::endl;
                         socket.close();
                     }
             });
@@ -106,7 +106,7 @@ class Client: public IClient<T> {
                         if (!q_out.empty())
                             writeHeader();
                     } else {
-                        Snitch::warn(std::to_string(this->getId())) << "Write body failed: " << ec.message() << Snitch::endl;
+                        Snitch::err(std::to_string(this->getId())) << "Write body failed: " << ec.message() << Snitch::endl;
                         socket.close();
                     }
             });

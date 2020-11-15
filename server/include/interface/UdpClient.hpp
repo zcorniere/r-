@@ -57,7 +57,7 @@ class Client: public IClient<T> {
                 [this](std::error_code ec, std::size_t len) {
                    (void)len;
                     if (!ec) {
-                        Snitch::msg("UDP_CLIENT") << "msgHeader send" <<Snitch::endl;
+                        Snitch::info("UDP_CLIENT") << "msgHeader send" <<Snitch::endl;
                         if (q_out.front().body.size() > 0) {
                             writeBody();
                         } else {
@@ -66,7 +66,7 @@ class Client: public IClient<T> {
                                 writeHeader();
                         }
                     } else {
-                        Snitch::warn(std::to_string(this->getId())) << "Write Header failed: " << ec.message() << Snitch::endl;
+                        Snitch::err(std::to_string(this->getId())) << "Write Header failed: " << ec.message() << Snitch::endl;
                         socket.close();
                     }
             });
@@ -78,12 +78,12 @@ class Client: public IClient<T> {
                 [this](std::error_code ec, std::size_t len) {
                    (void)len;
                     if (!ec) {
-                        Snitch::msg("UDP_CLIENT") << "msgBody send" <<Snitch::endl;
+                        Snitch::debug("UDP_CLIENT") << "msgBody send" <<Snitch::endl;
                         q_out.pop_front();
                         if (!q_out.empty())
                             writeHeader();
                     } else {
-                        Snitch::warn(std::to_string(this->getId())) << "Write Header failed: " << ec.message() << Snitch::endl;
+                        Snitch::err(std::to_string(this->getId())) << "Write Header failed: " << ec.message() << Snitch::endl;
                         socket.close();
                     }
             });

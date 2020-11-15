@@ -5,7 +5,7 @@ Storage::Storage(const std::string &base, std::function<bool(std::filesystem::pa
 {
     for (const auto &e: std::filesystem::directory_iterator(base)) {
         if (selector(e.path())) {
-            Snitch::msg("STORAGE") << "File Indexed : " << e << Snitch::endl;
+            Snitch::info("STORAGE") << "File Indexed : " << e << Snitch::endl;
             storage_map.insert({e.path().string(), base_id++});
         }
     }

@@ -52,10 +52,15 @@ void AssetsServer::onMessage(Message<protocol::tcp::AssetsRequest> msg) {
                         reply.id = body->id;
                         reply.type = assets_map.at(body->id);
                         rep.head.code = msg.head.code;
-                        rep.insert(reply);
+                        rep.insert(reply.type);
+                        rep.insert(reply.id);
+                        rep.insert(reply.size_data);
+                        rep.insert(reply.size_config);
+                        rep.insert(reply.data);
+                        rep.insert(reply.config);
                     }
                 } catch (const std::runtime_error &re) {
-                    Snitch::warn("ASSETS_SERVER") << "Execption " << re.what() << Snitch::endl;
+                    Snitch::warn("ASSETS_SERVER") << "Exeception " << re.what() << Snitch::endl;
                 }
             } break;
             default: Snitch::warn("ASSETS_SERVER") << "Unknown comand" << Snitch::endl; break;

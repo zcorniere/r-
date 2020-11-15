@@ -23,16 +23,16 @@ class Server: public IServer<T> {
                 waitForClientConnection();
                 context_thread = std::thread([this]() { asio_context.run(); } );
             } catch (const std::exception &e) {
-                Snitch::warn("TCP_SERVER") << "Exception: " << e.what() << Snitch::endl;
+                Snitch::err("TCP_SERVER") << "Exception: " << e.what() << Snitch::endl;
                 return false;
             }
-            Snitch::msg("TCP_SERVER") << "Server Started" << Snitch::endl;
+            Snitch::info("TCP_SERVER") << "Server Started" << Snitch::endl;
             return true;
         }
         virtual void stop()final {
             asio_context.stop();
             if (context_thread.joinable()) { context_thread.join(); }
-            Snitch::msg("TCP_SERVER") << "Stopped..." << Snitch::endl;
+            Snitch::info("TCP_SERVER") << "Stopped..." << Snitch::endl;
         }
         virtual void update(const size_t maxMessage = -1, const bool wait = false) {
             if (wait) q_in.wait();
@@ -46,15 +46,15 @@ class Server: public IServer<T> {
             asio_acceptor.async_accept(
                 [this](std::error_code ec, boost::asio::ip::tcp::socket socket) {
                     if (!ec) {
-                        Snitch::msg("TCP_SERVER") << " New Connection: " << socket.remote_endpoint() << Snitch::endl;
+                        Snitch::info("TCP_SERVER") << "New Connection: " << socket.remote_endpoint() << Snitch::endl;
                         auto new_client = std::make_shared<Client<T>>(asio_context, std::move(socket), q_in);
                         if (this->onClientConnect(new_client)) {
                             clients.push_back(std::move(new_client));
                             clients.back()->giveId(base_id++);
-                            Snitch::msg(std::to_string(clients.back()->getId())) << "Connection Approved" << Snitch::endl;
+                            Snitch::info(std::to_string(clients.back()->getId())) << "Connection Approved" << Snitch::endl;
                         }
                     } else {
-                        Snitch::warn("TCP_SERVER") << "Connection Error: " << ec.message() << Snitch::endl;
+                        Snitch::err("TCP_SERVER") << "Connection Error: " << ec.message() << Snitch::endl;
                     }
             });
         }
