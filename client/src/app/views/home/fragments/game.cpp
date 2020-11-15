@@ -20,6 +20,7 @@ Game::Game(std::optional<std::string> &intent_ref, bidimensional::Transform &par
     z_index = 1;
     client.set_onDisconnect([&](){
         is_connect = false;
+        sprites.clear();
     });
 }
 

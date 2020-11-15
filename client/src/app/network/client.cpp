@@ -242,6 +242,12 @@ void network::Client::disconnect()
     status = Status::NotConnected;
     timeout_clock.restart();
     onDisconnect_hdl();
+    for (auto &asset : assets) {
+        if (asset.type == Asset::Type::Sound) {
+            asset.sound.stop();
+        }
+    }
+    assets.clear();
     if (console) console->log("you have been disconnected");
     reset();
 }
