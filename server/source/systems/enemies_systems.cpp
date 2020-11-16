@@ -9,7 +9,8 @@ void run_enemy_group(Game &game, EnemyGroup &group, Transform &transform,
         if (group.time_elapsed >= group.delay) {
             group.time_elapsed = 0;
             group.enemies_spawned++;
-            group.enemy.build(game.componentStorage.buildEntity())
+            game.componentStorage.buildEntity()
+                .withBuilder(group.enemy)
                 .withComponent(transform)
                 .build();
         }

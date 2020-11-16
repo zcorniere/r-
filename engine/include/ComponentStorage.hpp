@@ -140,6 +140,12 @@ private:
                 component);
             return *this;
         }
+        template <typename T>
+        EntityBuilder &withBuilder(const T &bundle)
+        {
+            bundle.build(*this);
+            return *this;
+        }
         unsigned build();
         unsigned buildAsOrphan();
     };
