@@ -24,7 +24,10 @@ void network::Client::statePlay()
         // handle server game instruction
         if (message.head().code == UdpCode::Sprite) {
             protocol::udp::from_server::Sprite sprite;
-            std::memcpy(&sprite, message.body().data(), message.body().size());
+            if (sizeof(sprite) != message.body().size()) {
+                exit(84);
+            }
+            std::memcpy(&sprite, message.body().data(), sizeof(sprite));
             auto it = std::find_if(assets.begin(), assets.end(), [&](const auto &item){
                 if (item.type != Asset::Type::Texture)
                     return false;
@@ -38,7 +41,7 @@ void network::Client::statePlay()
                 it->sprite.setRotation(sprite.rot.x);
                 it->sprite.setPosition(sprite.pos.x, sprite.pos.y);
                 // it->sprite.setS// TODO
-                it->sprite.setScale(sprite.scale.x, sprite.scale.y);
+                it->sprite.setScale(sprite.scale.x / 2, sprite.scale.y / 2);
 
                 sprites.insert(sprites.begin(), it->sprite);
                 if (sprites.size() > network::Client::max_sprites) {

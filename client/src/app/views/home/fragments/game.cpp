@@ -51,7 +51,10 @@ void Game::onUpdateView()
 }
 
 void Game::onFinishView()
-{}
+{
+    if (is_connect)
+        disconnect();
+}
 
 bool *Game::get_is_connect()
 {
