@@ -61,11 +61,11 @@ class Client: public IClient<T> {
                 boost::asio::buffer(buffer, buffer.size()),
                 *remote_endpoint,
                 [this](std::error_code ec, std::size_t len) {
-//                    std::cout << "i just sent" << len << " bytes to client" << std::endl;
-                    std::cout << "sizeof(protocol::udp::Sound): " << sizeof(protocol::udp::Sound) << std::endl;
-                    std::cout << "sizeof(protocol::udp::Sprite): " << sizeof(protocol::udp::Sprite) << std::endl;
-                    std::cout << "sizeof(protocol::udp::Input): " << sizeof(protocol::udp::Input) << std::endl;
-                    std::cout << "###########" << std::endl;
+                    std::cout << "i just sent" << len << " bytes to client" << std::endl;
+//                    std::cout << "sizeof(protocol::udp::Sound): " << sizeof(protocol::udp::Sound) << std::endl;
+//                    std::cout << "sizeof(protocol::udp::Sprite): " << sizeof(protocol::udp::Sprite) << std::endl;
+//                    std::cout << "sizeof(protocol::udp::Input): " << sizeof(protocol::udp::Input) << std::endl;
+//                    std::cout << "###########" << std::endl;
                    (void)len;
                     if (!ec) {
                         try {
