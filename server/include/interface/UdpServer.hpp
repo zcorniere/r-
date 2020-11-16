@@ -67,10 +67,11 @@ class Server: public IServer<T> {
     private:
        void readHeader() {
             asio_acceptor.async_receive_from(
-                boost::asio::buffer(&tmp.head, sizeof(MessageHeader<T>)),
+                boost::asio::buffer(this->buffer.data(), this->buffer.size()),
                tmp_end,
                [this](std::error_code ec, std::size_t len) {
                     (void)len;
+                    std::memcpy(&this->tmp.head, this->buffer.data(), sizeof(tmp.head));
                     if (!ec) {
                         if (tmp.head.size > 0) {
                             tmp.body.resize(tmp.head.size);
@@ -83,18 +84,11 @@ class Server: public IServer<T> {
                     }
             });
         }
-        void readBody() {
-            asio_acceptor.async_receive_from(
-                boost::asio::buffer(tmp.body.data(), tmp.body.size()),
-               tmp_end,
-               [this](std::error_code ec, std::size_t len) {
-                   (void)len;
-                    if (!ec) {
-                        addToMsgQueue();
-                    } else {
-                        Snitch::err("UDP_SERVER") << "ReadBody failed: " << ec.message() << Snitch::endl;
-                    }
-            });
+        void readBody()
+        {
+            std::memcpy(tmp.body.data(), buffer.data() + sizeof(tmp.head),
+                        tmp.head.size);
+            addToMsgQueue();
         }
         void addToMsgQueue() {
             Snitch::debug("UDP_SERVER") << tmp << Snitch::endl;
@@ -121,6 +115,7 @@ class Server: public IServer<T> {
 
         boost::asio::ip::udp::socket asio_acceptor;
         uint32_t base_id = 1;
+        std::array<std::byte, 65535> buffer;
 };
 
 }
