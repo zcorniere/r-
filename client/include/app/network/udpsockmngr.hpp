@@ -25,6 +25,7 @@ namespace network {
         udp::endpoint endpoint;
         std::vector<protocol::MessageReceived<UdpCode>> received_messages;
         std::thread run_thread;
+        std::mutex socket_mutex;
         void do_receive();
     public:
         UdpSockMngr(Console &console, const std::string &ip, short port);
