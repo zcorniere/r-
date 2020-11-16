@@ -6,6 +6,8 @@
 */
 
 #include <algorithm>
+#include <fstream>
+#include <filesystem>
 #include "app/network/tcpsockmngr.hpp"
 
 network::TcpSockMngr::TcpSockMngr(sf::Clock &timeout, Console &console, const std::string &ip, short port, std::vector<std::pair<long, bool>> assetlist) :
@@ -17,6 +19,9 @@ network::TcpSockMngr::TcpSockMngr(sf::Clock &timeout, Console &console, const st
         is_connection_failed = true;
         return;
     }
+    loadAllCachedAssets();
+    if (isDownloadFinished())
+        return;
     do_receive();
     run_thread = std::thread([this](){context.run();});
     downloadAllAssets();
@@ -46,6 +51,13 @@ long network::TcpSockMngr::receiveAsset(uint32_t body_size)
             bytes_to_read -= received_size;
         }
     }
+
+    return loadAssetFromBytes(buffer);
+}
+
+long network::TcpSockMngr::loadAssetFromBytes(
+    const std::vector<std::byte> &buffer, bool cache)
+{
     boost::asio::const_buffer buff(buffer.data(), buffer.size());
     protocol::tcp::AssetPackage body;
     // type
@@ -70,6 +82,9 @@ long network::TcpSockMngr::receiveAsset(uint32_t body_size)
         std::memcpy(body.config.data(), buff.data(), body.size_config);
         buff += body.size_config;
     }
+
+    if (cache)
+        cacheAsset(body.id_asset, buffer);
 
     // body is build
     if (body.type == protocol::tcp::AssetPackage::Type::Sound) {  // Sound
@@ -201,5 +216,64 @@ std::vector<Asset> network::TcpSockMngr::getAssets() const
     return assets;
 }
 
+std::string network::TcpSockMngr::cachedAssetName(uint64_t asset_id)
+{
+    return this->ip + ":" + std::to_string(this->port) + "-" +
+           std::to_string(asset_id) + ".asset";
+}
 
+std::filesystem::path network::TcpSockMngr::cachedAssetPath(uint64_t asset_id)
+{
+    return std::filesystem::path(asset_cache_directory) /
+           this->cachedAssetName(asset_id);
+}
 
+void network::TcpSockMngr::cacheAsset(uint64_t asset_id,
+                                      const std::vector<std::byte> &buffer)
+{
+    std::filesystem::create_directories(asset_cache_directory);
+    std::ofstream cache_file(this->cachedAssetPath(asset_id), std::ios::binary);
+    cache_file.write(reinterpret_cast<const char *>(buffer.data()),
+                     buffer.size());
+    cache_file.close();
+}
+
+bool network::TcpSockMngr::tryLoadingCachedAsset(uint64_t asset_id)
+{
+    std::ifstream file(this->cachedAssetPath(asset_id), std::ios::binary);
+    if (!file.is_open())
+        return false;
+    console.log("[TCP]: Loading asset " + std::to_string(asset_id) +
+                " from cache file " + this->cachedAssetPath(asset_id).string());
+    std::vector<char> content((std::istreambuf_iterator(file)),
+                              std::istreambuf_iterator<char>());
+    std::vector<std::byte> bytes(reinterpret_cast<std::byte *>(content.data()),
+                                 reinterpret_cast<std::byte *>(content.data()) +
+                                     content.size());
+    loadAssetFromBytes(bytes, false);
+    auto it = std::find_if(
+        assets_ids_list.begin(), assets_ids_list.end(),
+        [&](auto &asset_id_item) { return asset_id_item.first == asset_id; });
+    if (it == assets_ids_list.end()) {
+        console.log("Error [TCP]: cached asset " +
+                    this->cachedAssetPath(asset_id).string() +
+                    " does not correspond to asset " +
+                    std::to_string(asset_id));
+        return false;
+    }
+    it->second = true;
+    return true;
+}
+
+void network::TcpSockMngr::loadAllCachedAssets()
+{
+    bool all_loaded = true;
+
+    for (auto &[asset_id, loaded] : this->assets_ids_list ) {
+        if (loaded)
+            continue;
+        if (!tryLoadingCachedAsset(asset_id))
+            all_loaded = false;
+    }
+    this->is_download_finish = all_loaded;
+}
