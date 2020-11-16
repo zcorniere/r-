@@ -86,6 +86,11 @@ void network::Client::statePlay()
 
 void network::Client::stateAskForAssets()
 {
+    std::cout << "###########" << std::endl;
+    std::cout << "sizeof(protocol::udp::Sound): " << sizeof(protocol::udp::from_server::Sound) << std::endl;
+    std::cout << "sizeof(protocol::udp::Sprite): " << sizeof(protocol::udp::from_server::Sprite) << std::endl;
+    std::cout << "sizeof(protocol::udp::Input): " << sizeof(protocol::udp::from_client::Input) << std::endl;
+    std::cout << "###########" << std::endl;
     protocol::MessageToSend<UdpCode> message;
     message.head.code = protocol::udp::Code::AskAssetList;
     message.head.body_size = 0;

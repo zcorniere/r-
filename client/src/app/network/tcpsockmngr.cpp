@@ -29,46 +29,48 @@ network::TcpSockMngr::~TcpSockMngr()
         run_thread.join();
 }
 
-long network::TcpSockMngr::receiveAsset()
+long network::TcpSockMngr::receiveAsset(uint32_t body_size)
 {
+    auto bytes_to_read = body_size;
+    std::vector<std::byte> buffer;
+    std::array<std::byte, download_frame_size> sub_buffer;
+
+    while (bytes_to_read) {
+        if (socket.available()) {
+            auto received_size = socket.receive(boost::asio::buffer(sub_buffer, sub_buffer.size()));
+            if (received_size) {
+                auto old_size = buffer.size();
+                buffer.resize(old_size + received_size);
+                std::memcpy(buffer.data() + old_size, sub_buffer.data(), received_size);
+            }
+            bytes_to_read -= received_size;
+        }
+    }
+    boost::asio::const_buffer buff(buffer.data(), buffer.size());
     protocol::tcp::AssetPackage body;
-    std::vector<std::byte> buff;
-    // body type
-    auto len = sizeof(body.type);
-    buff.resize(len);
-    auto size = socket.receive(boost::asio::buffer(buff, len));
-    std::memcpy(&body.type, buff.data(), size);
-    // body id_asset
-    len = sizeof(body.id_asset);
-    buff.resize(len);
-    size = socket.receive(boost::asio::buffer(buff, len));
-    std::memcpy(&body.id_asset, buff.data(), size);
-    // body size_data
-    len = sizeof(body.size_data);
-    buff.resize(len);
-    size = socket.receive(boost::asio::buffer(buff, len));
-    std::memcpy(&body.size_data, buff.data(), size);
+    // type
+    std::memcpy(&body.type, buff.data(), sizeof(body.type));
+    buff += sizeof(body.type);
+    // id_asset
+    std::memcpy(&body.id_asset, buff.data(), sizeof(body.id_asset));
+    buff += sizeof(body.id_asset);
+    // size_data
+    std::memcpy(&body.size_data, buff.data(), sizeof(body.size_data));
+    buff += sizeof(body.size_data);
+    // size_config
+    std::memcpy(&body.size_config, buff.data(), sizeof(body.size_config));
+    buff += sizeof(body.size_config);
+    // data
+    body.data.resize(body.size_data);
+    std::memcpy(body.data.data(), buff.data(), body.size_data);
+    buff += body.size_data;
     if (body.type == protocol::tcp::AssetPackage::Type::Texture) {
-        // body size_config
-        len = sizeof(body.size_config);
-        buff.resize(len);
-        size = socket.receive(boost::asio::buffer(buff, len));
-        std::memcpy(&body.size_config, buff.data(), size);
+        // config
+        body.config.resize(body.size_config);
+        std::memcpy(body.config.data(), buff.data(), body.size_config);
+        buff += body.size_config;
     }
-    // body data
-    len = body.size_data;
-    buff.resize(len);
-    size = socket.receive(boost::asio::buffer(buff, len));
-    body.data.resize(size);
-    std::memcpy(body.data.data(), buff.data(), size);
-    if (body.type == protocol::tcp::AssetPackage::Type::Texture) {
-        // body config
-        len = body.size_config;
-        buff.resize(len);
-        size = socket.receive(boost::asio::buffer(buff, len));
-        body.config.resize(size);
-        std::memcpy(body.config.data(), buff.data(), size);
-    }
+
     // body is build
     if (body.type == protocol::tcp::AssetPackage::Type::Sound) {  // Sound
         Asset asset;
@@ -104,8 +106,9 @@ long network::TcpSockMngr::receiveAsset()
 void network::TcpSockMngr::do_receive()
 {
     socket.async_wait(tcp::socket::wait_read, [&](const boost::system::error_code &error) {
-        if (error || socket.available() < sizeof(protocol::MessageHeader<UdpCode>))
+        if (error || socket.available() < sizeof(protocol::MessageHeader<UdpCode>)) {
             return;
+        }
         // Get the header
         protocol::MessageHeader<TcpCode> header;
         auto len = sizeof(header);
@@ -113,6 +116,11 @@ void network::TcpSockMngr::do_receive()
         buff.resize(len);
         auto size = socket.receive(boost::asio::buffer(buff, len));
         buff.resize(size);
+//        std::cout << "[DEBUG][TCP] " << socket.available() << " bytes received" << std::endl;
+//        for (auto i = 0; i < socket.available(); ++i) {
+//            std::cout << std::hex << int(buff[i]) << " ";
+//        }
+//        std::cout << std::endl;
         std::memcpy(&header, buff.data(), size);
         // check the header
         if (header.firstbyte != protocol::magic_number.first || header.secondbyte != protocol::magic_number.second)
@@ -121,8 +129,10 @@ void network::TcpSockMngr::do_receive()
             console.log("Error [TCP]: Server sent wrong data");
             return;
         }
+        std::cout << "header.body_size : " << std::hex << header.body_size << " : " << std::dec << header.body_size << std::endl;
+        std::cout << "socket.available() : " << socket.available() << std::endl;
         // get the body & work on it
-        auto asset_id = receiveAsset();
+        auto asset_id = receiveAsset(header.body_size);
         // update my assets_ids_list
         auto it = std::find_if(assets_ids_list.begin(), assets_ids_list.end(), [&](auto &asset_id_item){
             return asset_id_item.first == asset_id;
@@ -138,17 +148,12 @@ void network::TcpSockMngr::do_receive()
 
 void network::TcpSockMngr::send(protocol::MessageToSend<TcpCode> message)
 {
-    std::cout << "sizeof(protocol::tcp::AssetAsk) : " << sizeof(protocol::tcp::AssetAsk) << std::endl;     // zac a 8
-    std::cout << "sizeof(protocol::tcp::AssetPackage) : " << sizeof(protocol::tcp::AssetPackage) << std::endl; // zac a 80
     std::size_t length = sizeof(message.head) + message.head.body_size;
     std::vector<std::byte> buffer;
     buffer.resize(length);
     std::memcpy(buffer.data(), &message.head, sizeof(message.head));
     std::memcpy(buffer.data() + sizeof(message.head), message.body.data(), message.head.body_size);
     boost::asio::write(socket, boost::asio::buffer(buffer, length));
-    for (auto i = 0; i < length; ++i) {
-        std::cout << reinterpret_cast<char*>(buffer.data())[i] << " ";
-    }
     do_receive();
 }
 
