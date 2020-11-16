@@ -23,9 +23,13 @@ network::UdpSockMngr::~UdpSockMngr()
         run_thread.join();
 }
 
+#include <iostream>
+
 void network::UdpSockMngr::do_receive()
 {
+    std::cout << "[UDP debug] do_received() entered" << std::endl;
     socket.async_wait(udp::socket::wait_read, [&](const boost::system::error_code &error) {
+        std::cout << "UDP received some data" << std::endl;
         auto len = socket.available();
         if (error || len < sizeof(protocol::MessageHeader<UdpCode>))
             return;
