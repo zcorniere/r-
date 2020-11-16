@@ -12,7 +12,9 @@ public:
     };
     std::string asset;
     Status status;
-    Speaker(std::string _asset);
+    float volume;
+    float variation;
+    Speaker(std::string _asset, float _volume = 1, float _variation = 0);
     void play();
 };
 

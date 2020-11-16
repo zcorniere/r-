@@ -9,6 +9,7 @@
 #include "components/Sprite.hpp"
 #include "components/Trajectory.hpp"
 #include "components/OrientedSprite.hpp"
+#include "components/Speaker.hpp"
 #include <variant>
 
 struct Enemy {
@@ -17,6 +18,7 @@ struct Enemy {
     std::variant<Sprite, AnimationLoop, OrientedSprite> animation;
     int health;
     DeathMontage death_montage;
+    DeathSpeaker death_sound;
 
     static const Enemy BUG;
     static const Enemy PATA_PATA;
