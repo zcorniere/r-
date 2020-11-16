@@ -50,7 +50,7 @@ void GameServer::onMessage(Message<RequestCode> msg) {
             protocol::udp::AssetsList ass;
             ass.port = port + 1;
             for (const auto &[_, e]: stor->getStorage()) {
-                ass.list.push_back(e);
+                ass.list.push_back(e.second);
             }
             ass.size = ass.list.size();
             rep.insert(ass.port);
@@ -73,7 +73,7 @@ void GameServer::playSound(const std::string &name, float volume, float pitch) {
     s.volume = volume;
     s.pitch = pitch;
     s.isLooping = false;
-    auto v = stor->getIdFromPath(name);
+    auto v = stor->getIdFromName(name);
     s.id = v ? *v : -1;
     rep.insert(s);
     for (const auto &[i, e]: list) {
@@ -95,8 +95,12 @@ void GameServer::drawSprite(const std::string &name, const Transform &transf, un
     s.pos.y = transf.location.y;
     s.scale.x = transf.scale.x;
     s.scale.y = transf.scale.y;
-    auto v = stor->getIdFromPath(name);
-    s.id_assets = v ? *v : -1;
+    auto v = stor->getIdFromName(name);
+    if (!v) {
+        Snitch::err("GAME_SERVER") << name << " can't find name";
+        throw std::runtime_error("invalid name");
+    }
+    s.id_assets = *v;
     s.id_rectangle = tile_id;
     rep.insert(s);
     for (const auto &[i, e]: list) {

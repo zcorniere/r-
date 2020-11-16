@@ -26,8 +26,8 @@ struct MessageHeader {
 template<typename T>
 class Message {
     public:
-        Message() = default;
-        Message(const uint8_t m1, const uint8_t m2) {
+        explicit Message() = default;
+        explicit Message(const uint8_t m1, const uint8_t m2) {
             head.magic1 = m1;
             head.magic2 = m2;
         }

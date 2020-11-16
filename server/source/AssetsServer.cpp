@@ -25,7 +25,7 @@ AssetsServer::AssetsServer(const unsigned port, const std::string &path):
     for (auto &[i, e]: stor->getStorage()) {
         if (!ext_to_type.contains(std::filesystem::path(i).extension()))
             continue;
-        assets_map.insert({e, ext_to_type.at(std::filesystem::path(i).extension())});
+        assets_map.insert({e.second, ext_to_type.at(std::filesystem::path(i).extension())});
     }
     this->start();
 };
@@ -60,7 +60,7 @@ void AssetsServer::onMessage(Message<AssetsRequest> msg) {
                         rep.insert(config);
                     }
                 } catch (const std::runtime_error &re) {
-                    Snitch::err("ASSETS_SERVER") << "Exception :" << re.what() << Snitch::endl;
+                    Snitch::err("ASSETS_SERVER") << "Exception: " << re.what() << Snitch::endl;
                 }
             } break;
             default: Snitch::warn("ASSETS_SERVER") << "Unknown comand" << Snitch::endl; break;

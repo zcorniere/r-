@@ -64,7 +64,7 @@ class Client: public IClient<T> {
                 boost::asio::buffer(buffer, buffer.size()),
                 *remote_endpoint,
                 [this](std::error_code ec, std::size_t len) {
-                    Snitch::debug("TCP_CLIENT") << len << Snitch::endl;
+                    Snitch::debug("UDP_CLIENT") << len << Snitch::endl;
                    (void)len;
                     if (!ec) {
                         q_out.pop_front();
