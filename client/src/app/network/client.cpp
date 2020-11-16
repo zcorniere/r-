@@ -64,6 +64,7 @@ void network::Client::statePlay()
                 console->log("Error [Play]: Sound specified not found");
         }
     }
+
     // send input
     protocol::MessageToSend<UdpCode> message;
     protocol::udp::from_client::Input body_input;

@@ -61,7 +61,7 @@ std::vector<protocol::MessageReceived<UdpCode>> network::UdpSockMngr::receive()
     received_messages.clear();
 //    if (!received_messages.empty())
 //        return std::vector<protocol::MessageReceived<UdpCode>>();
-    return ret;
+    return std::move(ret);
 }
 
 

@@ -24,7 +24,10 @@
 
 namespace network {
     class Client {
-        static constexpr auto max_sprites = 100;
+        /**
+         * Increase that value increases significantly memory consumption but reduce screen flickering
+         */
+        static constexpr auto max_sprites = 5000;
         enum class Status {
             NotConnected,
             AskForAssets,
