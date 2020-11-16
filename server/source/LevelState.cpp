@@ -17,6 +17,7 @@
 #include "components/EnemyGroup.hpp"
 #include "components/Speaker.hpp"
 #include "Enemies.hpp"
+#include "load_game.hpp"
 #include <iostream>
 #include <chrono>
 #include <cstdlib>
@@ -27,6 +28,8 @@ constexpr int STAR_SPAWN_DELAY = 250;
 
 constexpr unsigned STAR_BUFFER_SIZE = 200;
 
+constexpr float SCROLLING_SPEED = 3;
+
 void LevelState::onStart(Game &instance)
 {
     // Creating Back ground
@@ -34,7 +37,7 @@ void LevelState::onStart(Game &instance)
         .withComponent(Sprite("level1", 0))
         .withComponent(Transform(Dimensional(10, 10), Dimensional(0, 0),
                                  Dimensional(4, 4)))
-        .withComponent(Velocity(-0.5, 0))
+        .withComponent(Velocity(-1 * SCROLLING_SPEED, 0))
         .build();
 
     // Creating Player Ship
@@ -86,6 +89,12 @@ void LevelState::onStart(Game &instance)
 
     // Playing music
     instance.audioModule.value().get().playSound("../server/assets/stage-1.ogg", 0.7);
+
+    /*
+    ** WALLS
+    */
+
+    build_walls(instance, SCROLLING_SPEED);
 }
 
 void LevelState::onPause(Game &instance)
