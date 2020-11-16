@@ -28,7 +28,7 @@ constexpr int STAR_SPAWN_DELAY = 250;
 
 constexpr unsigned STAR_BUFFER_SIZE = 200;
 
-constexpr float SCROLLING_SPEED = 3;
+constexpr float SCROLLING_SPEED = 0.5;
 
 void LevelState::onStart(Game &instance)
 {
@@ -67,24 +67,20 @@ void LevelState::onStart(Game &instance)
         .build();
 
     // Bugs Enemies
-    instance.componentStorage.buildEntity()
+    /*instance.componentStorage.buildEntity()
         .withBuilder(Enemy::BUG)
         .withComponent(Transform({2000, 400}, {0, 0}, {3, 3}))
         .withComponent(BydoShooter())
-        .withComponent(PlayerScanner(1500))
-        .build();
-
-    // Example Enemy
-    instance.componentStorage.buildEntity()
-        .withBuilder(Enemy::PATA_PATA)
-        .withComponent(Transform({500, 200}, {0, 0}, {3, 3}))
-        .build();
+        .withComponent(PlayerScanner(2000))
+        .build();*/
 
     // Example Enemy group
     instance.componentStorage.buildEntity()
         .withComponent(EnemyGroup{Enemy::PATA_PATA, 10, 60})
         .withComponent(Transform({2000, 400}, {0, 0}, {3, 3}))
         .withComponent(Destructible{0})
+        .withComponent(BydoShooter())
+        .withComponent(PlayerScanner(2500))
         .build();
 
     // Playing music

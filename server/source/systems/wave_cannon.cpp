@@ -52,7 +52,7 @@ void wave_cannon_projectile_summoner(Game &instance)
                     Dimensional(0, 0),
                     transform.scale
                 ))
-                .withComponent(CollisionBox(16, 4, 0, 0 ))
+                .withComponent(CollisionBox(16, 4, 0, 0, 1, {GameObject::PlayerProjectile, GameObject::EnemyProjectile}))
                 .withComponent(Destructible(1))
                 .withComponent(Velocity(WCP_SPEED, 0))
                 .withComponent(GameObject::PlayerProjectile)
