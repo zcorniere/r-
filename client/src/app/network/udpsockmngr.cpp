@@ -34,17 +34,13 @@ void network::UdpSockMngr::do_receive()
         auto size = socket.receive(boost::asio::buffer(buffer, len));
         buffer.resize(size);
 
-        protocol::MessageReceived<UdpCode> message(std::move(buffer));
-        if (message.head().firstbyte != protocol::magic_number.first || message.head().secondbyte != protocol::magic_number.second)
-            do_receive();
-        if (!protocol::check_size(message.head().code, message.head().body_size)) {
+        protocol::MessageReceived<UdpCode> current(std::move(buffer));
+        if (current.head().firstbyte != protocol::magic_number.first || current.head().secondbyte != protocol::magic_number.second) {
+        } else if (!protocol::check_size(current.head().code, current.head().body_size)) {
             console.log("Error : UDP package has wrong body size");
-            do_receive();
-            return;
-        }
-        protocol::MessageReceived<UdpCode> current(std::move(message));
-        if (current.head().firstbyte == protocol::magic_number.first && current.head().secondbyte == protocol::magic_number.second && len >= sizeof(protocol::MessageHeader<UdpCode>))
+        } else {
             received_messages.push_back(current);
+        }
         do_receive();
     });
 }
@@ -61,7 +57,11 @@ void network::UdpSockMngr::send(protocol::MessageToSend<UdpCode> message)
 
 std::vector<protocol::MessageReceived<UdpCode>> network::UdpSockMngr::receive()
 {
-    return std::move(received_messages);
+    auto ret = received_messages;
+    received_messages.clear();
+//    if (!received_messages.empty())
+//        return std::vector<protocol::MessageReceived<UdpCode>>();
+    return ret;
 }
 
 

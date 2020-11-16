@@ -242,6 +242,13 @@ void network::Client::connect(const std::string &new_udp_server_address)
 
 void network::Client::disconnect()
 {
+    if (udp) {
+        protocol::MessageToSend<UdpCode> msg;
+        msg.head.code = protocol::udp::Code::Disconnect;
+        msg.head.body_size = 0;
+        udp->send(msg);
+        if (console) console->log("Disconnection send to server");
+    }
     stopSockManagers();
     status = Status::NotConnected;
     timeout_clock.restart();

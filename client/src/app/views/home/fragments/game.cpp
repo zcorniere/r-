@@ -37,12 +37,16 @@ void Game::onUpdateView()
         console->log("EXCEPTION : " + std::string(e.what()));
         disconnect();
     }
-    auto new_sprites = client.getSprites();
-    if (!new_sprites.empty()) {
-        sprites = new_sprites;
-    }
-    for (auto &sprite : sprites) {
-        window.draw(sprite);
+    if (is_connect) {
+        auto new_sprites = client.getSprites();
+        if (!new_sprites.empty()) {
+            sprites = new_sprites;
+        }
+        if (sprites.size()) {
+            for (int i = sprites.size() - 1; i >= 0 ; --i) {
+                window.draw(sprites[i]);
+            }
+        }
     }
 }
 

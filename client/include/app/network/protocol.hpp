@@ -13,6 +13,7 @@
 #include <type_traits>
 #include <vector>
 #include <cstring>
+#include <iostream>
 #include <boost/asio/buffer.hpp>
 
 namespace protocol {
@@ -195,7 +196,10 @@ namespace protocol {
         explicit MessageReceived(std::vector<std::byte> data) : data(std::move(data)) {}
         MessageHeader<T> head() const {
             MessageHeader<T> ret;
-            std::memcpy(&ret, data.data(), sizeof(ret));
+            if (data.size() < sizeof(ret)) {
+                std::cerr << "Error: data size : " << data.size() << std::endl;
+            } else
+                std::memcpy(&ret, data.data(), sizeof(ret));
             return ret;
         }
         boost::asio::const_buffer body() const {

@@ -154,23 +154,6 @@ void network::TcpSockMngr::send(protocol::MessageToSend<TcpCode> message)
     do_receive();
 }
 
-//void network::TcpSockMngr::do_send(protocol::MessageToSend<TcpCode> message)
-//{
-//    std::size_t length = sizeof(message.head) + message.head.body_size;
-//    std::vector<std::byte> buffer;
-//    buffer.resize(length);
-//    std::memcpy(buffer.data(), &message.head, sizeof(message.head));
-//    std::memcpy(buffer.data() + sizeof(message.head), message.body.data(), message.head.body_size);
-//    boost::asio::async_write(socket, boost::asio::buffer(buffer, length),
-//        [this](boost::system::error_code ec, std::size_t) {
-//                if (ec) {
-//                    console.log("Error [TCP]: Sending failed");
-//                } else {
-//                    do_receive();
-//                }
-//            });
-//}
-
 void network::TcpSockMngr::downloadAsset(long asset_id) {
     protocol::MessageToSend<TcpCode> message;
     message.head.code = TcpCode::AssetAsk;
