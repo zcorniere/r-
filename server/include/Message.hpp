@@ -83,13 +83,17 @@ class Message {
 };
 
 template<typename T>
-std::ostream &operator<<(std::ostream &os, Message<T> msg) {
-    os << "Message(head: " << msg.head << ", body: " << msg.body.size() << ")";
+std::ostream &operator<<(std::ostream &os, const Message<T> &msg) {
+    os << "Message(head: " << msg.head << ", body: " << std::hex;
+    for (const auto &i: msg.body) {
+        os << "0x" << static_cast<unsigned>(i) << ":";
+    }
+    os << std::dec << ")";
     return os;
 }
 
 template<typename T>
-std::ostream &operator<<(std::ostream &os, MessageHeader<T> head) {
+std::ostream &operator<<(std::ostream &os, const MessageHeader<T> &head) {
     os << std::hex << "0x" << static_cast<unsigned>(head.magic1)
                    << ":0x" << static_cast<unsigned>(head.magic2)
                    << ":0x" << static_cast<unsigned>(head.code)
