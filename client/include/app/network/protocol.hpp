@@ -33,7 +33,7 @@ namespace protocol {
     }
     namespace input {
         constexpr short keys_array_size = 5;
-        enum class Keys {
+        enum class Keys : uint8_t {
             LeftClick = 1,
             RightClick,
             A,

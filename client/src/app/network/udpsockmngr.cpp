@@ -63,7 +63,7 @@ void network::UdpSockMngr::send(protocol::MessageToSend<UdpCode> message)
         std::cout << std::dec << std::endl;
         std::cout << "I send Input: buffer.size(): " << std::dec << buffer.size() << " | length: " << length << std::endl;
         std::cout << "total sizeof : " << sizeof(protocol::udp::from_client::Input::nb_keys) + keys_size + sizeof(protocol::udp::from_client::Input::pos) << std::endl;
-        std::cout << "message.head.firstbyte  : " <<  static_cast<int>(message.head.firstbyte) << std::endl;
+        std::cout << "message.head.firstbyte  : " << static_cast<int>(message.head.firstbyte) << std::endl;
         std::cout << "message.head.secondbyte : " << static_cast<int>(message.head.secondbyte) << std::endl;
         std::cout << "message.head.code       : " << std::hex << static_cast<int>(message.head.code) << std::endl;
         std::cout << "message.head.body_size  : " << std::dec << static_cast<int>(message.head.body_size) << std::endl;

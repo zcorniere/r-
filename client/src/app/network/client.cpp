@@ -37,6 +37,7 @@ void network::Client::statePlay()
             if (it != assets.end()) {
                 it->sprite.setRotation(sprite.rot.x);
                 it->sprite.setPosition(sprite.pos.x, sprite.pos.y);
+                // it->sprite.setS// TODO
                 it->sprite.setScale(sprite.scale.x, sprite.scale.y);
 
                 sprites.insert(sprites.begin(), it->sprite);
