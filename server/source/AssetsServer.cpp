@@ -51,7 +51,7 @@ void AssetsServer::onMessage(Message<AssetsRequest> msg) {
                     Snitch::info(std::to_string(msg.remote->getId())) << "sending asset id " << body->id << " : " << *path_data << Snitch::endl;
                     std::vector<uint8_t> data = this->getFileAt(*path_data);
                     std::vector<uint8_t> config = this->getConfigForAssets(body->id);
-                    if (data.size() != 0 && config.size() != 0) {
+                    if (data.size() != 0) {
                         rep.insert(assets_map.at(body->id));
                         rep.insert(body->id);
                         rep.insert(data.size());
