@@ -35,7 +35,6 @@ long network::TcpSockMngr::receiveAsset(uint32_t body_size)
     std::vector<std::byte> buffer;
     std::array<std::byte, download_frame_size> sub_buffer;
 
-    // TODO download
     while (bytes_to_read) {
         if (socket.available()) {
             auto received_size = socket.receive(boost::asio::buffer(sub_buffer, sub_buffer.size()));
@@ -61,12 +60,6 @@ long network::TcpSockMngr::receiveAsset(uint32_t body_size)
     // size_config
     std::memcpy(&body.size_config, buff.data(), sizeof(body.size_config));
     buff += sizeof(body.size_config);
-    std::cout << "received asset | header.body_size : " << std::dec << body_size << std::endl;
-    std::cout << "body buffer size = " << buff.size() << std::endl;
-    std::cout << "id_asset   :" << body.id_asset << std::endl;
-    std::cout << "type       :" << static_cast<int>(body.type) << std::endl;
-    std::cout << "size_config: " << body.size_config << std::endl;
-    std::cout << "size_data  :  " << body.size_data << std::endl;
     // data
     body.data.resize(body.size_data);
     std::memcpy(body.data.data(), buff.data(), body.size_data);
@@ -89,7 +82,6 @@ long network::TcpSockMngr::receiveAsset(uint32_t body_size)
         std::string config_str;
         config_str.resize(body.size_config);
         std::memcpy(config_str.data(), body.config.data(), body.size_config);
-        std::cout << "JSON : " << std::dec << config_str << std::endl;
         std::istringstream is(config_str);
         ptree json;
         read_json(is, json);
