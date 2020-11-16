@@ -12,6 +12,8 @@ const Enemy Enemy::BUG = {
     }},
     OrientedSprite("bug", std::array<unsigned, 16>{0, 1, 2, 3, 4, 5, 6, 7, 10,
                                                    11, 12, 13, 14, 15, 16, 17}),
+    BydoShooter(),
+    PlayerScanner(1000),
     1, DeathMontage("explosions", {0, 1, 2, 3, 4, 5}, 7),
     DeathSpeaker("../draft/assets/enemy-explosion.ogg", 0.5, 0.5)
 };
@@ -29,6 +31,8 @@ const Enemy Enemy::PATA_PATA = {
                    {"enemy_flap", 6},
                    {"enemy_flap", 7}},
                   15},
+    BydoShooter(300, 0.7, {0, -1}, 0.6),
+    PlayerScanner(1500),
     1, DeathMontage("explosions", {0, 1, 2, 3, 4, 5}, 7),
     DeathSpeaker("../draft/assets/enemy-explosion.ogg", 0.5, 0.5)
 };
@@ -51,5 +55,7 @@ void Enemy::build(ComponentStorage::EntityBuilder &builder) const
         .withComponent(Destructible{this->health, true})
         .withComponent(this->death_montage)
         .withComponent(GameObject::Enemy)
-        .withComponent(this->death_sound);
+        .withComponent(this->death_sound)
+        .withComponent(this->shooter)
+        .withComponent(this->scanner);
 }

@@ -58,7 +58,7 @@ void bydo_shooter_projectile_summoner(Game &instance)
                     Dimensional(0, 0),
                     Dimensional(2, 2)
                 ))
-                .withComponent(CollisionBox(4, 4, 0, 0, 1, {GameObject::EnemyProjectile, GameObject::Enemy}))
+                .withComponent(CollisionBox(4, 4, 0, 0, 1, {GameObject::EnemyProjectile, GameObject::Enemy, GameObject::PlayerProjectile}))
                 .withComponent(Destructible(1))
                 .withComponent(Velocity({
                     shooter.aim_direction.x * shooter.projectile_speed,
@@ -81,7 +81,6 @@ void player_scanner_detector(Game &instance)
     );
 
     PlayerScanner::m_playerLocations.clear();
-
     for (auto &[id, param] : players_params) {
         auto &[controller, transform] = param;
         PlayerScanner::m_playerLocations.push_back(transform.location);
