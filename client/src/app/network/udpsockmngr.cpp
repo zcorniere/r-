@@ -48,6 +48,7 @@ void network::UdpSockMngr::do_receive()
         if (!protocol::check_size(message.head().code, message.head().body_size)) {
             console.log("Error : UDP package has wrong body size");
             do_receive();
+            return;
         }
         received_messages.push_back(std::move(message));
         do_receive();
