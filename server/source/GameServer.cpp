@@ -31,6 +31,7 @@ void GameServer::onMessage(Message<RequestCode> msg) {
         case RequestCode::Disconnect: msg.remote->disconnect(); break;
         case RequestCode::Ready: list.at(msg.remote).ready = true; break;
         case RequestCode::Input: {
+            Snitch::debug() << sizeof(short) + sizeof(MousePos) + InputSize << Snitch::endl;
             protocol::udp::Input body{};
             std::memcpy(&body.nb_keys, msg.body.data(), sizeof(body.nb_keys));
             std::memcpy(body.keys.data(), msg.body.data() + sizeof(body.nb_keys), InputSize);

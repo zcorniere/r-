@@ -77,7 +77,7 @@ namespace udp {
         std::array<Event, keys::ArraySize> keys;
         MousePos pos;
     };
-    constexpr uint32_t InputSize = sizeof(keys::Keys) * keys::ArraySize;
+    constexpr uint32_t InputSize = sizeof(Event) * keys::ArraySize;
 }
 
 namespace tcp {
