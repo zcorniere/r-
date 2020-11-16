@@ -104,9 +104,15 @@ class Client: public IClient<T> {
             buffer.resize(len);
             std::memcpy(buffer.data(), &q_out.front().head, sizeof(q_out.front().head));
             std::memcpy(buffer.data() + sizeof(q_out.front().head), q_out.front().body.data(), q_out.front().body.size());
+
+            std::cout << "[DEBUG][TCP] " << buffer.size() << " bytes wanted to send:" << std::endl;
+            for (auto & i : buffer) {
+                std::cout << std::hex << int(i) << " ";
+            }
             boost::asio::async_write(socket,
                 boost::asio::buffer(buffer, buffer.size()),
                 [this](std::error_code ec, std::size_t len) {
+                    std::cout << len << "bytes finaly sended" << std::endl;
                     (void)len;
                     Snitch::debug() << "body send " << len << Snitch::endl;
                     if (!ec) {

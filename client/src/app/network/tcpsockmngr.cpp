@@ -104,8 +104,10 @@ long network::TcpSockMngr::receiveAsset()
 void network::TcpSockMngr::do_receive()
 {
     socket.async_wait(tcp::socket::wait_read, [&](const boost::system::error_code &error) {
-        if (error || socket.available() < sizeof(protocol::MessageHeader<UdpCode>))
+        if (error || socket.available() < sizeof(protocol::MessageHeader<UdpCode>)) {
+            std::cout << "DEBUG [ERROR] was throw in tcp do_receive()" << std::endl;
             return;
+        }
         // Get the header
         protocol::MessageHeader<TcpCode> header;
         auto len = sizeof(header);
@@ -114,6 +116,11 @@ void network::TcpSockMngr::do_receive()
         buff.resize(len);
         auto size = socket.receive(boost::asio::buffer(buff, len));
         buff.resize(size);
+        std::cout << "[DEBUG][TCP] " << socket.available() << " bytes received" << std::endl;
+        for (auto i = 0; i < socket.available(); ++i) {
+            std::cout << std::hex << int(buff[i]) << " ";
+        }
+        std::cout << std::endl;
         std::memcpy(&header, buff.data(), size);
         // check the header
         if (header.firstbyte != protocol::magic_number.first || header.secondbyte != protocol::magic_number.second)
