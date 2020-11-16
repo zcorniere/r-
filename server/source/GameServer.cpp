@@ -36,6 +36,7 @@ void GameServer::onMessage(Message<RequestCode> msg) {
             std::memcpy(&body.nb_keys, msg.body.data(), sizeof(body.nb_keys));
             std::memcpy(body.keys.data(), msg.body.data() + sizeof(body.nb_keys), InputSize);
             std::memcpy(&body.pos, msg.body.data() + sizeof(body.nb_keys) + InputSize, sizeof(body.pos));
+            Snitch::debug("GAME_SERVER") << "nb_key: " << body.nb_keys << Snitch::endl;
             list.at(msg.remote).nb_key = std::move(body.nb_keys);
             for (const auto &i : body.keys ) {
                 list.at(msg.remote).input.push_back(i.key);
@@ -59,7 +60,6 @@ void GameServer::onMessage(Message<RequestCode> msg) {
             rep.insert(ass.port);
             rep.insert(ass.size);
             rep.insert(ass.list);
-            Snitch::debug("GAME_SERVER") << "Replied RequestCode::AssetsList" << Snitch::endl;
             msg.remote->send(rep);
         } break;
         default: Snitch::warn("GAME_SERVER") << "Unknown comand" << Snitch::endl; break;

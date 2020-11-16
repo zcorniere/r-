@@ -97,6 +97,7 @@ class Server: public IServer<T> {
             });
         }
         void addToMsgQueue() {
+            Snitch::debug("UDP_SERVER") << tmp << Snitch::endl;
             auto tmp_ptr = std::make_shared<boost::asio::ip::udp::endpoint>(tmp_end);
             if (!client_list.contains(tmp_ptr)) {
                 client_list.insert({tmp_ptr, std::make_shared<Client<T>>(asio_context, tmp_ptr, asio_acceptor)});
@@ -104,6 +105,7 @@ class Server: public IServer<T> {
             }
             tmp.remote = client_list.at(tmp_ptr);
             msg_in.push_back(tmp);
+            tmp.empty();
             waitForClientConnection();
         }
 
@@ -118,7 +120,7 @@ class Server: public IServer<T> {
         boost::asio::ip::udp::endpoint tmp_end;
 
         boost::asio::ip::udp::socket asio_acceptor;
-        uint32_t base_id = 10000;
+        uint32_t base_id = 1;
 };
 
 }
