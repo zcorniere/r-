@@ -196,10 +196,6 @@ void network::TcpSockMngr::downloadAllAssets()
 
 bool network::TcpSockMngr::isDownloadFinished() const
 {
-    // if (assets_ids_list.empty()) {
-    //     console.log("Error [TCP]: Download: assets_ids_list is empty");
-    //     return false;
-    // }
     return is_download_finish.load();
 }
 
