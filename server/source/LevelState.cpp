@@ -15,6 +15,7 @@
 #include "components/PlayerScanner.hpp"
 #include "components/RestrictionBox.hpp"
 #include "components/EnemyGroup.hpp"
+#include "components/Speaker.hpp"
 #include "Enemies.hpp"
 #include <iostream>
 #include <chrono>
@@ -50,6 +51,7 @@ void LevelState::onStart(Game &instance)
         .withComponent(ShootMontage("effects", {20, 21}, 7))
         .withComponent(RestrictionBox(0, 0, 1850, 1080))
         .withComponent(WaveCannon())
+//        .withComponent(DeathSpeaker("playership-explosion.ogg"))
         .build();
 
     // Floor CollisionBox

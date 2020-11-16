@@ -35,6 +35,8 @@ void load_game(Game &game)
     game.componentStorage.registerComponent<ShootMontage>();
     game.componentStorage.registerComponent<RestrictionBox>();
     game.componentStorage.registerComponent<EnemyGroup>();
+    game.componentStorage.registerComponent<Speaker>();
+    game.componentStorage.registerComponent<DeathSpeaker>();
 
     /*
     ** SYSTEMS
@@ -107,6 +109,11 @@ void load_game(Game &game)
     game.systemStorage.addSystem(bydo_shooter_apply_scanner);
 
     game.systemStorage.addSystem(run_enemy_group);
+
+    // audio
+    game.systemStorage.addSystem(speaker_player);
+    game.systemStorage.addSystem(death_speaker_player);
+    game.systemStorage.addSystem(death_speaker_activator);
 
     /*
     ** STATES

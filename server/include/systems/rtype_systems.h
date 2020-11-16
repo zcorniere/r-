@@ -17,6 +17,7 @@
 #include "components/PlayerScanner.hpp"
 #include "components/RestrictionBox.hpp"
 #include "components/EnemyGroup.hpp"
+#include "components/Speaker.hpp"
 
 // collisions
 void collisions_update(Game &instance);
@@ -65,5 +66,10 @@ void bydo_shooter_apply_scanner
 // Enemies
 void run_enemy_group(Game &game, EnemyGroup &group, Transform &transform,
                      Destructible &destructible);
+
+// Audio
+void speaker_player(IAudioModule &module, Speaker &speaker);
+void death_speaker_player(IAudioModule &module, DeathSpeaker &speaker);
+void death_speaker_activator(DeathSpeaker &speaker, const Destructible &destructible);
 
 #endif
