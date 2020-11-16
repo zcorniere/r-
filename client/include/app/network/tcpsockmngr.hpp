@@ -24,6 +24,7 @@ using boost::property_tree::read_json;
 
 namespace network {
     class TcpSockMngr {
+        static constexpr auto download_frame_size = 500;
         bool is_download_finish = false;
         bool is_connection_failed = false;
         Console &console;
@@ -37,7 +38,7 @@ namespace network {
         std::vector<Asset> assets;
         std::thread run_thread;
         sf::Clock &timeout_clock;
-        long receiveAsset();
+        long receiveAsset(uint32_t body_size);
         void do_receive();
         void send(protocol::MessageToSend<TcpCode> message);
 //        void do_send(protocol::MessageToSend<TcpCode> message);
