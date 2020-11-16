@@ -91,14 +91,15 @@ std::vector<uint8_t> AssetsServer::getConfigForAssets(const long id) {
     std::string path = *(stor->getPathFromId(id));
     if (ext_to_type.at(std::filesystem::path(path).extension()) == AssetsPackage::Sound) {
         return std::vector<uint8_t>();
+    } else {
+        size_t dot = path.find_last_of('.');
+        if (dot == std::string::npos)
+            throw std::runtime_error("not dot");
+        path.replace(dot, 5, ".json");
+        if (!std::filesystem::exists(path)) {
+            Snitch::warn("ASSETS_SERVER") << "missing config file for " << path << Snitch::endl;
+            throw std::runtime_error("missing config file");
+        }
+        return getFileAt(path);
     }
-    size_t dot = path.find_last_of('.');
-    if (dot == std::string::npos)
-        throw std::runtime_error("not dot");
-    path.replace(dot, 5, ".json");
-    if (!std::filesystem::exists(path)) {
-        Snitch::warn("ASSETS_SERVER") << "missing config file for " << path << Snitch::endl;
-        return std::vector<uint8_t>();
-    }
-    return getFileAt(path);
 }
