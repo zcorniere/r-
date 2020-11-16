@@ -67,7 +67,7 @@ void GameServer::onMessage(Message<RequestCode> msg) {
 void GameServer::playSound(const std::string &name, float volume, float pitch) {
     if (!stor)
         throw std::runtime_error("Uninitialized storage");
-    Message<RequestCode> rep;
+    Message<RequestCode> rep(protocol::MAGIC_NB_1, protocol::MAGIC_NB_2);
     rep.head.code = protocol::udp::RequestCode::Sound;
     protocol::udp::Sound s;
     s.volume = volume;
@@ -86,8 +86,8 @@ void GameServer::playSound(const std::string &name, float volume, float pitch) {
 void GameServer::drawSprite(const std::string &name, const Transform &transf, unsigned tile_id) {
     if (!stor)
         throw std::runtime_error("Uninitialized storage");
-    Message<RequestCode> rep;
-    rep.head.code = protocol::udp::RequestCode::Sound;
+    Message<RequestCode> rep(protocol::MAGIC_NB_1, protocol::MAGIC_NB_2);
+    rep.head.code = protocol::udp::RequestCode::Texture;
     protocol::udp::Sprite s;
     s.rot.x = transf.rotation.x;
     s.rot.y = transf.rotation.y;

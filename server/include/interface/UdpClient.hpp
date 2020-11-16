@@ -59,11 +59,12 @@ class Client: public IClient<T> {
             std::memcpy(buffer.data(), &q_out.front().head, sizeof(q_out.front().head));
             std::memcpy(buffer.data() + sizeof(q_out.front().head), q_out.front().body.data(), q_out.front().body.size());
 
+            Snitch::debug("_UDPCLIENT_HPP_") << q_out.front()  << Snitch::endl;
             socket.async_send_to(
                 boost::asio::buffer(buffer, buffer.size()),
                 *remote_endpoint,
                 [this](std::error_code ec, std::size_t len) {
-//                    std::cout << "i just sent " << len << " bytes to client" << std::endl;
+                    Snitch::debug("TCP_CLIENT") << len << Snitch::endl;
                    (void)len;
                     if (!ec) {
                         q_out.pop_front();
