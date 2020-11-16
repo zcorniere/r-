@@ -33,3 +33,13 @@ std::optional<std::string> Storage::getPathFromId(const long id) {
 const std::unordered_map<std::string, long> &Storage::getStorage()const {
     return storage_map;
 }
+
+std::ostream &operator<<(std::ostream &os, const Storage &stor) {
+    const auto map = stor.getStorage();
+    os << "Storage(";
+    for (const auto &[i, e] : map) {
+        os << "(path: " << i << "id: " << e << "),";
+    }
+    os << ")";
+    return os;
+}

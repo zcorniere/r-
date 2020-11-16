@@ -71,7 +71,6 @@ class Server: public IServer<T> {
                tmp_end,
                [this](std::error_code ec, std::size_t len) {
                     (void)len;
-                    Snitch::debug("UDP_SERVER_DEBUG") << tmp.head << Snitch::endl;
                     if (!ec) {
                         if (tmp.head.size > 0) {
                             tmp.body.resize(tmp.head.size);
@@ -85,7 +84,6 @@ class Server: public IServer<T> {
             });
         }
         void readBody() {
-            Snitch::info("UDP_SERVER") << "ReadBody" << std::endl;
             asio_acceptor.async_receive_from(
                 boost::asio::buffer(tmp.body.data(), tmp.body.size()),
                tmp_end,

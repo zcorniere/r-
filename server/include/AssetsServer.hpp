@@ -18,7 +18,7 @@ class AssetsServer: public ecs::tcp::Server<protocol::tcp::AssetsRequest> {
 
     private:
         std::vector<uint8_t> getFileAt(const std::string &path);
-        std::string getConfigForAssets(std::string path);
+        std::vector<uint8_t> getConfigForAssets(const long id);
 
     private:
         std::shared_ptr<Storage> stor;
