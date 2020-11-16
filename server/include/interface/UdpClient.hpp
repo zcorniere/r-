@@ -32,8 +32,9 @@ class Client: public IClient<T> {
         virtual void send(const Message<T> &msg)final {
             boost::asio::post(context,
                 [this, msg]() {
+                    bool writeMsg = !q_out.empty();
                     q_out.push_back(msg);
-                    if (!q_out.empty()) {
+                    if (!writeMsg) {
                         writeHeader();
                     }
                 });
@@ -68,12 +69,13 @@ class Client: public IClient<T> {
                 boost::asio::buffer(buffer, buffer.size()),
                 *remote_endpoint,
                 [this](std::error_code ec, std::size_t len) {
+<<<<<<< HEAD
 //                    std::cout << "i just sent " << len << " bytes to client" << std::endl;
+=======
+>>>>>>> 36e8ed833004fdedc90ad26b9a69088fcce3453c
                    (void)len;
                     if (!ec) {
-                        try {
                         q_out.pop_front();
-                        } catch (std::runtime_error) {}
                         if (!q_out.empty())
                             writeHeader();
                     } else {

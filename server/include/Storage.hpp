@@ -19,4 +19,7 @@ class Storage {
         std::string base_path;
         std::unordered_map<std::string, long> storage_map;
 };
+
+std::ostream &operator<<(std::ostream &os, const Storage &stor);
+
 #endif //_STORAGE_HPP_

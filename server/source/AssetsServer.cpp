@@ -12,7 +12,7 @@ using namespace protocol::tcp;
 const std::unordered_map<std::string, protocol::tcp::AssetsPackage::Type> ext_to_type {
     {".png", AssetsPackage::Texture},
     {".gif", AssetsPackage::Texture},
-    {".mp3", AssetsPackage::Sound}
+    {".ogg", AssetsPackage::Sound}
 };
 
 AssetsServer::AssetsServer(const unsigned port, const std::string &path):
@@ -42,16 +42,15 @@ void AssetsServer::onMessage(Message<AssetsRequest> msg) {
             case AssetsRequest::AskAssets: {
                 rep.head.code = AssetsRequest::AssetsPackage;
                 auto body = reinterpret_cast<AssetsAsk *>(msg.body.data());
-                Snitch::debug("AssetsAsk") << sizeof(AssetsAsk) << Snitch::endl;
-                Snitch::debug("AssetsPackage") << sizeof(AssetsPackage) << Snitch::endl;
                 try {
                     auto path_data = stor->getPathFromId(body->id);
                     if (!path_data) {
                         Snitch::warn("ASSETS_SERVER") << "Invalid data: " << body->id << Snitch::endl;
                         break;
                     }
-                    auto data = this->getFileAt(*path_data);
-                    auto config = this->getFileAt(this->getConfigForAssets(*path_data));
+                    Snitch::info(std::to_string(msg.remote->getId())) << "sending asset id " << body->id << " : " << *path_data << Snitch::endl;
+                    std::vector<uint8_t> data = this->getFileAt(*path_data);
+                    std::vector<uint8_t> config = this->getConfigForAssets(body->id);
                     if (data.size() != 0 && config.size() != 0) {
                         rep.insert(assets_map.at(body->id));
                         rep.insert(body->id);
@@ -59,10 +58,9 @@ void AssetsServer::onMessage(Message<AssetsRequest> msg) {
                         rep.insert(config.size());
                         rep.insert(data);
                         rep.insert(config);
-                        Snitch::debug() << rep.head << Snitch::endl;
                     }
                 } catch (const std::runtime_error &re) {
-                    Snitch::err("ASSETS_SERVER") << "Exception " << re.what() << Snitch::endl;
+                    Snitch::err("ASSETS_SERVER") << "Exception :" << re.what() << Snitch::endl;
                 }
             } break;
             default: Snitch::warn("ASSETS_SERVER") << "Unknown comand" << Snitch::endl; break;
@@ -86,18 +84,21 @@ std::vector<uint8_t> AssetsServer::getFileAt(const std::string &path) {
                   std::back_inserter(ret));
         file.close();
     }
-    std::string h(ret.begin(), ret.end());
-    Snitch::debug(path) << ret.size() << Snitch::endl;
     return ret;
 }
 
-std::string AssetsServer::getConfigForAssets(std::string path) {
+std::vector<uint8_t> AssetsServer::getConfigForAssets(const long id) {
+    std::string path = *(stor->getPathFromId(id));
+    if (ext_to_type.at(std::filesystem::path(path).extension()) == AssetsPackage::Sound) {
+        return std::vector<uint8_t>();
+    }
     size_t dot = path.find_last_of('.');
     if (dot == std::string::npos)
         throw std::runtime_error("not dot");
     path.replace(dot, 5, ".json");
     if (!std::filesystem::exists(path)) {
-        throw std::runtime_error("Not a valid path");
+        Snitch::warn("ASSETS_SERVER") << "missing config file for " << path << Snitch::endl;
+        return std::vector<uint8_t>();
     }
-    return path;
+    return getFileAt(path);
 }
