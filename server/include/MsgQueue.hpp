@@ -16,14 +16,14 @@ class MsgQueue {
 
         const T& front() {
             if (this->size() == 0) {
-                throw std::runtime_error("queue is empty");
+                throw std::runtime_error("queue is empty in MsgQueue::front()");
             }
             std::scoped_lock lock(q_mut);
             return q.front();
         }
         const T& back() {
             if (this->size() == 0) {
-                throw std::runtime_error("queue is empty");
+                throw std::runtime_error("queue is empty in MsgQueue::back()");
             }
             std::scoped_lock lock(q_mut);
             return q.back();
@@ -42,7 +42,7 @@ class MsgQueue {
         }
         T pop_front() {
             if (this->size() == 0) {
-                throw std::runtime_error("queue is empty");
+                throw std::runtime_error("queue is empty MsgQueue::pop_front()");
             }
             std::scoped_lock lock(q_mut);
             T t = std::move(q.front());
@@ -51,7 +51,7 @@ class MsgQueue {
         }
         T pop_back() {
             if (this->size() == 0) {
-                throw std::runtime_error("queue is empty");
+                throw std::runtime_error("queue is empty in MsgQueue::pop_back()");
             }
             std::scoped_lock lock(q_mut);
             T t = std::move(q.front());
