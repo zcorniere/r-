@@ -61,6 +61,7 @@ class Client: public IClient<T> {
                 boost::asio::buffer(buffer, buffer.size()),
                 *remote_endpoint,
                 [this](std::error_code ec, std::size_t len) {
+                    std::cout << "[DEBUG UDP] " << len << " bytes written" << std::endl;
                    (void)len;
                     if (!ec) {
                         q_out.pop_front();
