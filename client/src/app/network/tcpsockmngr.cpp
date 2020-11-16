@@ -129,6 +129,10 @@ void network::TcpSockMngr::do_receive()
             console.log("Error [TCP]: Server sent wrong data");
             return;
         }
+        if (!header.body_size) {
+            console.log("Error [TCP]: Server sent empty body");
+            return;
+        }
         std::cout << "header.body_size : " << std::hex << header.body_size << " : " << std::dec << header.body_size << std::endl;
         std::cout << "socket.available() : " << socket.available() << std::endl;
         // get the body & work on it
