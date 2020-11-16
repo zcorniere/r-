@@ -57,11 +57,18 @@ class Client: public IClient<T> {
             buffer.resize(len);
             std::memcpy(buffer.data(), &q_out.front().head, sizeof(q_out.front().head));
             std::memcpy(buffer.data() + sizeof(q_out.front().head), q_out.front().body.data(), q_out.front().body.size());
+
+            std::cout << std::dec << "Sending : " << buffer.size() << " bytes" << std::endl << std::hex;
+            for (auto i = 0; i < buffer.size(); ++i) {
+                std::cout << int(buffer[i]) << " ";
+            }
+            std::cout << std::dec << std::endl;
+
             socket.async_send_to(
                 boost::asio::buffer(buffer, buffer.size()),
                 *remote_endpoint,
                 [this](std::error_code ec, std::size_t len) {
-                    std::cout << "i just sent " << len << " bytes to client" << std::endl;
+//                    std::cout << "i just sent " << len << " bytes to client" << std::endl;
                    (void)len;
                     if (!ec) {
                         try {
