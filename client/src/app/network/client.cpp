@@ -234,7 +234,13 @@ void network::Client::connect(const std::string &new_udp_server_address)
     server_ip = host.value().first;
     server_udp_port = host.value().second;
     if (console) console->log( "try to connect to : " + server_ip + ":" + std::to_string(server_udp_port));
-    udp = std::make_unique<network::UdpSockMngr>(*console, server_ip, server_udp_port);
+    try {
+        udp = std::make_unique<network::UdpSockMngr>(*console, server_ip, server_udp_port);
+    } catch (std::exception) {
+        if (udp) udp.reset();
+        if (console) console->log("Connection failed");
+        return;
+    }
     if (udp)
         status = Status::AskForAssets;
     timeout_clock.restart();
