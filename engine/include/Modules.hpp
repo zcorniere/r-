@@ -17,7 +17,7 @@ public:
 
 // Specific modules
 
-enum class Input {
+enum class Input: uint8_t {
     Unknwown = 0,
     LeftClick = 1,
     RightClick,

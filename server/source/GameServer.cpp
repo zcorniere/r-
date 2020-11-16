@@ -31,18 +31,20 @@ void GameServer::onMessage(Message<RequestCode> msg) {
         case RequestCode::Disconnect: msg.remote->disconnect(); break;
         case RequestCode::Ready: list.at(msg.remote).ready = true; break;
         case RequestCode::Input: {
-            auto body = reinterpret_cast<protocol::udp::Input *>(msg.body.data());
-            if (!body) { break; }
-            list.at(msg.remote).nb_key = std::move(body->nb_keys);
-            for (const auto &i : body->keys ) {
+            protocol::udp::Input body{};
+            std::memcpy(&body.nb_keys, msg.body.data(), sizeof(body.nb_keys));
+            std::memcpy(body.keys.data(), msg.body.data() + sizeof(body.nb_keys), InputSize);
+            std::memcpy(&body.pos, msg.body.data() + sizeof(body.nb_keys) + InputSize, sizeof(body.pos));
+            list.at(msg.remote).nb_key = std::move(body.nb_keys);
+            for (const auto &i : body.keys ) {
                 list.at(msg.remote).input.push_back(i.key);
                 if (i.pressed)
                     list.at(msg.remote).keys.insert(i.key);
                 else
                     list.at(msg.remote).keys.erase(i.key);
             }
-            list.at(msg.remote).cur_pos.y = std::move(body->pos.y);
-            list.at(msg.remote).cur_pos.x = std::move(body->pos.x);
+            list.at(msg.remote).cur_pos.y = std::move(body.pos.y);
+            list.at(msg.remote).cur_pos.x = std::move(body.pos.x);
         } break;
         case RequestCode::AssetsAsk: {
             Message<RequestCode> rep(protocol::MAGIC_NB_1, protocol::MAGIC_NB_2);
