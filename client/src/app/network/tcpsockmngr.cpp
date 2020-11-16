@@ -22,9 +22,8 @@ network::TcpSockMngr::TcpSockMngr(sf::Clock &timeout, Console &console, const st
     loadAllCachedAssets();
     if (isDownloadFinished())
         return;
-    do_receive();
-    run_thread = std::thread([this](){context.run();});
     downloadAllAssets();
+    run_thread = std::thread([this](){context.run();});
 }
 
 network::TcpSockMngr::~TcpSockMngr()
@@ -121,6 +120,7 @@ long network::TcpSockMngr::loadAssetFromBytes(
 void network::TcpSockMngr::do_receive()
 {
     socket.async_wait(tcp::socket::wait_read, [&](const boost::system::error_code &error) {
+        const std::lock_guard lock(this->socket_mutex);
         if (error || socket.available() < sizeof(protocol::MessageHeader<UdpCode>)) {
             return;
         }
@@ -170,7 +170,7 @@ void network::TcpSockMngr::send(protocol::MessageToSend<TcpCode> message)
 }
 
 void network::TcpSockMngr::downloadAsset(long asset_id) {
-    protocol::MessageToSend<TcpCode> message;
+    protocol::MessageToSend<TcpCode> message{};
     message.head.code = TcpCode::AssetAsk;
     protocol::tcp::AssetAsk asset_ask {static_cast<uint64_t>(asset_id)};
     message.head.body_size = sizeof(asset_ask);
@@ -196,20 +196,21 @@ void network::TcpSockMngr::downloadAllAssets()
 
 bool network::TcpSockMngr::isDownloadFinished() const
 {
-    if (assets_ids_list.empty()) {
-        console.log("Error [TCP]: Download: assets_ids_list is empty");
-        return false;
-    }
-    return is_download_finish;
+    // if (assets_ids_list.empty()) {
+    //     console.log("Error [TCP]: Download: assets_ids_list is empty");
+    //     return false;
+    // }
+    return is_download_finish.load();
 }
 
 bool network::TcpSockMngr::isConnectionFailed() const
 {
-    return is_connection_failed;
+    return is_connection_failed.load();
 }
 
-std::vector<Asset> network::TcpSockMngr::getAssets() const
+std::vector<Asset> network::TcpSockMngr::getAssets()
 {
+    const std::lock_guard lock(this->socket_mutex);
     if (!isDownloadFinished()) {
         throw ("Download is not finish");
     }

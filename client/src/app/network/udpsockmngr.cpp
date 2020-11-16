@@ -8,7 +8,7 @@
 #include "app/network/udpsockmngr.hpp"
 
 network::UdpSockMngr::UdpSockMngr(Console &console, const std::string &ip, short port) :
-    console(console), socket(context, udp::endpoint(udp::v4(), 0)) , resolver(context)
+    console(console), socket(context, udp::endpoint(udp::v4(), 0)) , resolver(context), received_messages()
 {
     udp::resolver::query query(udp::v4(), ip, std::to_string(port));
     endpoint = *resolver.resolve(query).begin();
@@ -18,6 +18,7 @@ network::UdpSockMngr::UdpSockMngr(Console &console, const std::string &ip, short
 
 network::UdpSockMngr::~UdpSockMngr()
 {
+    const std::lock_guard lock(this->socket_mutex);
     context.stop();
     if (run_thread.joinable())
         run_thread.join();
@@ -26,6 +27,7 @@ network::UdpSockMngr::~UdpSockMngr()
 void network::UdpSockMngr::do_receive()
 {
     socket.async_wait(udp::socket::wait_read, [&](const boost::system::error_code &error) {
+        const std::lock_guard lock(this->socket_mutex);
         auto len = socket.available();
         if (error || len < sizeof(protocol::MessageHeader<UdpCode>))
             return;
@@ -47,6 +49,8 @@ void network::UdpSockMngr::do_receive()
 
 void network::UdpSockMngr::send(protocol::MessageToSend<UdpCode> message)
 {
+    const std::lock_guard lock(this->socket_mutex);
+    assert(message.body.size() == message.head.body_size);
     std::size_t length = sizeof(message.head) + message.head.body_size;
     std::vector<std::byte> buffer;
     buffer.resize(length);
@@ -85,17 +89,13 @@ void network::UdpSockMngr::send(protocol::MessageToSend<UdpCode> message)
 
     }
 
-
     socket.send_to(boost::asio::buffer(buffer, length), endpoint);
 }
 
 std::vector<protocol::MessageReceived<UdpCode>> network::UdpSockMngr::receive()
 {
+    const std::lock_guard lock(this->socket_mutex);
     auto ret = received_messages;
     received_messages.clear();
     return std::move(ret);
 }
-
-
-
-
