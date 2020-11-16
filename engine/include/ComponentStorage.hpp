@@ -140,6 +140,14 @@ private:
                 component);
             return *this;
         }
+        template <typename Optional>
+        EntityBuilder &withComponent(std::optional<Optional> component)
+        {
+            if (component) {
+                m_dest.storeComponent<Optional>(component.value(), m_id);
+            }
+            return *this;
+        }
         template <typename T>
         EntityBuilder &withBuilder(const T &bundle)
         {

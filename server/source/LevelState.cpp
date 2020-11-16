@@ -67,20 +67,18 @@ void LevelState::onStart(Game &instance)
         .build();
 
     // Bugs Enemies
-    /*instance.componentStorage.buildEntity()
+    instance.componentStorage.buildEntity()
         .withBuilder(Enemy::BUG)
         .withComponent(Transform({2000, 400}, {0, 0}, {3, 3}))
         .withComponent(BydoShooter())
         .withComponent(PlayerScanner(2000))
-        .build();*/
+        .build();
 
     // Example Enemy group
     instance.componentStorage.buildEntity()
         .withComponent(EnemyGroup{Enemy::PATA_PATA, 10, 60})
         .withComponent(Transform({2000, 400}, {0, 0}, {3, 3}))
         .withComponent(Destructible{0})
-        .withComponent(BydoShooter())
-        .withComponent(PlayerScanner(2500))
         .build();
 
     // Playing music

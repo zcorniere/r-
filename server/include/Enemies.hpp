@@ -11,12 +11,17 @@
 #include "components/Trajectory.hpp"
 #include "components/OrientedSprite.hpp"
 #include "components/Speaker.hpp"
+#include "components/BydoShooter.hpp"
+#include "components/PlayerScanner.hpp"
 #include <variant>
+#include <optional>
 
 struct Enemy {
     CollisionBox collision;
     std::variant<Trajectory, PatternLoop> movement;
     std::variant<Sprite, AnimationLoop, OrientedSprite> animation;
+    std::optional<BydoShooter> shooter;
+    std::optional<PlayerScanner> scanner;
     int health;
     DeathMontage death_montage;
     DeathSpeaker death_sound;
