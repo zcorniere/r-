@@ -23,6 +23,8 @@ network::UdpSockMngr::~UdpSockMngr()
         run_thread.join();
 }
 
+#include <iostream>
+
 void network::UdpSockMngr::do_receive()
 {
     socket.async_wait(udp::socket::wait_read, [&](const boost::system::error_code &error) {
@@ -33,6 +35,10 @@ void network::UdpSockMngr::do_receive()
         buffer.resize(len);
         auto size = socket.receive(boost::asio::buffer(buffer, len));
         buffer.resize(size);
+        std::cout << "[DEBUG][UDP] " << buffer.size() << " bytes received" << std::endl;
+        for (auto i = 0; i < buffer.size(); ++i) {
+            std::cout << std::hex << int(buffer[i]) << " ";
+        }
         protocol::MessageReceived<UdpCode> message(std::move(buffer));
         if (message.head().firstbyte != protocol::magic_number.first || message.head().secondbyte != protocol::magic_number.second)
             do_receive();
