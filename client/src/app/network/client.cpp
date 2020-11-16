@@ -66,8 +66,8 @@ void network::Client::statePlay()
     }
 
     // send input
-    protocol::MessageToSend<UdpCode> message;
-    protocol::udp::from_client::Input body_input;
+    protocol::MessageToSend<UdpCode> message{};
+    protocol::udp::from_client::Input body_input{};
     auto mouse = Input::getMouse();
     auto keys = Input::getKeysQueue();
     body_input.pos = {static_cast<short>(mouse.x), static_cast<short>(mouse.y)};
@@ -91,7 +91,7 @@ void network::Client::statePlay()
 
 void network::Client::stateAskForAssets()
 {
-    protocol::MessageToSend<UdpCode> message;
+    protocol::MessageToSend<UdpCode> message{};
     message.head.code = protocol::udp::Code::AskAssetList;
     message.head.body_size = 0;
     udp->send(message);
@@ -161,7 +161,7 @@ void network::Client::stateDownload()
 
 void network::Client::stateReady()
 {
-    protocol::MessageToSend<UdpCode> message;
+    protocol::MessageToSend<UdpCode> message{};
     message.head.code = protocol::udp::Code::Ready;
     message.head.body_size = 0;
     udp->send(message);
