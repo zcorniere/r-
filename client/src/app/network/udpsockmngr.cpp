@@ -23,8 +23,6 @@ network::UdpSockMngr::~UdpSockMngr()
         run_thread.join();
 }
 
-#include <iostream>
-
 void network::UdpSockMngr::do_receive()
 {
     socket.async_wait(udp::socket::wait_read, [&](const boost::system::error_code &error) {

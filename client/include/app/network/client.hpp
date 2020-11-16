@@ -24,6 +24,7 @@
 
 namespace network {
     class Client {
+        static constexpr auto max_sprites = 100;
         enum class Status {
             NotConnected,
             AskForAssets,

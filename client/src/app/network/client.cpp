@@ -38,7 +38,11 @@ void network::Client::statePlay()
                 it->sprite.setRotation(sprite.rot.x);
                 it->sprite.setPosition(sprite.pos.x, sprite.pos.y);
                 it->sprite.setScale(sprite.scale.x, sprite.scale.y);
-                sprites.push_back(it->sprite);
+
+                sprites.insert(sprites.begin(), it->sprite);
+                if (sprites.size() > network::Client::max_sprites) {
+                    sprites.pop_back();
+                }
             } else
                 console->log("Error [Play]: Sprite specified not found : id_asset : " + std::to_string(sprite.id_asset) + " id_tile + " + std::to_string(sprite.id_sprite));
         }
@@ -262,7 +266,7 @@ void network::Client::reset()
 
 std::vector<sf::Sprite> network::Client::getSprites()
 {
-    return std::move(sprites);
+    return sprites;
 }
 
 void network::Client::stopSockManagers()
