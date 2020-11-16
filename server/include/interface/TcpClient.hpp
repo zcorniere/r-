@@ -116,7 +116,9 @@ class Client: public IClient<T> {
                     (void)len;
                     Snitch::debug() << "body send " << len << Snitch::endl;
                     if (!ec) {
-                        q_out.pop_front();
+                        try {
+                            q_out.pop_front();
+                        } catch (std::runtime_error) {}
                         if (!q_out.empty())
                             writeHeader();
                     } else {

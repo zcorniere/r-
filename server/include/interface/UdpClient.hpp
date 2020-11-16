@@ -63,7 +63,9 @@ class Client: public IClient<T> {
                 [this](std::error_code ec, std::size_t len) {
                    (void)len;
                     if (!ec) {
+                        try {
                         q_out.pop_front();
+                        } catch (std::runtime_error) {}
                         if (!q_out.empty())
                             writeHeader();
                     } else {
