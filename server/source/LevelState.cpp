@@ -5,12 +5,17 @@
 #include "components/Velocity.hpp"
 #include "components/CollisionBox.hpp"
 #include "components/GameObject.hpp"
-#include "components/Enemy.hpp"
+#include "components/PatternLoop.hpp"
 #include "components/AnimationLoop.hpp"
 #include "components/Destructible.hpp"
 #include "components/AnimMontage.hpp"
 #include "components/WaveCannon.hpp"
 #include "components/Trajectory.hpp"
+#include "components/BydoShooter.hpp"
+#include "components/PlayerScanner.hpp"
+#include "components/RestrictionBox.hpp"
+#include "components/EnemyGroup.hpp"
+#include "Enemies.hpp"
 #include <iostream>
 #include <chrono>
 #include <cstdlib>
@@ -41,7 +46,9 @@ void LevelState::onStart(Game &instance)
         .withComponent(GameObject::PlayerShip)
         .withComponent(CollisionBox(30, 10, 0, 3, 10))
         .withComponent(Destructible(1, true))
-        .withComponent(DeathMontage(AnimMontage("effects", {80, 81, 82, 83, 84}, 7)))
+        .withComponent(DeathMontage("effects", {80, 81, 82, 83, 84}, 7))
+        .withComponent(ShootMontage("effects", {20, 21}, 7))
+        .withComponent(RestrictionBox(0, 0, 1850, 1080))
         .withComponent(WaveCannon())
         .build();
 
@@ -54,36 +61,22 @@ void LevelState::onStart(Game &instance)
         .build();
 
     // Bugs Enemies
-    instance.componentStorage.buildEntity()
-        .withComponent(Sprite{"bug", 4})
+    Enemy::BUG.build(instance.componentStorage.buildEntity())
         .withComponent(Transform({2000, 400}, {0, 0}, {3, 3}))
-        .withComponent(Trajectory([]
-        (Transform &t) {
-            t.location.x -= 1;
-            t.location.y = std::cos(t.location.x * 0.01) * 200 + 300;
-        }))
-        .withComponent(Destructible(1, true))
-        .withComponent(CollisionBox(21, 20, 4, 2, 1))
-        .withComponent(DeathMontage(AnimMontage("explosions", {0, 1, 2, 3, 4, 5}, 7)))
-        .withComponent(GameObject::Enemy)
+        .withComponent(BydoShooter())
+        .withComponent(PlayerScanner(1500))
         .build();
 
-
     // Example Enemy
+    Enemy::PATA_PATA.build(instance.componentStorage.buildEntity())
+        .withComponent(Transform({500, 200}, {0, 0}, {3, 3}))
+        .build();
+
+    // Example Enemy group
     instance.componentStorage.buildEntity()
-        .withComponent(Sprite{"player_ships", 1})
-        .withComponent(Transform({1000, 200}, {0, 0}, {1, 1}))
-        .withComponent(Velocity{0, 0})
-        .withComponent(Enemy{{Pattern{{-1, 1}, 60}, Pattern{{-1, -1}, 60}}, 10})
-        .withComponent(AnimationLoop{{{"enemy_flap", 0},
-                                      {"enemy_flap", 1},
-                                      {"enemy_flap", 2},
-                                      {"enemy_flap", 3},
-                                      {"enemy_flap", 4},
-                                      {"enemy_flap", 5},
-                                      {"enemy_flap", 6},
-                                      {"enemy_flap", 7}},
-                                     15})
+        .withComponent(EnemyGroup{Enemy::PATA_PATA, 10, 60})
+        .withComponent(Transform({2000, 400}, {0, 0}, {3, 3}))
+        .withComponent(Destructible{0})
         .build();
 }
 

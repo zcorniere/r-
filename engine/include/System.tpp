@@ -17,9 +17,12 @@ template <typename T, typename M>
 struct split_modules_components;
 
 template <typename... Modules, typename First, typename... Rest>
-requires std::is_base_of<IModule, cleaned_component<First>>::
-    value struct split_modules_components<std::tuple<Modules...>,
-                                          std::tuple<First, Rest...>>
+    requires std::is_base_of<IModule, cleaned_component<First>>::value ||
+    std::is_same_v<
+        Game,
+        cleaned_component<
+            First>> struct split_modules_components<std::tuple<Modules...>,
+                                                    std::tuple<First, Rest...>>
     : public split_modules_components<std::tuple<Modules..., First>,
                                       std::tuple<Rest...>> {
 };
@@ -49,12 +52,16 @@ struct wrapper<std::pair<std::tuple<Modules...>, std::tuple<Components...>>> {
             auto modules = std::tuple<Modules...>(
                 getModule<typename std::remove_reference<Modules>::type>(
                     game)...);
-            auto components_map = game.componentStorage.join_components(
-                game.componentStorage
-                    .getComponents<cleaned_component<Components>>()...);
+            if constexpr (sizeof...(Components) != 0) {
+                auto components_map = game.componentStorage.join_components(
+                    game.componentStorage
+                        .getComponents<cleaned_component<Components>>()...);
 
-            for (auto &[_, components] : components_map)
-                std::apply(system, std::tuple_cat(modules, components));
+                for (auto &[_, components] : components_map)
+                    std::apply(system, std::tuple_cat(modules, components));
+            } else {
+                std::apply(system, modules);
+            }
         };
     }
 };

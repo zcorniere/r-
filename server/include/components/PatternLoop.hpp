@@ -9,9 +9,8 @@ struct Pattern {
     unsigned duration;
 };
 
-struct Enemy {
+struct PatternLoop {
     std::vector<Pattern> pattern;
-    unsigned health;
     unsigned pattern_id = 0;
     unsigned duration_elapsed = 0;
 

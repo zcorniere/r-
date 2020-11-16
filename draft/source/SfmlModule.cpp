@@ -27,7 +27,7 @@ void SfmlModule::loadAsset(std::filesystem::path path)
     // Loading Spritesheet configuration file
 
     boost::property_tree::ptree root(m_assets_path);
-    std::cout << "Parsing " << path.replace_extension(".json") << std::endl;
+    Snitch::info() << "Parsing " << path.replace_extension(".json") << Snitch::endl;
     boost::property_tree::read_json(path.replace_extension(".json"), root);
 
     // Creating Sprites from configuration
@@ -51,7 +51,7 @@ void SfmlModule::loadAsset(std::filesystem::path path)
 
     m_textures.emplace(path.stem(), std::move(texture));
 
-    std::cout << "Loaded " << path.stem() << std::endl;
+    Snitch::info() << "Loaded " << path.stem() << Snitch::endl;
 }
 
 void SfmlModule::drawSprite(const std::string &name, Transform const &transform, unsigned id)

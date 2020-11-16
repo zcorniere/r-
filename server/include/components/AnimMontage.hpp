@@ -26,6 +26,12 @@ public:
     Status getStatus() const;
 };
 
-class DeathMontage : public AnimMontage {};
+class DeathMontage : public AnimMontage {
+        using AnimMontage::AnimMontage;
+};
+
+class ShootMontage : public AnimMontage {
+        using AnimMontage::AnimMontage;
+};
 
 #endif

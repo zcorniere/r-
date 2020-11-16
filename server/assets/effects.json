@@ -87,16 +87,16 @@
     {
       "id": 20,
       "origin_x": 215,
-      "origin_y": 68,
+      "origin_y": 67,
       "width": 14,
-      "height": 12
+      "height": 13
     },
     {
       "id": 21,
-      "origin_x": 223,
-      "origin_y": 68,
+      "origin_x": 233,
+      "origin_y": 67,
       "width": 14,
-      "height": 12
+      "height": 13
     },
     {
       "id": 22,
@@ -251,6 +251,13 @@
       "origin_y": 326,
       "width": 32,
       "height": 28
+    },
+    {
+        "id": 90,
+        "origin_x": 1,
+        "origin_y": 326,
+        "width": 32,
+        "height": 28
     }
   ]
 }

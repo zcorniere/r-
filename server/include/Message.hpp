@@ -48,12 +48,25 @@ class Message {
         }
 
         template<isLayoutStd D>
-        void insert(D &data) {
+        void insert(const D &data) {
+            this->insert(&data);
+        };
+        template<isLayoutStd D>
+        void insert(const D *data) {
             size_t i = body.size();
             body.resize(i + sizeof(D));
-            std::memcpy(body.data() + i, &data, sizeof(D));
+            std::memcpy(body.data() + i, data, sizeof(D));
             head.size = body.size();
         };
+
+        template<isLayoutStd D>
+        void insert(const std::vector<D> &data) {
+            for (const auto &i: data) {
+                this->insert(i);
+            }
+            head.size = body.size();
+        };
+
         // extract data from the end of the buffer
         template<isLayoutStd D>
         void extract(D &data) {
@@ -80,7 +93,7 @@ std::ostream &operator<<(std::ostream &os, MessageHeader<T> head) {
     os << std::hex << "0x" << static_cast<unsigned>(head.magic1)
                    << ":0x" << static_cast<unsigned>(head.magic2)
                    << ":0x" << static_cast<unsigned>(head.code)
-                   << ":0x" << static_cast<unsigned>(head.size);
+                   << ":0x" << static_cast<unsigned>(head.size) << std::dec;
     return os;
 }
 

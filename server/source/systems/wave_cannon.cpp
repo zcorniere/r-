@@ -5,6 +5,7 @@
 #include "components/Velocity.hpp"
 #include "components/CollisionBox.hpp"
 #include "components/Destructible.hpp"
+#include "components/AnimMontage.hpp"
 #include "Game.hpp"
 
 // Wave Cannon Projectile config
@@ -21,6 +22,14 @@ void wave_cannon_input_getter(WaveCannon &cannon, const PlayerShipController &co
         cannon.status = WaveCannon::Status::Charging;
     else if (cannon.status == WaveCannon::Status::Charging && !controller.firing)
         cannon.status = WaveCannon::Status::Firing;
+}
+
+void wave_cannon_montage_player(const WaveCannon &cannon, ShootMontage &montage)
+{
+    if (cannon.status == WaveCannon::Status::Firing
+    && montage.getStatus() != AnimMontage::Status::Playing) {
+        montage.play();
+    }
 }
 
 void wave_cannon_projectile_summoner(Game &instance)
@@ -46,7 +55,7 @@ void wave_cannon_projectile_summoner(Game &instance)
                 .withComponent(CollisionBox(16, 4, 0, 0 ))
                 .withComponent(Destructible(1))
                 .withComponent(Velocity(WCP_SPEED, 0))
-                .withComponent(GameObject::Projectile)
+                .withComponent(GameObject::PlayerProjectile)
                 .build();
             cannon.status = WaveCannon::Status::Inactive;
         }

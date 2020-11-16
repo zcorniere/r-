@@ -22,8 +22,14 @@ add_executable(r-type_server
                             source/GameServer.cpp
                             source/AssetsServer.cpp
                             source/Storage.cpp
+                            source/Enemies.cpp
+                            source/load_game.cpp
                             ${components}
                             ${systems}
 )
 
 target_link_libraries(r-type_server r-type_engine)
+
+add_executable(test_oriented_sprite
+  tests/src/test_oriented_sprite.cpp
+  source/components/OrientedSprite.cpp)

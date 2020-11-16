@@ -6,6 +6,7 @@ AnimMontage::AnimMontage(const std::string &_spritesheet, std::vector<unsigned> 
 
 void AnimMontage::play()
 {
+    ticksCount = 0;
     m_status = Status::Playing;
 }
 

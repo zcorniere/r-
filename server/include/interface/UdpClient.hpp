@@ -4,6 +4,7 @@
 #include "MsgQueue.hpp"
 #include "Protocol.hpp"
 #include "interface/IClient.hpp"
+#include "Snitch.hpp"
 
 #include <iostream>
 #include <boost/asio.hpp>
@@ -46,61 +47,18 @@ class Client: public IClient<T> {
         }
 
     protected:
-        virtual void readHeader()final {
-            socket.async_receive_from(boost::asio::buffer(&tmp.head, sizeof(MessageHeader<T>)),
-               *remote_endpoint,
-               [this](std::error_code ec, std::size_t len) {
-                   (void)len;
-                    if (!ec) {
-                        if (tmp.head.size > 0) {
-                            tmp.body.resize(tmp.head.size);
-                            readBody();
-                        } else {
-                            addToMsgQueue();
-                        }
-                    } else {
-                        std::cerr << "[" << this->getId() << "] Read Header failed: " << ec.message() << std::endl;
-                        socket.close();
-                    }
-            });
-        }
-        virtual void readBody()final {
-            socket.async_receive_from(boost::asio::buffer(tmp.body.data(), tmp.body.size()),
-               *remote_endpoint,
-               [this](std::error_code ec, std::size_t len) {
-                   (void)len;
-                    if (!ec) {
-                        addToMsgQueue();
-                    } else {
-                        std::cerr << "[" << this->getId() << "] Read Body failed: " << ec.message() << std::endl;
-                        socket.close();
-                    }
-            });
-        }
+        virtual void readHeader()final {}
+        virtual void readBody()final {}
 
-        virtual void writeHeader()final {
-            socket.async_send_to(
-                boost::asio::buffer(&q_out.front().head, sizeof(MessageHeader<T>)),
-                *remote_endpoint,
-                [this](std::error_code ec, std::size_t len) {
-                   (void)len;
-                    if (!ec) {
-                        if (q_out.front().body.size() > 0) {
-                            writeBody();
-                        } else {
-                            q_out.pop_front();
-                            if (!q_out.empty())
-                                writeHeader();
-                        }
-                    } else {
-                        std::cerr << "[" << this->getId() << "] Write Header failed: " << ec.message() << std::endl;
-                        socket.close();
-                    }
-            });
-        }
+        virtual void writeHeader()final { writeBody(); }
         virtual void writeBody()final {
+            auto len = sizeof(q_out.front().head) + q_out.front().head.size;
+            std::vector<std::byte> buffer;
+            buffer.resize(len);
+            std::memcpy(buffer.data(), &q_out.front().head, sizeof(q_out.front().head));
+            std::memcpy(buffer.data() + sizeof(q_out.front().head), q_out.front().body.data(), q_out.front().body.size());
             socket.async_send_to(
-                boost::asio::buffer(q_out.front().body.data(), q_out.front().body.size()),
+                boost::asio::buffer(buffer, buffer.size()),
                 *remote_endpoint,
                 [this](std::error_code ec, std::size_t len) {
                    (void)len;
@@ -109,7 +67,7 @@ class Client: public IClient<T> {
                         if (!q_out.empty())
                             writeHeader();
                     } else {
-                        std::cerr << "[" << this->getId() << "] Write Body failed: " << ec.message() << std::endl;
+                        Snitch::err(std::to_string(this->getId())) << "Write Header failed: " << ec.message() << Snitch::endl;
                         socket.close();
                     }
             });

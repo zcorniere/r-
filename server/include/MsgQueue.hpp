@@ -5,6 +5,8 @@
 #ifndef _MSGQUEUE_HPP_
 #define _MSGQUEUE_HPP_
 
+#include "Snitch.hpp"
+
 template<typename T>
 class MsgQueue {
     public:
@@ -13,10 +15,16 @@ class MsgQueue {
         virtual ~MsgQueue() { this->clear(); }
 
         const T& front() {
+            if (this->size() == 0) {
+                throw std::runtime_error("queue is empty");
+            }
             std::scoped_lock lock(q_mut);
             return q.front();
         }
         const T& back() {
+            if (this->size() == 0) {
+                throw std::runtime_error("queue is empty");
+            }
             std::scoped_lock lock(q_mut);
             return q.back();
         }
@@ -33,12 +41,18 @@ class MsgQueue {
             q.clear();
         }
         T pop_front() {
+            if (this->size() == 0) {
+                throw std::runtime_error("queue is empty");
+            }
             std::scoped_lock lock(q_mut);
             T t = std::move(q.front());
             q.pop_front();
             return t;
         }
         T pop_back() {
+            if (this->size() == 0) {
+                throw std::runtime_error("queue is empty");
+            }
             std::scoped_lock lock(q_mut);
             T t = std::move(q.front());
             q.pop_back();

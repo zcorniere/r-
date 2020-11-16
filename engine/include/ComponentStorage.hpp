@@ -14,7 +14,11 @@
 #include <typeindex>
 #include <vector>
 #include <stdexcept>
+#include <variant>
+#include <type_traits>
 #include <boost/type_index.hpp>
+
+class Enemy;
 
 class ComponentStorage {
 class EntityBuilder;
@@ -110,6 +114,7 @@ private:
 private:
 
     friend EntityBuilder;
+    friend Enemy;
     class EntityBuilder {
     private:
         unsigned m_id;
@@ -121,6 +126,18 @@ private:
         EntityBuilder &withComponent(T component)
         {
             m_dest.storeComponent<T>(component, m_id);
+            return *this;
+        }
+        template <typename... Variants>
+        EntityBuilder &withComponent(std::variant<Variants...> component)
+        {
+            std::visit(
+                [this](auto &&component) {
+                    using T = std::decay_t<decltype(component)>;
+                    m_dest.storeComponent<T>(
+                        component, m_id);
+                },
+                component);
             return *this;
         }
         unsigned build();

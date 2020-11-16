@@ -7,10 +7,12 @@
 #include "AssetsServer.hpp"
 #include "Snitch.hpp"
 
+using namespace protocol::tcp;
+
 const std::unordered_map<std::string, protocol::tcp::AssetsPackage::Type> ext_to_type {
-    {".png", protocol::tcp::AssetsPackage::Texture},
-    {".gif", protocol::tcp::AssetsPackage::Texture},
-    {".mp3", protocol::tcp::AssetsPackage::Sound}
+    {".png", AssetsPackage::Texture},
+    {".gif", AssetsPackage::Texture},
+    {".mp3", AssetsPackage::Sound}
 };
 
 AssetsServer::AssetsServer(const unsigned port, const std::string &path):
@@ -33,32 +35,37 @@ AssetsServer::~AssetsServer()
     this->stop();
 }
 
-void AssetsServer::onMessage(Message<protocol::tcp::AssetsRequest> msg) {
-    Message<protocol::tcp::AssetsRequest> rep(protocol::MAGIC_NB_1, protocol::MAGIC_NB_2);
+void AssetsServer::onMessage(Message<AssetsRequest> msg) {
+    Message<AssetsRequest> rep(protocol::MAGIC_NB_1, protocol::MAGIC_NB_2);
     if (msg.validMagic(protocol::MagicPair) && msg.remote) {
         switch (msg.head.code) {
-            case protocol::tcp::AssetsRequest::AskAssets: {
-                auto body = reinterpret_cast<protocol::tcp::AssetsAsk *>(msg.body.data());
-                protocol::tcp::AssetsPackage reply;
+            case AssetsRequest::AskAssets: {
+                rep.head.code = AssetsRequest::AssetsPackage;
+                auto body = reinterpret_cast<AssetsAsk *>(msg.body.data());
+                Snitch::debug("AssetsAsk") << sizeof(AssetsAsk) << Snitch::endl;
+                Snitch::debug("AssetsPackage") << sizeof(AssetsPackage) << Snitch::endl;
                 try {
                     auto path_data = stor->getPathFromId(body->id);
-                    if (!path_data)
+                    if (!path_data) {
+                        Snitch::warn("ASSETS_SERVER") << "Invalid data: " << body->id << Snitch::endl;
                         break;
-                    reply.data = this->getFileAt(*path_data);
-                    reply.config = this->getFileAt(this->getConfigForAssets(*path_data));
-                    if (reply.data.size() != 0 && reply.config.size() != 0) {
-                        reply.size_data = reply.data.size();
-                        reply.size_config = reply.config.size();
-                        reply.id = body->id;
-                        reply.type = assets_map.at(body->id);
-                        rep.head.code = msg.head.code;
-                        rep.insert(reply);
+                    }
+                    auto data = this->getFileAt(*path_data);
+                    auto config = this->getFileAt(this->getConfigForAssets(*path_data));
+                    if (data.size() != 0 && config.size() != 0) {
+                        rep.insert(assets_map.at(body->id));
+                        rep.insert(body->id);
+                        rep.insert(data.size());
+                        rep.insert(config.size());
+                        rep.insert(data);
+                        rep.insert(config);
+                        Snitch::debug() << rep.head << Snitch::endl;
                     }
                 } catch (const std::runtime_error &re) {
-                    Snitch::warn("ASSETS_SERVER") << "Execption " << re.what() << Snitch::endl;
+                    Snitch::err("ASSETS_SERVER") << "Exception " << re.what() << Snitch::endl;
                 }
             } break;
-            default: break;
+            default: Snitch::warn("ASSETS_SERVER") << "Unknown comand" << Snitch::endl; break;
         }
     }
     msg.remote->send(rep);
@@ -79,6 +86,7 @@ std::vector<uint8_t> AssetsServer::getFileAt(const std::string &path) {
                   std::back_inserter(ret));
         file.close();
     }
+    Snitch::debug(path) << ret.size() << Snitch::endl;
     return ret;
 }
 

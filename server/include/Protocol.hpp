@@ -28,7 +28,7 @@ namespace udp {
     struct AssetsList {
         unsigned port;
         std::size_t size;
-        std::vector<long> list;
+        std::vector<uint64_t> list;
     };
 
     namespace transform {
@@ -46,15 +46,15 @@ namespace udp {
         };
     }
     struct Sprite {
-        long id_rectangle;
-        long id_assets;
+        uint64_t id_rectangle;
+        uint64_t id_assets;
         transform::Rotation rot;
         transform::Position pos;
         transform::Scale scale;
     };
 
     struct Sound {
-        long id;
+        uint64_t id;
         float volume;
         float pitch;
         bool isLooping;
@@ -85,12 +85,12 @@ namespace tcp {
         AskAssets = 0x01,
         AssetsPackage = 0x02,
     };
-    struct AssetsAsk { long id; };
+    struct AssetsAsk { uint64_t id; };
 
     // Reply by the server
     struct AssetsPackage {
-        enum Type {Sound = 0x01, Texture = 0x02} type;
-        long id;
+        enum Type: bool {Sound = 0x00, Texture = 0x01} type;
+        uint64_t id;
         std::size_t size_data;
         std::size_t size_config;
         std::vector<uint8_t> data;

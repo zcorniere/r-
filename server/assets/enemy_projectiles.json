@@ -1,0 +1,32 @@
+{
+  "sprites": [
+    {
+      "id": 0,
+      "origin_x": 136,
+      "origin_y": 6,
+      "width": 7,
+      "height": 6
+    },
+    {
+      "id": 1,
+      "origin_x": 153,
+      "origin_y": 6,
+      "width": 7,
+      "height": 6
+    },
+    {
+      "id": 2,
+      "origin_x": 170,
+      "origin_y": 6,
+      "width": 7,
+      "height": 6
+    },
+    {
+      "id": 3,
+      "origin_x": 188,
+      "origin_y": 6,
+      "width": 7,
+      "height": 6
+    }
+  ]
+}
