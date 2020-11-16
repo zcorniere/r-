@@ -65,6 +65,7 @@ void Game::disconnect()
 {
     client.disconnect();
     client.reset();         // TODO necessary ?
+    set_intent("loading");
 }
 
 void Game::connect(const std::string &address)

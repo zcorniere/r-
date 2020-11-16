@@ -43,7 +43,7 @@ Console::Console(std::optional<std::string> &view_intent, bidimensional::Transfo
     Iwidget(view_intent, parent_trans, main_window)
 {
     auto color = theme->getColor("Black").value();
-    color.a /= 2;
+    color.a /= 1.75;
     background_color = color;
     border.setOutlineColor(theme->getColor("Black").value());
     border.setFillColor(theme->getColor("Transparent").value());
