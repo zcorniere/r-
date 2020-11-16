@@ -22,4 +22,8 @@ class DeathSpeaker : public Speaker {
         using Speaker::Speaker;
 };
 
+class ShootSpeaker : public Speaker {
+        using Speaker::Speaker;
+};
+
 #endif

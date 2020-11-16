@@ -37,6 +37,7 @@ void load_game(Game &game)
     game.componentStorage.registerComponent<EnemyGroup>();
     game.componentStorage.registerComponent<Speaker>();
     game.componentStorage.registerComponent<DeathSpeaker>();
+    game.componentStorage.registerComponent<ShootSpeaker>();
 
     /*
     ** SYSTEMS
@@ -114,6 +115,8 @@ void load_game(Game &game)
     game.systemStorage.addSystem(speaker_player);
     game.systemStorage.addSystem(death_speaker_player);
     game.systemStorage.addSystem(death_speaker_activator);
+    game.systemStorage.addSystem(shoot_speaker_player);
+    game.systemStorage.addSystem(shoot_speaker_activator);
 
     /*
     ** STATES

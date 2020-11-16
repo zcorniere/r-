@@ -71,5 +71,7 @@ void run_enemy_group(Game &game, EnemyGroup &group, Transform &transform,
 void speaker_player(IAudioModule &module, Speaker &speaker);
 void death_speaker_player(IAudioModule &module, DeathSpeaker &speaker);
 void death_speaker_activator(DeathSpeaker &speaker, const Destructible &destructible);
+void shoot_speaker_player(IAudioModule &module, ShootSpeaker &speaker);
+void shoot_speaker_activator(ShootSpeaker &speaker, const WaveCannon &cannon);
 
 #endif

@@ -1,5 +1,6 @@
 #include "components/Speaker.hpp"
 #include "components/Destructible.hpp"
+#include "components/WaveCannon.hpp"
 #include "Game.hpp"
 #include <cstdlib>
 
@@ -25,9 +26,26 @@ void death_speaker_player(IAudioModule &module, DeathSpeaker &speaker)
     }
 }
 
+void shoot_speaker_player(IAudioModule &module, ShootSpeaker &speaker)
+{
+    float factor = static_cast<float>(rand() % 200) / 100;
+    float pitch_variation = speaker.variation * factor - speaker.variation;
+
+    if (speaker.status == Speaker::Status::Starting) {
+        module.playSound(speaker.asset, speaker.volume, 1 + pitch_variation);
+        speaker.status = Speaker::Status::Playing;
+    }
+}
+
 void death_speaker_activator(DeathSpeaker &speaker, const Destructible &destructible)
 {
     if (speaker.status == Speaker::Status::Inactive
     && destructible.status == Destructible::Status::Dying)
+        speaker.play();
+}
+
+void shoot_speaker_activator(ShootSpeaker &speaker, const WaveCannon &cannon)
+{
+    if (cannon.status == WaveCannon::Status::Firing)
         speaker.play();
 }

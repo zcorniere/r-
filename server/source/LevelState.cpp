@@ -52,6 +52,7 @@ void LevelState::onStart(Game &instance)
         .withComponent(RestrictionBox(0, 0, 1850, 1080))
         .withComponent(WaveCannon())
         .withComponent(DeathSpeaker("../draft/assets/playership-explosion.ogg"))
+        .withComponent(ShootSpeaker("../draft/assets/laser-burst.ogg", 0.1, 0.1))
         .build();
 
     // Floor CollisionBox
@@ -80,6 +81,9 @@ void LevelState::onStart(Game &instance)
         .withComponent(Transform({2000, 400}, {0, 0}, {3, 3}))
         .withComponent(Destructible{0})
         .build();
+
+    // Playing music
+    instance.audioModule.value().get().playSound("../server/assets/stage-1.ogg", 0.7);
 }
 
 void LevelState::onPause(Game &instance)
