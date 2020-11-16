@@ -4,7 +4,8 @@
 #include <cmath>
 
 const Enemy Enemy::BUG = {
-    CollisionBox{27, 25, 4, 5, 1, {GameObject::Enemy, GameObject::EnemyProjectile}},
+    CollisionBox{
+        27, 25, 4, 5, 1, {GameObject::Enemy, GameObject::EnemyProjectile}},
     Trajectory{[](Transform &t) {
         t.location.x -= 1;
         t.location.y = std::cos(t.location.x * 0.01) * 200 + 300;
@@ -16,7 +17,8 @@ const Enemy Enemy::BUG = {
 };
 
 const Enemy Enemy::PATA_PATA = {
-    CollisionBox{21, 20, 4, 2, 1, {GameObject::Enemy, GameObject::EnemyProjectile}},
+    CollisionBox{
+        21, 20, 4, 2, 1, {GameObject::Enemy, GameObject::EnemyProjectile}},
     PatternLoop{{Pattern{{-2, 2}, 60}, Pattern{{-2, -2}, 60}}},
     AnimationLoop{{{"enemy_flap", 0},
                    {"enemy_flap", 1},
@@ -31,8 +33,7 @@ const Enemy Enemy::PATA_PATA = {
     DeathSpeaker("../draft/assets/enemy-explosion.ogg", 0.5, 0.5)
 };
 
-ComponentStorage::EntityBuilder Enemy::build(
-    ComponentStorage::EntityBuilder builder) const
+void Enemy::build(ComponentStorage::EntityBuilder &builder) const
 {
     if (auto animation = std::get_if<AnimationLoop>(&this->animation)) {
         builder.withComponent(animation->frames[0]);
@@ -44,7 +45,7 @@ ComponentStorage::EntityBuilder Enemy::build(
     if (std::holds_alternative<PatternLoop>(this->movement)) {
         builder.withComponent(Velocity{0, 0});
     }
-    return builder.withComponent(this->collision)
+    builder.withComponent(this->collision)
         .withComponent(this->movement)
         .withComponent(this->animation)
         .withComponent(Destructible{this->health, true})

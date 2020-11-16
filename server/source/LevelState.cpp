@@ -64,14 +64,16 @@ void LevelState::onStart(Game &instance)
         .build();
 
     // Bugs Enemies
-    Enemy::BUG.build(instance.componentStorage.buildEntity())
+    instance.componentStorage.buildEntity()
+        .withBuilder(Enemy::BUG)
         .withComponent(Transform({2000, 400}, {0, 0}, {3, 3}))
         .withComponent(BydoShooter())
         .withComponent(PlayerScanner(1500))
         .build();
 
     // Example Enemy
-    Enemy::PATA_PATA.build(instance.componentStorage.buildEntity())
+    instance.componentStorage.buildEntity()
+        .withBuilder(Enemy::PATA_PATA)
         .withComponent(Transform({500, 200}, {0, 0}, {3, 3}))
         .build();
 

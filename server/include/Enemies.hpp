@@ -5,6 +5,7 @@
 #include "components/AnimMontage.hpp"
 #include "components/AnimationLoop.hpp"
 #include "components/CollisionBox.hpp"
+#include "components/OrientedSprite.hpp"
 #include "components/PatternLoop.hpp"
 #include "components/Sprite.hpp"
 #include "components/Trajectory.hpp"
@@ -23,8 +24,7 @@ struct Enemy {
     static const Enemy BUG;
     static const Enemy PATA_PATA;
 
-    ComponentStorage::EntityBuilder build(
-        ComponentStorage::EntityBuilder builder) const;
+    void build(ComponentStorage::EntityBuilder &builder) const;
 };
 
 #endif // RTYPE_ENEMIES_H_
