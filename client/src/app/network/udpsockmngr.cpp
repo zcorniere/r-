@@ -36,12 +36,6 @@ void network::UdpSockMngr::do_receive()
         auto size = socket.receive(boost::asio::buffer(buffer, len));
         buffer.resize(size);
 
-        std::cout << "[DEBUG][UDP] " << buffer.size() << " bytes received" << std::endl;
-        for (auto i = 0; i < buffer.size(); ++i) {
-            std::cout << std::hex << int(buffer[i]) << " ";
-        }
-        std::cout << std::endl;
-
         protocol::MessageReceived<UdpCode> message(std::move(buffer));
         if (message.head().firstbyte != protocol::magic_number.first || message.head().secondbyte != protocol::magic_number.second)
             do_receive();
@@ -51,7 +45,7 @@ void network::UdpSockMngr::do_receive()
             return;
         }
         protocol::MessageReceived<UdpCode> current(std::move(message));
-        if (current.head().firstbyte == protocol::magic_number.first && current.head().secondbyte == protocol::magic_number.second)
+        if (current.head().firstbyte == protocol::magic_number.first && current.head().secondbyte == protocol::magic_number.second && len >= sizeof(protocol::MessageHeader<UdpCode>))
             received_messages.push_back(current);
         do_receive();
     });

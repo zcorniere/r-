@@ -116,11 +116,6 @@ void network::TcpSockMngr::do_receive()
         buff.resize(len);
         auto size = socket.receive(boost::asio::buffer(buff, len));
         buff.resize(size);
-//        std::cout << "[DEBUG][TCP] " << socket.available() << " bytes received" << std::endl;
-//        for (auto i = 0; i < socket.available(); ++i) {
-//            std::cout << std::hex << int(buff[i]) << " ";
-//        }
-//        std::cout << std::endl;
         std::memcpy(&header, buff.data(), size);
         // check the header
         if (header.firstbyte != protocol::magic_number.first || header.secondbyte != protocol::magic_number.second)
@@ -133,8 +128,6 @@ void network::TcpSockMngr::do_receive()
             console.log("Error [TCP]: Server sent empty body");
             return;
         }
-        std::cout << "header.body_size : " << std::hex << header.body_size << " : " << std::dec << header.body_size << std::endl;
-        std::cout << "socket.available() : " << socket.available() << std::endl;
         // get the body & work on it
         auto asset_id = receiveAsset(header.body_size);
         // update my assets_ids_list
