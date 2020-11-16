@@ -96,7 +96,9 @@ private:
                 return;
             }
         }
-        Snitch::warn() << "Couldn't store unregistered component '" << typeid(T).name() << "'" << Snitch::endl;;
+        Snitch::warn() << "Couldn't store unregistered component '"
+                       << boost::typeindex::type_id_with_cvr<T>().pretty_name()
+                       << "'" << Snitch::endl;
     }
 
     template<typename T>
