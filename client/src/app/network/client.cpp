@@ -40,7 +40,7 @@ void network::Client::statePlay()
                 it->sprite.setScale(sprite.scale.x, sprite.scale.y);
                 sprites.push_back(it->sprite);
             } else
-                console->log("Error [Play]: Sprite specified not found");
+                console->log("Error [Play]: Sprite specified not found : id_asset : " + std::to_string(sprite.id_asset) + " id_tile + " + std::to_string(sprite.id_sprite));
         }
         if (message.head().code == UdpCode::Sound) {
             protocol::udp::from_server::Sound sound;

@@ -50,7 +50,9 @@ void network::UdpSockMngr::do_receive()
             do_receive();
             return;
         }
-        received_messages.push_back(std::move(message));
+        protocol::MessageReceived<UdpCode> current(std::move(message));
+        if (current.head().firstbyte == protocol::magic_number.first && current.head().secondbyte == protocol::magic_number.second)
+            received_messages.push_back(current);
         do_receive();
     });
 }
