@@ -69,10 +69,7 @@ class Client: public IClient<T> {
                 boost::asio::buffer(buffer, buffer.size()),
                 *remote_endpoint,
                 [this](std::error_code ec, std::size_t len) {
-<<<<<<< HEAD
 //                    std::cout << "i just sent " << len << " bytes to client" << std::endl;
-=======
->>>>>>> 36e8ed833004fdedc90ad26b9a69088fcce3453c
                    (void)len;
                     if (!ec) {
                         q_out.pop_front();
