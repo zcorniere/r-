@@ -125,14 +125,15 @@ namespace protocol {
         };
         namespace from_server {
             struct Sprite {
-                uint64_t id_asset;     // the tilesheet
                 uint64_t id_sprite;    // the sprite id of the tilesheet
+                uint64_t id_asset;     // the tilesheet
                 transform::Rotation rot;
                 transform::Position pos;
                 transform::Scale scale;
             };
             struct Sound {
                 uint64_t id;
+                float volume;
                 float pitch;
                 bool isLooping;
             };

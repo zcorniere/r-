@@ -12,6 +12,10 @@
 
 void network::Client::statePlay()
 {
+    std::cout << "sizeof(protocol::udp::Sound): " << sizeof(protocol::udp::from_server::Sound) << std::endl;
+    std::cout << "sizeof(protocol::udp::Sprite): " << sizeof(protocol::udp::from_server::Sprite) << std::endl;
+    std::cout << "sizeof(protocol::udp::Input): " << sizeof(protocol::udp::from_client::Input) << std::endl;
+    std::cout << "###########" << std::endl;
     auto message_list = udp->receive();
     if (message_list.empty())
         return;
