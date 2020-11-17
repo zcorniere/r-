@@ -20,6 +20,12 @@ void SfmlAudioModule::playSound(const std::string &name, float volume,
     asset.stop();
     asset.play();
 }
+void SfmlAudioModule::stopSound(const std::string &name)
+{
+    auto path = m_asset_location / name;
+    if (m_cached_assets.contains(path))
+        m_cached_assets[path].stop();
+}
 
 sf::Music &SfmlAudioModule::getSound(const std::filesystem::path &asset_path)
 {

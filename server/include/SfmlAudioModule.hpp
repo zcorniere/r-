@@ -13,6 +13,7 @@ class SfmlAudioModule : public IAudioModule
 
     void update() override;
     void playSound(const std::string &name, float volume, float pitch) override;
+    void stopSound(const std::string &name) override;
 
   private:
     sf::Music &getSound(const std::filesystem::path &asset_path);

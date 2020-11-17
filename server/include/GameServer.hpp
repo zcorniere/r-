@@ -34,6 +34,7 @@ class GameServer:
 
         // Required by IAudioModule
         virtual void playSound(const std::string &name, float volume, float pitch)final;
+        void stopSound(const std::string &name) override;
 
         // Required by IDisplayModule
         virtual void drawSprite(const std::string &name, Transform const &transf, unsigned tile_id)final;

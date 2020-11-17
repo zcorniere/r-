@@ -58,6 +58,7 @@ namespace udp {
         float volume;
         float pitch;
         bool isLooping;
+        bool isPlaying;
     };
 
     namespace keys {
