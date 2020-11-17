@@ -56,6 +56,7 @@ class Server: public IServer<T> {
                     } else {
                         Snitch::err("TCP_SERVER") << "Connection Error: " << ec.message() << Snitch::endl;
                     }
+                    waitForClientConnection();
             });
         }
         virtual void msgClient(const Message<T> &msg, std::shared_ptr<IClient<T>> cli)final {
