@@ -61,7 +61,7 @@ namespace udp {
     };
 
     namespace keys {
-        constexpr short ArraySize = 5;
+        constexpr short ArraySize = 255;
         typedef ::Input Keys;
     };
     struct Event {
