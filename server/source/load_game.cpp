@@ -40,6 +40,7 @@ void load_game(Game &game)
     game.componentStorage.registerComponent<DeathSpeaker>();
     game.componentStorage.registerComponent<ShootSpeaker>();
     game.componentStorage.registerComponent<PlayerBarracks>();
+    game.componentStorage.registerComponent<BackgroundMusic>();
 
     /*
     ** SYSTEMS
@@ -119,6 +120,7 @@ void load_game(Game &game)
     game.systemStorage.addSystem(death_speaker_activator);
     game.systemStorage.addSystem(shoot_speaker_player);
     game.systemStorage.addSystem(shoot_speaker_activator);
+    game.systemStorage.addSystem(play_background_music);
 
     // player barracks
     game.systemStorage.addSystem(player_barracks_filler);

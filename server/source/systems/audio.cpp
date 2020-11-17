@@ -1,6 +1,7 @@
 #include "components/Speaker.hpp"
 #include "components/Destructible.hpp"
 #include "components/WaveCannon.hpp"
+#include "components/BackgroundMusic.hpp"
 #include "Game.hpp"
 #include <cstdlib>
 
@@ -48,4 +49,13 @@ void shoot_speaker_activator(ShootSpeaker &speaker, const WaveCannon &cannon)
 {
     if (cannon.status == WaveCannon::Status::Firing)
         speaker.play();
+}
+
+void play_background_music(IAudioModule &audio, BackgroundMusic &music)
+{
+    music.counter++;
+    if (music.counter > 20) {
+        audio.playSound(music.name, music.volume, 1, true);
+        music.counter = 0;
+    }
 }

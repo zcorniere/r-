@@ -17,6 +17,7 @@
 #include "components/EnemyGroup.hpp"
 #include "components/Speaker.hpp"
 #include "components/PlayerBarracks.hpp"
+#include "components/BackgroundMusic.hpp"
 #include "Enemies.hpp"
 #include "load_game.hpp"
 #include <iostream>
@@ -63,7 +64,9 @@ void LobbyState::onStart(Game &instance)
         .withComponent(PlayerBarracks())
         .build();
 
-    instance.audioModule.value().get().playSound("title", 0.7);
+    instance.componentStorage.buildEntity()
+        .withComponent(BackgroundMusic{"title", 0.7})
+        .build();
 }
 
 void LobbyState::onPause(Game &instance)

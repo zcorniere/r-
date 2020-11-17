@@ -82,7 +82,9 @@ void LevelState::onStart(Game &instance)
         .build();
 
     // Playing music
-    instance.audioModule.value().get().playSound("stage-1", 0.7);
+    instance.componentStorage.buildEntity()
+        .withComponent(BackgroundMusic{"stage-1", 0.7})
+        .build();
 
     /*
     ** WALLS

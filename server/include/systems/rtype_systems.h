@@ -19,6 +19,7 @@
 #include "components/EnemyGroup.hpp"
 #include "components/Speaker.hpp"
 #include "components/PlayerBarracks.hpp"
+#include "components/BackgroundMusic.hpp"
 
 // collisions
 void collisions_update(Game &instance);
@@ -78,5 +79,6 @@ void death_speaker_player(IAudioModule &module, DeathSpeaker &speaker);
 void death_speaker_activator(DeathSpeaker &speaker, const Destructible &destructible);
 void shoot_speaker_player(IAudioModule &module, ShootSpeaker &speaker);
 void shoot_speaker_activator(ShootSpeaker &speaker, const WaveCannon &cannon);
+void play_background_music(IAudioModule &audio, BackgroundMusic &music);
 
 #endif

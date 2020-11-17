@@ -60,10 +60,13 @@ void network::Client::statePlay()
                 return true;
             });
             if (it != assets.end()) {
-                it->sound.setPitch(sound.pitch);
-                it->sound.setVolume(sound.volume);
-                it->sound.setLoop(sound.isLooping);
-                it->sound.play();
+                if (it->sound.getStatus() != sf::SoundSource::Status::Playing) {
+                    it->sound.setPitch(sound.pitch);
+                    it->sound.setVolume(sound.volume * 100);
+                    it->sound.setLoop(sound.isLooping);
+                    it->sound.play();
+                }
+                console->log("playing sound " + std::to_string(sound.id));
             } else
                 console->log("Error [Play]: Sound specified not found");
         }

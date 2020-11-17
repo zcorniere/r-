@@ -26,11 +26,13 @@ void SfmlAudioModule::playSound(const std::string &name, float volume,
     }
     sf::Music &asset = m_cached_assets[name];
 
-    asset.setVolume(volume * 100);
-    asset.setPitch(pitch);
-    asset.setLoop(looping);
-    asset.stop();
-    asset.play();
+    if (asset.getStatus() != sf::SoundSource::Status::Playing) {
+        asset.setVolume(volume * 100);
+        asset.setPitch(pitch);
+        asset.setLoop(looping);
+        asset.stop();
+        asset.play();
+    }
 }
 void SfmlAudioModule::stopSound(const std::string &name)
 {
