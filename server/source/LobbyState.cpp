@@ -34,6 +34,10 @@ constexpr float SCROLLING_SPEED = 0.5;
 void LobbyState::onStart(Game &instance)
 {
     instance.componentStorage.buildEntity()
+        .withComponent(Sprite("space_background", 0))
+        .withComponent(Transform({0,0}, {0,0}, {1800, 960}))
+        .build();
+    instance.componentStorage.buildEntity()
         .withComponent(Sprite("menus", 0))
         .withComponent(Transform({556.5, -100}, {0, 0}, {1, 1}))
         .withComponent(Trajectory{[](Transform &t) {
@@ -58,6 +62,8 @@ void LobbyState::onStart(Game &instance)
     instance.componentStorage.buildEntity()
         .withComponent(PlayerBarracks())
         .build();
+
+    instance.audioModule.value().get().playSound("../server/assets/title.ogg", 0.7);
 }
 
 void LobbyState::onPause(Game &instance)
