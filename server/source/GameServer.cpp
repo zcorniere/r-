@@ -41,7 +41,7 @@ void GameServer::update() {
 }
 
 void GameServer::onMessage(Message<RequestCode> msg) {
-    Snitch::debug("GAME_SERVER") << msg << Snitch::endl;
+    // Snitch::debug("GAME_SERVER") << msg << Snitch::endl;
     if (msg.validMagic(protocol::MagicPair) && msg.remote) {
         if (!list.contains(msg.remote->getId())) {
             list.insert({msg.remote->getId(), {msg.remote, Player{}}});
@@ -52,7 +52,7 @@ void GameServer::onMessage(Message<RequestCode> msg) {
             list.at(msg.remote->getId()).second.ready = true;
             break;
         case RequestCode::Input: {
-            Snitch::debug() << sizeof(short) + sizeof(MousePos) + InputSize << Snitch::endl;
+            // Snitch::debug() << sizeof(short) + sizeof(MousePos) + InputSize << Snitch::endl;
             protocol::udp::Input body{};
             std::memcpy(&body.nb_keys, msg.body.data(), sizeof(body.nb_keys));
             std::memcpy(body.keys.data(), msg.body.data() + sizeof(body.nb_keys), InputSize);
@@ -100,7 +100,11 @@ void GameServer::playSound(const std::string &name, float volume, float pitch) {
     s.isLooping = false;
     s.isPlaying = true;
     auto v = stor->getIdFromName(name);
-    s.id = v ? *v : -1;
+    if (!v) {
+        Snitch::warn() << "Could not find sound " << name << Snitch::endl;
+        return;
+    }
+    s.id = *v;
     rep.insert(s);
     for (const auto &[i, e] : list) {
         if (e.second.ready) {
@@ -121,7 +125,11 @@ void GameServer::stopSound(const std::string &name)
     s.isLooping = false;
     s.isPlaying = false;
     auto v = stor->getIdFromName(name);
-    s.id = v ? *v : -1;
+    if (!v) {
+        Snitch::warn() << "Could not find sound " << name << Snitch::endl;
+        return;
+    }
+    s.id = *v;
     rep.insert(s);
     for (const auto &[i, e]: list) {
         if (e.second.ready) {

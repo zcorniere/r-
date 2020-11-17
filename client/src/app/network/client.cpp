@@ -50,6 +50,7 @@ void network::Client::statePlay()
         }
         if (message.head().code == UdpCode::Sound) {
             protocol::udp::from_server::Sound sound;
+            assert(message.body().size() == sizeof(sound));
             std::memcpy(&sound, message.body().data(), message.body().size());
             auto it = std::find_if(assets.begin(), assets.end(), [&](const auto &item){
                 if (item.type != Asset::Type::Sound)
@@ -67,7 +68,7 @@ void network::Client::statePlay()
                     it->sound.stop();
                 }
             } else
-                console->log("Error [Play]: Sound specified not found");
+                console->log("Error [Play]: Sound specified not found: " + std::to_string(sound.id));
         }
     }
 
