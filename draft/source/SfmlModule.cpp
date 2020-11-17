@@ -89,15 +89,6 @@ void SfmlModule::update()
     m_window.clear();
 }
 
-std::vector<Input> SfmlModule::getInputEvents(unsigned player)
-{
-    std::vector<Input> inputs;
-
-    std::swap(inputs, m_pending_inputs);
-
-    return inputs;
-}
-
 Dimensional SfmlModule::getCursorLocation(unsigned player)
 {
     sf::Vector2i position = sf::Mouse::getPosition();

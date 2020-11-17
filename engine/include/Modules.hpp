@@ -98,7 +98,6 @@ public:
 
 class IInputModule : public virtual IModule {
 public:
-    virtual std::vector<Input> getInputEvents(unsigned player) = 0;
     virtual Dimensional getCursorLocation(unsigned player) = 0;
     virtual bool isKeyPressed(unsigned player, Input key) = 0;
 };

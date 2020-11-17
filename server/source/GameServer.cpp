@@ -54,13 +54,11 @@ void GameServer::onMessage(Message<RequestCode> msg) {
             std::memcpy(body.keys.data(), msg.body.data() + sizeof(body.nb_keys), InputSize);
             std::memcpy(&body.pos, msg.body.data() + sizeof(body.nb_keys) + InputSize, sizeof(body.pos));
             Snitch::debug("GAME_SERVER") << "nb_key: " << body.nb_keys << Snitch::endl;
-            list.at(msg.remote).nb_key = std::move(body.nb_keys);
-            for (const auto &i : body.keys ) {
-                list.at(msg.remote).input.push_back(i.key);
-                if (i.pressed)
-                    list.at(msg.remote).keys.insert(i.key);
+            for (unsigned i = 0; i < body.nb_keys; i++ ) {
+                if (body.keys.at(i).pressed)
+                    list.at(msg.remote).keys.insert(body.keys.at(i).key);
                 else
-                    list.at(msg.remote).keys.erase(i.key);
+                    list.at(msg.remote).keys.erase(body.keys.at(i).key);
             }
             list.at(msg.remote).cur_pos.y = std::move(body.pos.y);
             list.at(msg.remote).cur_pos.x = std::move(body.pos.x);
@@ -130,17 +128,6 @@ Dimensional GameServer::getCursorLocation(const unsigned player) {
         }
     }
     return Dimensional {-1, -1};
-}
-
-std::vector<::Input> GameServer::getInputEvents(const unsigned player) {
-    for (auto &[e, i] : list) {
-        if (e->getId() == player && i.ready) {
-            std::vector<::Input> ret = i.input;
-            i.input.clear();
-            return ret;
-        }
-    }
-    return std::vector<::Input>();
 }
 
 bool GameServer::isKeyPressed(unsigned player, ::Input key) {

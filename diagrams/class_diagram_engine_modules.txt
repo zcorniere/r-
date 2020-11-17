@@ -27,7 +27,7 @@ package "Modules" #DDDDDD {
 
         interface IInputModule {
         __ public __
-        +vector<Input> getInputEvents()
+        +bool isKeyPressed(unsigned player, Input key)
         +array<float, 2> getCursorLocation()
     }
     IModule <|-- IInputModule

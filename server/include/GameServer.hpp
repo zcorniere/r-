@@ -12,9 +12,7 @@
 
 struct Player {
     bool ready = false;
-    short nb_key = 0;
     std::unordered_set<protocol::udp::keys::Keys> keys;
-    std::vector<protocol::udp::keys::Keys> input;
     Dimensional cur_pos = {0, 0};
 };
 
@@ -42,7 +40,6 @@ class GameServer:
 
         // Required by IInputModule
         virtual Dimensional getCursorLocation(const unsigned player)final;
-        virtual std::vector<Input> getInputEvents(const unsigned player)final;
         virtual bool isKeyPressed(unsigned player, Input key)final;
 
     private:
