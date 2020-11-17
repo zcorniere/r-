@@ -2,6 +2,7 @@
 #include "LevelState.hpp"
 #include "LobbyState.hpp"
 #include "components/PlayerControlled.hpp"
+#include "components/WormHole.hpp"
 #include "systems/rtype_systems.h"
 
 #include <time.h>
@@ -41,6 +42,7 @@ void load_game(Game &game)
     game.componentStorage.registerComponent<ShootSpeaker>();
     game.componentStorage.registerComponent<PlayerBarracks>();
     game.componentStorage.registerComponent<BackgroundMusic>();
+    game.componentStorage.registerComponent<WormHole>();
 
     /*
     ** SYSTEMS
@@ -79,6 +81,7 @@ void load_game(Game &game)
     std::function<void(Game &)> collision_system = collisions_update;
     game.systemStorage.addSystem(collision_system);
     game.systemStorage.addSystem(collision_damages);
+    game.systemStorage.addSystem(collision_wormholes);
 
     // anim montages
     game.systemStorage.addSystem(play_deathmontages);

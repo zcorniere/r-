@@ -18,12 +18,16 @@
 #include "components/Speaker.hpp"
 #include "components/PlayerBarracks.hpp"
 #include "components/BackgroundMusic.hpp"
+#include "components/WormHole.hpp"
 #include "Enemies.hpp"
 #include "load_game.hpp"
+#include "LevelState.hpp"
 #include <iostream>
 #include <chrono>
 #include <cstdlib>
 #include <cmath>
+#include <memory>
+#include <functional>
 
 // Counted in milleseconds
 constexpr int STAR_SPAWN_DELAY = 250;
@@ -66,6 +70,13 @@ void LobbyState::onStart(Game &instance)
 
     instance.componentStorage.buildEntity()
         .withComponent(BackgroundMusic{"title", 0.7})
+        .build();
+
+    instance.componentStorage.buildEntity()
+        .withComponent(Transform({1900, 0}, {0, 0}, {1, 1}))
+        .withComponent(CollisionBox(100, 1000))
+        .withComponent(GameObject::Wall)
+        .withComponent(WormHole())
         .build();
 }
 

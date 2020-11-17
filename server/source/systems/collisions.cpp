@@ -3,7 +3,10 @@
 #include "components/CollisionBox.hpp"
 #include "components/GameObject.hpp"
 #include "components/Destructible.hpp"
+#include "components/WormHole.hpp"
+#include "LevelState.hpp"
 #include <algorithm>
+#include <memory>
 
 static bool are_colliding(Transform transform_a, CollisionBox box_a, \
 Transform transform_b, CollisionBox box_b) {
@@ -64,5 +67,21 @@ std::find(box.ignoreList.begin(), box.ignoreList.end(), box.collidingWith.value(
             destructible.status = Destructible::Status::Dying;
         else
             destructible.status = Destructible::Status::Dead;
+    }
+}
+
+void collision_wormholes(Game &instance)
+{
+    auto hole_params = instance.componentStorage.join_components(
+        instance.componentStorage.getComponents<WormHole>(),
+        instance.componentStorage.getComponents<CollisionBox>()
+    );
+
+    for (auto &[id, params] : hole_params) {
+        auto &[hole, box] = params;
+        if (box.collidingWith && box.collidingWith.value() == GameObject::PlayerShip) {
+            std::unique_ptr<AState> level_state(new LevelState);
+            instance.stateMachine.setState(std::move(level_state));
+        }
     }
 }

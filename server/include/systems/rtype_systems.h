@@ -24,6 +24,7 @@
 // collisions
 void collisions_update(Game &instance);
 void collision_damages(const CollisionBox &box, Destructible &destructible);
+void collision_wormholes(Game &instance);
 
 // movements
 void trajectory_applicator(Transform &transform, const Trajectory &trajectory);
