@@ -76,7 +76,7 @@ void LobbyState::onTick(Game &instance)
     last_update = std::chrono::system_clock::now();
 
     float scale = rand() % 4 + 3;
-    float height = rand() % 800;
+    float height = rand() % 1000;
     float speed = rand() % 5 + 1;
 
     m_stars_ids.push(
