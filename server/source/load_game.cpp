@@ -1,5 +1,6 @@
 #include "load_game.hpp"
 #include "LevelState.hpp"
+#include "LobbyState.hpp"
 #include "components/PlayerControlled.hpp"
 #include "systems/rtype_systems.h"
 
@@ -38,6 +39,7 @@ void load_game(Game &game)
     game.componentStorage.registerComponent<Speaker>();
     game.componentStorage.registerComponent<DeathSpeaker>();
     game.componentStorage.registerComponent<ShootSpeaker>();
+    game.componentStorage.registerComponent<PlayerBarracks>();
 
     /*
     ** SYSTEMS
@@ -118,13 +120,17 @@ void load_game(Game &game)
     game.systemStorage.addSystem(shoot_speaker_player);
     game.systemStorage.addSystem(shoot_speaker_activator);
 
+    // player barracks
+    game.systemStorage.addSystem(player_barracks_filler);
+
     /*
     ** STATES
     ** game related logic
     */
 
     std::unique_ptr<AState> level_state(new LevelState);
-    game.stateMachine.setState(std::move(level_state));
+    std::unique_ptr<AState> lobby_state(new LobbyState);
+    game.stateMachine.setState(std::move(lobby_state));
 }
 
 void build_walls(Game &instance, float scrolling_speed)

@@ -102,6 +102,8 @@ bool SfmlModule::isKeyPressed(unsigned player, Input key)
     sf::Keyboard::Key sfml_key =
         SfmlKeyMapping::rtype_key_mapping[static_cast<std::size_t>(key)];
 
+    if (player != 0)
+        return false;
     if (sfml_key != sf::Keyboard::Unknown)
         return sf::Keyboard::isKeyPressed(sfml_key);
     else

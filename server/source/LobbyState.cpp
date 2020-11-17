@@ -16,6 +16,7 @@
 #include "components/RestrictionBox.hpp"
 #include "components/EnemyGroup.hpp"
 #include "components/Speaker.hpp"
+#include "components/PlayerBarracks.hpp"
 #include "Enemies.hpp"
 #include "load_game.hpp"
 #include <iostream>
@@ -53,6 +54,9 @@ void LobbyState::onStart(Game &instance)
         .withComponent(AnimationLoop({
             {"menus", 10}, {"menus", 11}}, 50)
         )
+        .build();
+    instance.componentStorage.buildEntity()
+        .withComponent(PlayerBarracks())
         .build();
 }
 

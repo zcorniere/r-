@@ -18,6 +18,7 @@
 #include "components/RestrictionBox.hpp"
 #include "components/EnemyGroup.hpp"
 #include "components/Speaker.hpp"
+#include "components/PlayerBarracks.hpp"
 
 // collisions
 void collisions_update(Game &instance);
@@ -31,6 +32,9 @@ void restriction_applicator(Transform &transform, const RestrictionBox &box);
 // playership
 void playership_ct_input_getter(IInputModule &input, PlayerShipController &controller, const Destructible &destructible);
 void playership_animations(const PlayerShipController &controller, Sprite &sprite);
+
+// player barracks
+void player_barracks_filler(IInputModule &module, PlayerBarracks &barrack);
 
 // Sprite animation
 void run_pattern_loops(PatternLoop &loop, Velocity &velocity);
