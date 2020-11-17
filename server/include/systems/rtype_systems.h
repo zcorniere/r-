@@ -32,7 +32,7 @@ void restriction_applicator(Transform &transform, const RestrictionBox &box);
 
 // playership
 void playership_ct_input_getter(IInputModule &input, PlayerShipController &controller, const Destructible &destructible);
-void playership_animations(const PlayerShipController &controller, Sprite &sprite);
+void playership_animations(PlayerShipController &controller, Sprite &sprite);
 
 // player barracks
 void player_barracks_filler(IInputModule &module, PlayerBarracks &barrack);

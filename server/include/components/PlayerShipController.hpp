@@ -10,6 +10,8 @@ public:
     bool moovingRight;
     bool moovingLeft;
     bool firing;
+    unsigned m_moovingUp_ticks = 0;
+    unsigned m_moovingDown_ticks = 0;
     PlayerShipController(unsigned player_id, float speed);
     unsigned getPlayerId() const;
     float getSpeed() const;

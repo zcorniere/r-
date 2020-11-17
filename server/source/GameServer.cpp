@@ -50,6 +50,7 @@ void GameServer::onMessage(Message<RequestCode> msg) {
         case RequestCode::Disconnect: msg.remote->disconnect(); break;
         case RequestCode::Ready:
             list.at(msg.remote->getId()).second.ready = true;
+            Snitch::debug() << "Client " << msg.remote->getId() << " is ready" << Snitch::endl;
             break;
         case RequestCode::Input: {
             // Snitch::debug() << sizeof(short) + sizeof(MousePos) + InputSize << Snitch::endl;
