@@ -53,7 +53,7 @@ class Server: public IServer<T> {
             } else {
                 Snitch::warn("UDP_SERVER") << "Sending to invalid client" << Snitch::endl;
                 this->onClientDisconnect(cli);
-                client_list.erase(cli->remote_endpoint);
+                client_list.erase(*(cli->remote_endpoint));
             }
         }
         virtual void msgAll(const Message<T> &msg, std::shared_ptr<IClient<T>> skip = nullptr)final {
@@ -93,11 +93,11 @@ class Server: public IServer<T> {
         void addToMsgQueue() {
             // Snitch::debug("UDP_SERVER") << tmp << Snitch::endl;
             auto tmp_ptr = std::make_shared<boost::asio::ip::udp::endpoint>(tmp_end);
-            if (!client_list.contains(tmp_ptr)) {
-                client_list.insert({tmp_ptr, std::make_shared<Client<T>>(asio_context, tmp_ptr, asio_acceptor)});
-                this->onClientConnect(client_list.at(tmp_ptr));
+            if (!client_list.contains(*(tmp_ptr))) {
+                client_list.insert({*(tmp_ptr), std::make_shared<Client<T>>(asio_context, tmp_ptr, asio_acceptor)});
+                this->onClientConnect(client_list.at(*(tmp_ptr)));
             }
-            tmp.remote = client_list.at(tmp_ptr);
+            tmp.remote = client_list.at(*(tmp_ptr));
             msg_in.push_back(tmp);
             tmp.empty();
             waitForClientConnection();
@@ -105,7 +105,7 @@ class Server: public IServer<T> {
 
     private:
         MsgQueue<Message<T>> msg_in;
-        std::unordered_map<std::shared_ptr<boost::asio::ip::udp::endpoint>, std::shared_ptr<Client<T>>> client_list;
+        std::unordered_map<boost::asio::ip::udp::endpoint, std::shared_ptr<Client<T>>> client_list;
 
         boost::asio::io_context asio_context;
         std::thread context_thread;
@@ -119,6 +119,19 @@ class Server: public IServer<T> {
 };
 
 }
+}
+
+namespace std {
+template <>
+struct hash<boost::asio::ip::udp::endpoint>
+{
+    size_t operator()(const boost::asio::ip::udp::endpoint &x) const
+    {
+        string k = x.address().to_string();
+        k += std::to_string(x.port());
+        return hash<string>()(k);
+    }
+};
 }
 
 #endif //_UDPSERVER_HPP_
