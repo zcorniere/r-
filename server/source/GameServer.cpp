@@ -20,6 +20,23 @@ GameServer::~GameServer()
 
 void GameServer::update() {
     this->Server::update();
+    if (!pending_sprite.empty()) {
+        std::vector<std::shared_ptr<ecs::IClient<RequestCode>>> playes;
+        for (const auto &[i, e]: list) {
+            if (e.ready) {
+                playes.push_back(i);
+            }
+        }
+        for (const auto &i: pending_sprite) {
+            Message<RequestCode> rep(protocol::MAGIC_NB_1, protocol::MAGIC_NB_2);
+            rep.head.code = protocol::udp::RequestCode::Texture;
+            rep.insert(i);
+            for (auto &i: playes) {
+                i->send(rep);
+            }
+        }
+        pending_sprite.clear();
+    }
     assets.update(2);
 }
 
@@ -89,8 +106,6 @@ void GameServer::playSound(const std::string &name, float volume, float pitch) {
 void GameServer::drawSprite(const std::string &name, const Transform &transf, unsigned tile_id) {
     if (!stor)
         throw std::runtime_error("Uninitialized storage");
-    Message<RequestCode> rep(protocol::MAGIC_NB_1, protocol::MAGIC_NB_2);
-    rep.head.code = protocol::udp::RequestCode::Texture;
     protocol::udp::Sprite s;
     s.rot.x = transf.rotation.x;
     s.rot.y = transf.rotation.y;
@@ -105,12 +120,7 @@ void GameServer::drawSprite(const std::string &name, const Transform &transf, un
     }
     s.id_assets = *v;
     s.id_rectangle = tile_id;
-    rep.insert(s);
-    for (const auto &[i, e]: list) {
-        if (e.ready) {
-            i->send(rep);
-        }
-    }
+    pending_sprite.push_back(s);
 }
 
 Dimensional GameServer::getCursorLocation(const unsigned player) {
