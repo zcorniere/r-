@@ -89,7 +89,9 @@ void GameServer::onMessage(Message<RequestCode> msg) {
     }
 }
 
-void GameServer::playSound(const std::string &name, float volume, float pitch) {
+void GameServer::playSound(const std::string &name, float volume, float pitch,
+                           bool looping)
+{
     if (!stor)
         throw std::runtime_error("Uninitialized storage");
     Message<RequestCode> rep(protocol::MAGIC_NB_1, protocol::MAGIC_NB_2);
@@ -97,7 +99,7 @@ void GameServer::playSound(const std::string &name, float volume, float pitch) {
     protocol::udp::Sound s;
     s.volume = volume;
     s.pitch = pitch;
-    s.isLooping = false;
+    s.isLooping = looping;
     s.isPlaying = true;
     auto v = stor->getIdFromName(name);
     if (!v) {

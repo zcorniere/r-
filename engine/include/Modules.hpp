@@ -106,7 +106,7 @@ class IAudioModule : public virtual IModule
 {
   public:
     virtual void playSound(const std::string &name, float volume = 1,
-                           float pitch = 1) = 0;
+                           float pitch = 1, bool looping = false) = 0;
     virtual void stopSound(const std::string &name) = 0;
 };
 

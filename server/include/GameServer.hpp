@@ -33,7 +33,8 @@ class GameServer:
         virtual void onMessage(Message<protocol::udp::RequestCode> msg)final;
 
         // Required by IAudioModule
-        virtual void playSound(const std::string &name, float volume, float pitch)final;
+        virtual void playSound(const std::string &name, float volume,
+                               float pitch, bool looping) final;
         void stopSound(const std::string &name) override;
 
         // Required by IDisplayModule

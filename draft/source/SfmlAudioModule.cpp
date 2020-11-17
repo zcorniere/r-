@@ -18,7 +18,7 @@ void SfmlAudioModule::update()
 }
 
 void SfmlAudioModule::playSound(const std::string &name, float volume,
-                                float pitch)
+                                float pitch, bool looping)
 {
     if (!m_cached_assets.contains(name)) {
         Snitch::warn() << "Could not find sound " << name << Snitch::endl;
@@ -28,6 +28,7 @@ void SfmlAudioModule::playSound(const std::string &name, float volume,
 
     asset.setVolume(volume * 100);
     asset.setPitch(pitch);
+    asset.setLoop(looping);
     asset.stop();
     asset.play();
 }

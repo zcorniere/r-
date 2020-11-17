@@ -62,6 +62,7 @@ void network::Client::statePlay()
             if (it != assets.end()) {
                 if (sound.isPlaying) {
                     it->sound.setPitch(sound.pitch);
+                    it->sound.setVolume(sound.volume);
                     it->sound.setLoop(sound.isLooping);
                     it->sound.play();
                 } else {

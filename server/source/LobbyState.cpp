@@ -63,7 +63,7 @@ void LobbyState::onStart(Game &instance)
         .withComponent(PlayerBarracks())
         .build();
 
-    instance.audioModule.value().get().playSound("../server/assets/title.ogg", 0.7);
+    instance.audioModule.value().get().playSound("title", 0.7);
 }
 
 void LobbyState::onPause(Game &instance)
