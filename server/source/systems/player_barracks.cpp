@@ -23,7 +23,7 @@ void player_barracks_filler(IInputModule &module, PlayerBarracks &barrack)
 {
     if (!barrack.connectionsOpen)
         return;
-    for (short i = 0; i < 3; i++) {
+    for (short i = 0; i <= 3; i++) {
         if (!barrack.playerConnected[i] && module.isKeyPressed(i, Input::Z)) {
             barrack.playerConnected[i] = true;
             std::cout << "Player " << i << " joined !\n";
@@ -36,7 +36,7 @@ void player_barracks_ship_summoner(Game &instance)
     auto &barracks = instance.componentStorage.getComponents<PlayerBarracks>();
 
     for (auto &[id, barrack] : barracks) {
-        for (short i = 0; i < 3; i++) {
+        for (short i = 0; i <= 3; i++) {
             if (barrack.playerConnected[i] && !barrack.playerSpawned[i]) {
                 instance.componentStorage.buildEntity()
                     .withComponent(Sprite("player_ships", 2 + 10 * i))
