@@ -23,8 +23,8 @@ void GameServer::update() {
     if (!pending_sprite.empty()) {
         std::vector<std::shared_ptr<ecs::IClient<RequestCode>>> playes;
         for (const auto &[i, e]: list) {
-            if (e.ready) {
-                playes.push_back(i);
+            if (e.second.ready) {
+                playes.push_back(e.first);
             }
         }
         for (const auto &i: pending_sprite) {
@@ -43,25 +43,32 @@ void GameServer::update() {
 void GameServer::onMessage(Message<RequestCode> msg) {
     Snitch::debug("GAME_SERVER") << msg << Snitch::endl;
     if (msg.validMagic(protocol::MagicPair) && msg.remote) {
-        if (!list.contains(msg.remote)) { list.insert({msg.remote, Player{}}); }
+        if (!list.contains(msg.remote->getId())) {
+            list.insert({msg.remote->getId(), {msg.remote, Player{}}});
+        }
         switch (msg.head.code) {
         case RequestCode::Disconnect: msg.remote->disconnect(); break;
-        case RequestCode::Ready: list.at(msg.remote).ready = true; break;
+        case RequestCode::Ready:
+            list.at(msg.remote->getId()).second.ready = true;
+            break;
         case RequestCode::Input: {
             Snitch::debug() << sizeof(short) + sizeof(MousePos) + InputSize << Snitch::endl;
             protocol::udp::Input body{};
             std::memcpy(&body.nb_keys, msg.body.data(), sizeof(body.nb_keys));
             std::memcpy(body.keys.data(), msg.body.data() + sizeof(body.nb_keys), InputSize);
             std::memcpy(&body.pos, msg.body.data() + sizeof(body.nb_keys) + InputSize, sizeof(body.pos));
-            Snitch::debug("GAME_SERVER") << "nb_key: " << body.nb_keys << Snitch::endl;
             for (unsigned i = 0; i < body.nb_keys; i++ ) {
                 if (body.keys.at(i).pressed)
-                    list.at(msg.remote).keys.insert(body.keys.at(i).key);
+                    list.at(msg.remote->getId())
+                        .second.keys.insert(body.keys.at(i).key);
                 else
-                    list.at(msg.remote).keys.erase(body.keys.at(i).key);
+                    list.at(msg.remote->getId())
+                        .second.keys.erase(body.keys.at(i).key);
             }
-            list.at(msg.remote).cur_pos.y = std::move(body.pos.y);
-            list.at(msg.remote).cur_pos.x = std::move(body.pos.x);
+            list.at(msg.remote->getId()).second.cur_pos.y =
+                std::move(body.pos.y);
+            list.at(msg.remote->getId()).second.cur_pos.x =
+                std::move(body.pos.x);
         } break;
         case RequestCode::AssetsAsk: {
             Message<RequestCode> rep(protocol::MAGIC_NB_1, protocol::MAGIC_NB_2);
@@ -95,8 +102,8 @@ void GameServer::playSound(const std::string &name, float volume, float pitch) {
     s.id = v ? *v : -1;
     rep.insert(s);
     for (const auto &[i, e]: list) {
-        if (e.ready) {
-            i->send(rep);
+        if (e.second.ready) {
+            e.first->send(rep);
         }
     }
 }
@@ -121,20 +128,22 @@ void GameServer::drawSprite(const std::string &name, const Transform &transf, un
     pending_sprite.push_back(s);
 }
 
-Dimensional GameServer::getCursorLocation(const unsigned player) {
-    for (const auto &[e, i] : list) {
-        if (e->getId() == player && i.ready) {
-            return i.cur_pos;
-        }
+Dimensional GameServer::getCursorLocation(const unsigned player)
+{
+    if (list.contains(player)) {
+        auto &data = list[player].second;
+        if (data.ready)
+            return data.cur_pos;
     }
-    return Dimensional {-1, -1};
+    return Dimensional{-1, -1};
 }
 
-bool GameServer::isKeyPressed(unsigned player, ::Input key) {
-    for (const auto &[e, i]: list) {
-        if (e->getId() == player && i.ready) {
-            return i.keys.contains(key);
-        }
+bool GameServer::isKeyPressed(unsigned player, ::Input key)
+{
+    if (list.contains(player)) {
+        auto &data = list.at(player).second;
+        if (data.ready)
+            return data.keys.contains(key);
     }
     return false;
 }

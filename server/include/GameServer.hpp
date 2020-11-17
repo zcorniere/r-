@@ -45,7 +45,11 @@ class GameServer:
     private:
         AssetsServer assets;
         std::shared_ptr<Storage> stor;
-        std::unordered_map<std::shared_ptr<ecs::IClient<protocol::udp::RequestCode>>, Player> list;
+        std::unordered_map<
+            uint32_t,
+            std::pair<std::shared_ptr<ecs::IClient<protocol::udp::RequestCode>>,
+                      Player>>
+            list;
         std::deque<protocol::udp::Sprite> pending_sprite;
         std::string path;
         unsigned port;
