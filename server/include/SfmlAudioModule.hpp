@@ -16,7 +16,7 @@ class SfmlAudioModule : public IAudioModule
     void stopSound(const std::string &name) override;
 
   private:
-    sf::Music &getSound(const std::filesystem::path &asset_path);
+    sf::Music &loadSound(const std::filesystem::path &asset_path);
 
     std::filesystem::path m_asset_location;
     std::unordered_map<std::string, sf::Music> m_cached_assets;

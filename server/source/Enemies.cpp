@@ -15,7 +15,7 @@ const Enemy Enemy::BUG = {
     BydoShooter(),
     PlayerScanner(1000),
     1, DeathMontage("explosions", {0, 1, 2, 3, 4, 5}, 7),
-    DeathSpeaker("../draft/assets/enemy-explosion.ogg", 0.5, 0.5)
+    DeathSpeaker("enemy-explosion", 0.5, 0.5)
 };
 
 const Enemy Enemy::PATA_PATA = {
@@ -34,7 +34,7 @@ const Enemy Enemy::PATA_PATA = {
     BydoShooter(300, 0.7, {0, -1}, 0.6),
     PlayerScanner(1500),
     1, DeathMontage("explosions", {0, 1, 2, 3, 4, 5}, 7),
-    DeathSpeaker("../draft/assets/enemy-explosion.ogg", 0.5, 0.5)
+    DeathSpeaker("enemy-explosion", 0.5, 0.5)
 };
 
 void Enemy::build(ComponentStorage::EntityBuilder &builder) const

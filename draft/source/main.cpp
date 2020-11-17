@@ -26,7 +26,7 @@ int main(void)
     std::unique_ptr<IModule> sfml_module(new SfmlModule(
         "R-Type SOLO v0.1",
         assets_location));
-    auto audio_module = std::make_unique<SfmlAudioModule>();
+    auto audio_module = std::make_unique<SfmlAudioModule>(assets_location);
 
     game.addModule("sfml", std::move(sfml_module));
     game.setDisplayModule("sfml");

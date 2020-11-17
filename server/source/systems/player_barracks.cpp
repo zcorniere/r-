@@ -51,8 +51,8 @@ void player_barracks_ship_summoner(Game &instance)
                     .withComponent(ShootMontage("effects", {20, 21}, 7))
                     .withComponent(RestrictionBox(0, 0, 2000, 1000))
                     .withComponent(WaveCannon())
-                    .withComponent(DeathSpeaker("../draft/assets/playership-explosion.ogg"))
-                    .withComponent(ShootSpeaker("../draft/assets/laser-burst.ogg", 0.1, 0.1))
+                    .withComponent(DeathSpeaker("playership-explosion"))
+                    .withComponent(ShootSpeaker("laser-burst", 0.1, 0.1))
                     .build();
                 barrack.playerSpawned[i] = true;
                 barrack.playerAlive[i] = true;
