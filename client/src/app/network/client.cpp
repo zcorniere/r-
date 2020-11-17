@@ -39,9 +39,8 @@ void network::Client::statePlay()
             });
             if (it != assets.end()) {
                 it->sprite.setRotation(sprite.rot.x);
-                it->sprite.setPosition(sprite.pos.x, sprite.pos.y);
+                it->sprite.setPosition(sprite.pos.x + pos_offset_x , sprite.pos.y + pos_offset_y);
                 it->sprite.setScale(sprite.scale.x, sprite.scale.y);
-
                 sprites.insert(sprites.begin(), it->sprite);
                 if (sprites.size() > network::Client::max_sprites) {
                     sprites.pop_back();

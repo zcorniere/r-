@@ -28,6 +28,8 @@ namespace network {
          * Increase that value increases significantly memory consumption but reduce screen flickering
          */
         static constexpr auto max_sprites = 500;
+        static constexpr auto pos_offset_x = 0;
+        static constexpr auto pos_offset_y = -10;
         enum class Status {
             NotConnected,
             AskForAssets,
