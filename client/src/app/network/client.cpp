@@ -41,16 +41,16 @@ void network::Client::statePlay()
                 it->sprite.setRotation(sprite.rot.x);
                 it->sprite.setPosition(sprite.pos.x + pos_offset_x , sprite.pos.y + pos_offset_y);
                 it->sprite.setScale(sprite.scale.x, sprite.scale.y);
-                sprites.insert(sprites.begin(), it->sprite);
-                if (sprites.size() > network::Client::max_sprites) {
-                    sprites.pop_back();
-                }
+                main_texture.draw(it->sprite);
+//                sprites.insert(sprites.begin(), it->sprite);
+//                if (sprites.size() > network::Client::max_sprites) {
+//                    sprites.pop_back();
+//                }
             } else
                 console->log("Error [Play]: Sprite specified not found : id_asset : " + std::to_string(sprite.id_asset) + " id_tile + " + std::to_string(sprite.id_sprite));
         }
         if (message.head().code == UdpCode::Sound) {
             protocol::udp::from_server::Sound sound;
-            assert(message.body().size() == sizeof(sound));
             std::memcpy(&sound, message.body().data(), message.body().size());
             auto it = std::find_if(assets.begin(), assets.end(), [&](const auto &item){
                 if (item.type != Asset::Type::Sound)
@@ -60,18 +60,15 @@ void network::Client::statePlay()
                 return true;
             });
             if (it != assets.end()) {
-                if (sound.isPlaying) {
-                    it->sound.setPitch(sound.pitch);
-                    it->sound.setVolume(sound.volume);
-                    it->sound.setLoop(sound.isLooping);
-                    it->sound.play();
-                } else {
-                    it->sound.stop();
-                }
+                it->sound.setPitch(sound.pitch);
+                it->sound.setVolume(sound.volume);
+                it->sound.setLoop(sound.isLooping);
+                it->sound.play();
             } else
-                console->log("Error [Play]: Sound specified not found: " + std::to_string(sound.id));
+                console->log("Error [Play]: Sound specified not found");
         }
     }
+    main_texture.display();
 
     // send input
     protocol::MessageToSend<UdpCode> message{};
@@ -286,10 +283,10 @@ void network::Client::reset()
     assets_ids_list.clear();
 }
 
-std::vector<sf::Sprite> network::Client::getSprites()
-{
-    return sprites;
-}
+//std::vector<sf::Sprite> network::Client::getSprites()
+//{
+//    return sprites;
+//}
 
 void network::Client::stopSockManagers()
 {

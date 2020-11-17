@@ -137,7 +137,6 @@ namespace protocol {
                 float volume;
                 float pitch;
                 bool isLooping;
-                bool isPlaying;
             };
             struct AssetList {
                 unsigned port;          // port of the tcp server (same ip)

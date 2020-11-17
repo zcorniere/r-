@@ -20,13 +20,18 @@ Game::Game(std::optional<std::string> &intent_ref, bidimensional::Transform &par
     z_index = 1;
     client.set_onDisconnect([&](){
         is_connect = false;
-        sprites.clear();
+//        sprites.clear();
     });
+    main_texture.create(1800, 960);
+    main_sprite.setTexture(main_texture.getTexture());
+    main_sprite.setOrigin(0, 0);
+    main_sprite.setPosition(0, 0);
 }
 
 void Game::onCreateView()
 {
     client.setConsole(console);
+
 }
 
 void Game::onUpdateView()
@@ -38,16 +43,19 @@ void Game::onUpdateView()
         disconnect();
     }
     if (is_connect) {
-        auto new_sprites = client.getSprites();
-        if (!new_sprites.empty()) {
-            sprites = new_sprites;
-        }
-        if (sprites.size()) {
-            for (int i = sprites.size() - 1; i >= 0 ; --i) {
-                window.draw(sprites[i]);
-            }
-        }
+        window.draw(main_sprite);
     }
+//    if (is_connect) {
+//        auto new_sprites = client.getSprites();
+//        if (!new_sprites.empty()) {
+//            sprites = new_sprites;
+//        }
+//        if (sprites.size()) {
+//            for (int i = sprites.size() - 1; i >= 0 ; --i) {
+//                window.draw(sprites[i]);
+//            }
+//        }
+//    }
 }
 
 void Game::onFinishView()

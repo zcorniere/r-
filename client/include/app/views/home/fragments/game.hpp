@@ -14,9 +14,11 @@
 
 class Game : public Ifragment {
     bool is_connect = false;
-    network::Client client;
+    sf::RenderTexture main_texture;
+    sf::Sprite main_sprite;
+    network::Client client = network::Client(main_texture);
     Console *console = nullptr;
-    std::vector<sf::Sprite> sprites;
+//    std::vector<sf::Sprite> sprites;
     void onCreateView() final;
     void onUpdateView() final;
     void onFinishView() final;

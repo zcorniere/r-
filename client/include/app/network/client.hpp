@@ -38,9 +38,10 @@ namespace network {
             Ready,
             Play
         } status = Status::NotConnected;
+        sf::RenderTexture &main_texture;
         std::string server_ip;
-        short server_udp_port;
-        short server_tcp_port;
+        short server_udp_port = 0;
+        short server_tcp_port = 0;
         std::vector<std::pair<long, bool>> assets_ids_list;
         std::vector<Asset> assets;
         std::unique_ptr<network::UdpSockMngr> udp = nullptr;
@@ -57,13 +58,14 @@ namespace network {
         void stateReady();
         void stateTimeout();
     public:
+        explicit Client(sf::RenderTexture &main_texture) : main_texture(main_texture) {}
         void update();
         void setConsole(Console *new_console);
         void set_onDisconnect(std::function<void(void)> functor);
         void connect(const std::string &new_udp_server_address);
         void disconnect();
         void reset();
-        [[nodiscard]] std::vector<sf::Sprite> getSprites();
+//        [[nodiscard]] std::vector<sf::Sprite> getSprites();
     private:
         void stopSockManagers();
     };
