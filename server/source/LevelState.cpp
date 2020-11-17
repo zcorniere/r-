@@ -16,6 +16,7 @@
 #include "components/RestrictionBox.hpp"
 #include "components/EnemyGroup.hpp"
 #include "components/Speaker.hpp"
+#include "components/BackgroundMusic.hpp"
 #include "Enemies.hpp"
 #include "load_game.hpp"
 #include <iostream>
