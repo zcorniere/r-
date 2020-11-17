@@ -95,6 +95,7 @@ class Server: public IServer<T> {
             auto tmp_ptr = std::make_shared<boost::asio::ip::udp::endpoint>(tmp_end);
             if (!client_list.contains(*(tmp_ptr))) {
                 client_list.insert({*(tmp_ptr), std::make_shared<Client<T>>(asio_context, tmp_ptr, asio_acceptor)});
+                client_list.at(*(tmp_ptr))->giveId(base_id++);
                 this->onClientConnect(client_list.at(*(tmp_ptr)));
             }
             tmp.remote = client_list.at(*(tmp_ptr));
