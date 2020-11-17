@@ -128,6 +128,7 @@ void load_game(Game &game)
     // player barracks
     game.systemStorage.addSystem(player_barracks_filler);
     game.systemStorage.addSystem(player_barracks_ship_summoner);
+    game.systemStorage.addSystem(player_life_checker);
 
     /*
     ** STATES

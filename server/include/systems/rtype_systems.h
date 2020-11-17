@@ -38,6 +38,7 @@ void playership_animations(PlayerShipController &controller, Sprite &sprite);
 // player barracks
 void player_barracks_filler(IInputModule &module, PlayerBarracks &barrack);
 void player_barracks_ship_summoner(Game &instance);
+void player_life_checker(Game &instance);
 
 // Sprite animation
 void run_pattern_loops(PatternLoop &loop, Velocity &velocity);

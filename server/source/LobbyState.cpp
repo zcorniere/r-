@@ -65,7 +65,7 @@ void LobbyState::onStart(Game &instance)
         )
         .build();
     int barracks_id = instance.componentStorage.buildEntity()
-        .withComponent(PlayerBarracks())
+        .withComponent(PlayerBarracks(true, true))
         .build();
 
     instance.componentStorage.buildEntity()

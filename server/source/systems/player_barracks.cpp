@@ -17,6 +17,8 @@
 #include "components/RestrictionBox.hpp"
 #include "components/EnemyGroup.hpp"
 #include "components/Speaker.hpp"
+#include "components/Destructible.hpp"
+#include "components/PlayerShipController.hpp"
 #include <iostream>
 
 void player_barracks_filler(IInputModule &module, PlayerBarracks &barrack)
@@ -37,7 +39,8 @@ void player_barracks_ship_summoner(Game &instance)
 
     for (auto &[id, barrack] : barracks) {
         for (short i = 0; i <= 3; i++) {
-            if (barrack.playerConnected[i] && !barrack.playerSpawned[i]) {
+            if (barrack.playerConnected[i] && !barrack.playerSpawned[i] ||
+        !barrack.playerAlive[i] && barrack.autoRespawn && barrack.playerConnected[i]) {
                 instance.componentStorage.buildEntity()
                     .withComponent(Sprite("player_ships", 2 + 10 * i))
                     .withComponent(Transform(Dimensional(10, 225 + 135 * i), Dimensional(0, 0),
@@ -57,6 +60,23 @@ void player_barracks_ship_summoner(Game &instance)
                 barrack.playerSpawned[i] = true;
                 barrack.playerAlive[i] = true;
             }
+        }
+    }
+}
+
+void player_life_checker(Game &instance)
+{
+    auto players_params = instance.componentStorage.join_components(
+        instance.componentStorage.getComponents<Destructible>(),
+        instance.componentStorage.getComponents<PlayerShipController>()
+    );
+    auto &barracks = instance.componentStorage.getComponents<PlayerBarracks>();
+
+    for (auto &[id, barrack] : barracks) {
+        for (auto &[id, params] : players_params) {
+            auto &[destructible, controller] = params;
+            barrack.playerAlive[controller.getPlayerId()] =
+            destructible.status == Destructible::Status::Alive;
         }
     }
 }
