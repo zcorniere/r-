@@ -40,7 +40,7 @@ void network::Client::statePlay()
             if (it != assets.end()) {
                 it->sprite.setRotation(sprite.rot.x);
                 it->sprite.setPosition(sprite.pos.x, sprite.pos.y);
-                it->sprite.setScale(sprite.scale.x / 2, sprite.scale.y / 2);
+                it->sprite.setScale(sprite.scale.x, sprite.scale.y);
 
                 sprites.insert(sprites.begin(), it->sprite);
                 if (sprites.size() > network::Client::max_sprites) {
