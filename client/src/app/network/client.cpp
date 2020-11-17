@@ -25,7 +25,7 @@ void network::Client::statePlay()
         if (message.head().code == UdpCode::Sprite) {
             protocol::udp::from_server::Sprite sprite;
             if (sizeof(sprite) != message.body().size()) {
-                exit(84);
+                continue;
             }
             std::memcpy(&sprite, message.body().data(), sizeof(sprite));
             auto it = std::find_if(assets.begin(), assets.end(), [&](const auto &item){
