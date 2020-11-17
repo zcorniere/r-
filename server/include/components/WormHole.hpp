@@ -5,6 +5,8 @@
 #include <memory>
 #include <functional>
 
-struct WormHole {};
+struct WormHole {
+    unsigned barracks_id;
+};
 
 #endif

@@ -134,7 +134,6 @@ void load_game(Game &game)
     ** game related logic
     */
 
-    std::unique_ptr<AState> level_state(new LevelState);
     std::unique_ptr<AState> lobby_state(new LobbyState);
     game.stateMachine.setState(std::move(lobby_state));
 }

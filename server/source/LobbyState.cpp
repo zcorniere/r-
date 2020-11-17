@@ -64,7 +64,7 @@ void LobbyState::onStart(Game &instance)
             {"menus", 10}, {"menus", 11}}, 50)
         )
         .build();
-    instance.componentStorage.buildEntity()
+    int barracks_id = instance.componentStorage.buildEntity()
         .withComponent(PlayerBarracks())
         .build();
 
@@ -76,7 +76,7 @@ void LobbyState::onStart(Game &instance)
         .withComponent(Transform({1900, 0}, {0, 0}, {1, 1}))
         .withComponent(CollisionBox(100, 1000))
         .withComponent(GameObject::Wall)
-        .withComponent(WormHole())
+        .withComponent(WormHole(barracks_id))
         .build();
 }
 

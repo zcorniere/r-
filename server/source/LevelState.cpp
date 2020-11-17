@@ -17,6 +17,7 @@
 #include "components/EnemyGroup.hpp"
 #include "components/Speaker.hpp"
 #include "components/BackgroundMusic.hpp"
+#include "components/PlayerBarracks.hpp"
 #include "Enemies.hpp"
 #include "load_game.hpp"
 #include <iostream>
@@ -31,6 +32,9 @@ constexpr unsigned STAR_BUFFER_SIZE = 200;
 
 constexpr float SCROLLING_SPEED = 0.5;
 
+LevelState::LevelState(std::vector<bool> players) : m_players(players), m_stars_ids(), AState()
+{}
+
 void LevelState::onStart(Game &instance)
 {
     // Creating Back ground
@@ -41,8 +45,12 @@ void LevelState::onStart(Game &instance)
         .withComponent(Velocity(-1 * SCROLLING_SPEED, 0))
         .build();
 
+    int barracks_id = instance.componentStorage.buildEntity()
+        .withComponent(PlayerBarracks(false, false, m_players))
+        .build();
+
     // Creating Player Ship
-    instance.componentStorage.buildEntity()
+    /*instance.componentStorage.buildEntity()
         .withComponent(Sprite("player_ships", 2))
         .withComponent(Transform(Dimensional(10, 10), Dimensional(0, 0),
                                  Dimensional(3, 3)))
@@ -57,7 +65,7 @@ void LevelState::onStart(Game &instance)
         .withComponent(WaveCannon())
         .withComponent(DeathSpeaker("playership-explosion"))
         .withComponent(ShootSpeaker("laser-burst", 0.1, 0.1))
-        .build();
+        .build();*/
 
     // Floor CollisionBox
     instance.componentStorage.buildEntity()

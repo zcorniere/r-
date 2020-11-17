@@ -4,6 +4,7 @@
 #include "components/GameObject.hpp"
 #include "components/Destructible.hpp"
 #include "components/WormHole.hpp"
+#include "components/PlayerBarracks.hpp"
 #include "LevelState.hpp"
 #include <algorithm>
 #include <memory>
@@ -76,11 +77,12 @@ void collision_wormholes(Game &instance)
         instance.componentStorage.getComponents<WormHole>(),
         instance.componentStorage.getComponents<CollisionBox>()
     );
+    auto barracks = instance.componentStorage.getComponents<PlayerBarracks>();
 
     for (auto &[id, params] : hole_params) {
         auto &[hole, box] = params;
         if (box.collidingWith && box.collidingWith.value() == GameObject::PlayerShip) {
-            std::unique_ptr<AState> level_state(new LevelState);
+            std::unique_ptr<AState> level_state(new LevelState(barracks.at(hole.barracks_id).playerConnected));
             instance.stateMachine.setState(std::move(level_state));
         }
     }
