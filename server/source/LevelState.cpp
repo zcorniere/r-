@@ -33,7 +33,7 @@ constexpr int STAR_SPAWN_DELAY = 250;
 
 constexpr unsigned STAR_BUFFER_SIZE = 200;
 
-constexpr float SCROLLING_SPEED = 50;
+constexpr float SCROLLING_SPEED = 1;
 
 constexpr float SCROLLING_TICKS = (4028 * 4 - 1900) / SCROLLING_SPEED;
 

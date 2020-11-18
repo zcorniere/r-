@@ -82,7 +82,7 @@ void player_barracks_ship_summoner(Game &instance)
                     {"effects", 2},
                     {"effects", 3}
                     }, 10))
-                    .withComponent(Transform(Dimensional(-165, 220 + 145 * i), {0, 0}, {2, 2}))
+                    .withComponent(Transform(Dimensional(-165, (225 + 135 * i) - 10), {0, 0}, {2, 2}))
                     .withComponent(Velocity({1, 0}))
                     .withComponent(Lifetime(500))
                     .build();
