@@ -31,7 +31,7 @@ void GameServer::update() {
         rep.head.code = protocol::udp::RequestCode::SpriteBatch;
         auto end_it = pending_sprite.end();
         if (pending_sprite.size() > SpriteBatchMaxSize) {
-            Snitch::warn("GAME_SERVER") << "More than " << SpriteBatchMaxSize << " pendign sprite" << Snitch::endl;
+            Snitch::warn("GAME_SERVER") << "More than " << SpriteBatchMaxSize << " pendign sprites: " << pending_sprite.size() << Snitch::endl;
             end_it = pending_sprite.begin() + SpriteBatchMaxSize;
         }
         SpriteBatch b;

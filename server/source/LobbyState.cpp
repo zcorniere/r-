@@ -32,7 +32,7 @@
 // Counted in milleseconds
 constexpr int STAR_SPAWN_DELAY = 250;
 
-constexpr unsigned STAR_BUFFER_SIZE = 200;
+constexpr unsigned STAR_BUFFER_SIZE = 50;
 
 constexpr float SCROLLING_SPEED = 0.5;
 
