@@ -53,9 +53,10 @@ namespace udp {
         transform::Position pos;
         transform::Scale scale;
     };
+    constexpr short SpriteBatchMaxSize = 100;
     struct SpriteBatch {
         std::size_t size;
-        std::array<Sprite, 100> array;
+        std::array<Sprite, SpriteBatchMaxSize> array;
     };
 
     struct Sound {

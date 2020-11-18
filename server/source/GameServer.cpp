@@ -27,21 +27,26 @@ void GameServer::update() {
                 playes.push_back(e.first);
             }
         }
-        for (const auto &i: pending_sprite) {
-            Message<RequestCode> rep(protocol::MAGIC_NB_1, protocol::MAGIC_NB_2);
-            rep.head.code = protocol::udp::RequestCode::Sprite;
-            rep.insert(i);
-            for (auto &i: playes) {
-                i->send(rep);
-            }
+        Message<RequestCode> rep(protocol::MAGIC_NB_1, protocol::MAGIC_NB_2);
+        rep.head.code = protocol::udp::RequestCode::SpriteBatch;
+        auto end_it = pending_sprite.end();
+        if (pending_sprite.size()) {
+            Snitch::warn("GAME_SERVER") << "More than " << SpriteBatchMaxSize << " pendign sprite" << Snitch::endl;
+            end_it = pending_sprite.begin() + SpriteBatchMaxSize;
+        }
+        SpriteBatch b;
+        b.size = pending_sprite.size();
+        std::copy(pending_sprite.begin(), end_it, b.array);
+        rep.insert(b);
+        for (auto &i: playes) {
+            i->send(rep);
         }
         pending_sprite.clear();
     }
-    assets.update(2);
+    assets.update(4);
 }
 
 void GameServer::onMessage(Message<RequestCode> msg) {
-    // Snitch::debug("GAME_SERVER") << msg << Snitch::endl;
     if (msg.validMagic(protocol::MagicPair) && msg.remote) {
         if (!list.contains(msg.remote->getId())) {
             list.insert({msg.remote->getId(), {msg.remote, Player{}}});
@@ -53,7 +58,6 @@ void GameServer::onMessage(Message<RequestCode> msg) {
             Snitch::debug() << "Client " << msg.remote->getId() << " is ready" << Snitch::endl;
             break;
         case RequestCode::Input: {
-            // Snitch::debug() << sizeof(short) + sizeof(MousePos) + InputSize << Snitch::endl;
             protocol::udp::Input body{};
             std::memcpy(&body.nb_keys, msg.body.data(), sizeof(body.nb_keys));
             std::memcpy(body.keys.data(), msg.body.data() + sizeof(body.nb_keys), InputSize);
