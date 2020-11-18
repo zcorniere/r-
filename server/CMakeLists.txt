@@ -20,6 +20,7 @@ add_executable(r-type_server
                             source/main.cpp
                             source/LevelState.cpp
                             source/LobbyState.cpp
+                            source/CreditsState.cpp
                             source/GameServer.cpp
                             source/AssetsServer.cpp
                             source/Storage.cpp

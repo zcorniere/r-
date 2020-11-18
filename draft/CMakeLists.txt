@@ -22,6 +22,7 @@ add_executable(r-type_local
                             source/SfmlAudioModule.cpp
                             ../server/source/LevelState.cpp
                             ../server/source/LobbyState.cpp
+                            ../server/source/CreditsState.cpp
                             ../server/source/GameServer.cpp
                             ../server/source/AssetsServer.cpp
                             ../server/source/Storage.cpp

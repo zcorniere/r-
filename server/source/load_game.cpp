@@ -1,6 +1,7 @@
 #include "load_game.hpp"
 #include "LevelState.hpp"
 #include "LobbyState.hpp"
+#include "CreditsState.hpp"
 #include "Game.hpp"
 #include "components/PlayerControlled.hpp"
 #include "components/WormHole.hpp"
@@ -152,11 +153,14 @@ void load_game(Game &game)
     */
 
     const char *skip_lobby = getenv("RTYPE_SKIP_LOBBY");
+    const char *win_instant = getenv("RTYPE_INSTANT_WIN");
     if (skip_lobby && std::string(skip_lobby) == "true") {
         std::unique_ptr<AState> state(new LevelState({true, false, false, false}));
         game.stateMachine.setState(std::move(state));
-    }
-    else {
+    } else if (win_instant && std::string(win_instant) == "true") {
+        std::unique_ptr<AState> state(new CreditsState);
+        game.stateMachine.setState(std::move(state));
+    } else {
         std::unique_ptr<AState> state(new LobbyState);
         game.stateMachine.setState(std::move(state));
     }
@@ -461,8 +465,8 @@ void build_many_explosions(Game &instance)
     {"explosions", 0}, {"explosions", 1}, {"explosions", 2},
     {"explosions", 3}, {"explosions", 4}, {"explosions", 5}
         }, 10}))
-    .build();
-        instance.componentStorage.buildEntity()
+        .build();
+    instance.componentStorage.buildEntity()
         .withComponent(Transform({1066, 50}, {0, 0}, {10, 10}))
         .withComponent(Sprite("explosions", 0))
         .withComponent(AnimationLoop({{
@@ -470,5 +474,15 @@ void build_many_explosions(Game &instance)
     {"explosions", 3}, {"explosions", 4}, {"explosions", 5}
         }, 10}))
     .build();
+
+    instance.componentStorage.buildEntity()
+        .withComponent(Lifetime(1000))
+        .withComponent(DeathRattle([](Game &instance) {
+            std::unique_ptr<AState> state(new CreditsState);
+
+            instance.stateMachine.setState(std::move(state));
+        }))
+        .build();
+
     instance.audioModule.value().get().playSound("enemy-explosion", 1, 0.5, true);
 }
