@@ -1,6 +1,7 @@
 #include "Game.hpp"
 #include "Snitch.hpp"
 #include <stdexcept>
+#include <chrono>
 
 Game::Game(std::string name)
 : m_name(name), stateMachine(*this), componentStorage(stateMachine)
@@ -8,8 +9,18 @@ Game::Game(std::string name)
 
 void Game::run()
 {
+    std::chrono::time_point last_update = std::chrono::system_clock::now();
+    std::chrono::milliseconds tick_delay(GAME_TICK_DELAY);
+
     while(stateMachine.getCurrentState()) {
+        if (std::chrono::system_clock::now() - last_update < tick_delay)
+            continue;
+        last_update = std::chrono::system_clock::now();
         stateMachine.update();
+        for (auto &[name, module] : m_modules) {
+            (*module).update();
+        }
+        systemStorage.runTick(*this);
     }
 }
 
@@ -45,9 +56,4 @@ void Game::setInputModule(const std::string &name)
 void Game::setAudioModule(const std::string &name)
 {
     audioModule = dynamic_cast<IAudioModule &>(getModule(name));
-}
-
-void Game::setNetworkModule(const std::string &name)
-{
-    networkModule = dynamic_cast<INetworkModule &>(getModule(name));
 }

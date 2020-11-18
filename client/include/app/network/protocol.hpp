@@ -13,6 +13,7 @@
 #include <type_traits>
 #include <vector>
 #include <cstring>
+#include <iostream>
 #include <boost/asio/buffer.hpp>
 
 namespace protocol {
@@ -31,8 +32,8 @@ namespace protocol {
         };
     }
     namespace input {
-        constexpr short keys_array_size = 5;
-        enum class Keys {
+        constexpr short keys_array_size = 255;
+        enum class Keys : uint8_t {
             LeftClick = 1,
             RightClick,
             A,
@@ -125,21 +126,22 @@ namespace protocol {
         };
         namespace from_server {
             struct Sprite {
-                long id_asset;     // the tilesheet
-                long id_sprite;    // the sprite id of the tilesheet
+                uint64_t id_sprite;    // the sprite id of the tilesheet
+                uint64_t id_asset;     // the tilesheet
                 transform::Rotation rot;
                 transform::Position pos;
                 transform::Scale scale;
             };
             struct Sound {
-                long id;
+                uint64_t id;
+                float volume;
                 float pitch;
                 bool isLooping;
             };
             struct AssetList {
                 unsigned port;          // port of the tcp server (same ip)
                 std::size_t size;       // size of list
-                std::vector<long> list; // list of asset ids
+                std::vector<uint64_t> list; // list of asset ids
             };
         }
         namespace from_client {
@@ -160,14 +162,14 @@ namespace protocol {
             AssetPackage = 2    // from server
         };
         struct AssetAsk {
-            long id;
+            uint64_t id;
         };
         struct AssetPackage {
-            enum class Type {
-                Sound = 1,
-                Texture = 2
+            enum class Type : bool {
+                Sound = 0,
+                Texture = 1
             } type;
-            long id_asset;
+            uint64_t id_asset;
             std::size_t size_data;
             std::size_t size_config;
             /**
@@ -194,7 +196,10 @@ namespace protocol {
         explicit MessageReceived(std::vector<std::byte> data) : data(std::move(data)) {}
         MessageHeader<T> head() const {
             MessageHeader<T> ret;
-            std::memcpy(&ret, data.data(), sizeof(ret));
+            if (data.size() < sizeof(ret)) {
+                std::cerr << "Error: data size : " << data.size() << std::endl;
+            } else
+                std::memcpy(&ret, data.data(), sizeof(ret));
             return ret;
         }
         boost::asio::const_buffer body() const {

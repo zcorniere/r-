@@ -14,6 +14,11 @@
 #include <typeindex>
 #include <vector>
 #include <stdexcept>
+#include <variant>
+#include <type_traits>
+#include <boost/type_index.hpp>
+
+class Enemy;
 
 class ComponentStorage {
 class EntityBuilder;
@@ -40,13 +45,20 @@ public:
     {
         for (auto &[storage_type, storage] : m_storage) {
             if (storage_type == typeid(T)) {
-                auto &output = std::any_cast<std::map<unsigned, T>&>(storage);
-                clearZombies(output);
-                return output;
+                try {
+                    auto &output =
+                        std::any_cast<std::map<unsigned, T> &>(storage);
+                    clearZombies(output);
+                    return output;
+                } catch (std::bad_any_cast const &) {
+                    break;
+                }
             }
         }
 
-        Snitch::warn() << "Trying to find unregistered components '" << typeid(T).name() << "'" << Snitch::endl;
+        Snitch::warn() << "Trying to find unregistered components '"
+                       << boost::typeindex::type_id_with_cvr<T>().pretty_name()
+                       << "'" << Snitch::endl;
         throw std::runtime_error("Couldn't read given storage");
     }
 
@@ -60,7 +72,7 @@ public:
                     ((rest.find(key) != rest.end()) && ...)
                     && (
                         !(m_stateMachine.getCurrentState())
-                        || (*m_stateMachine.getCurrentState()).get().getId() == key
+                        || (*m_stateMachine.getCurrentState()).get().getId() == m_parentStates.at(key)
                         || (*m_stateMachine.getCurrentState()).get().getId() == -1
                     )
                 )
@@ -84,7 +96,9 @@ private:
                 return;
             }
         }
-        Snitch::warn() << "Couldn't store unregistered component '" << typeid(T).name() << "'" << Snitch::endl;;
+        Snitch::warn() << "Couldn't store unregistered component '"
+                       << boost::typeindex::type_id_with_cvr<T>().pretty_name()
+                       << "'" << Snitch::endl;
     }
 
     template<typename T>
@@ -102,6 +116,7 @@ private:
 private:
 
     friend EntityBuilder;
+    friend Enemy;
     class EntityBuilder {
     private:
         unsigned m_id;
@@ -112,7 +127,31 @@ private:
         template<typename T>
         EntityBuilder &withComponent(T component)
         {
-            m_dest.storeComponent<T>(component, m_id);
+            m_dest.storeComponent<std::decay_t<T>>(component, m_id);
+            return *this;
+        }
+        template <typename... Variants>
+        EntityBuilder &withComponent(std::variant<Variants...> component)
+        {
+            std::visit(
+                [this](auto &&component) {
+                    this->withComponent(component);
+                },
+                component);
+            return *this;
+        }
+        template <typename Optional>
+        EntityBuilder &withComponent(std::optional<Optional> component)
+        {
+            if (component) {
+                this->withComponent(component.value());
+            }
+            return *this;
+        }
+        template <typename T>
+        EntityBuilder &withBuilder(const T &bundle)
+        {
+            bundle.build(*this);
             return *this;
         }
         unsigned build();

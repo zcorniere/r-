@@ -66,6 +66,7 @@ target_sources(r-type_client_app PRIVATE
 
 conan_target_link_libraries(r-type_client_sdk)
 conan_target_link_libraries(r-type_client_app)
+conan_target_link_libraries(r-type_client)
 
 target_link_libraries(r-type_client_app
         r-type_client_sdk

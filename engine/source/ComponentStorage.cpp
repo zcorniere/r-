@@ -39,7 +39,7 @@ ComponentStorage::EntityBuilder::EntityBuilder(ComponentStorage &dest)
 ComponentStorage::EntityBuilder::EntityBuilder(ComponentStorage::EntityBuilder &other)
 : m_id(other.m_id), m_dest(other.m_dest)
 {
-    std::cout << "BUILDER COPIED, CARE\n";
+    Snitch::warn() << "BUILDER COPIED, CARE" << Snitch::endl;
 }
 
 unsigned ComponentStorage::EntityBuilder::build()

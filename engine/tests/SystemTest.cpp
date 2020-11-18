@@ -1,40 +1,37 @@
 #include "System.hpp"
-#include "SystemStorage.hpp"
 #include "Game.hpp"
+#include "SystemStorage.hpp"
 
-class Id
-{
-  public:
-    Id(int id) : id(id){};
-    int id;
+struct Position {
+    int x;
 };
 
-void s1_f(Id id, int i)
-{
-    std::cerr << "Id:" << id.id << " i:" << i << std::endl;
-}
+struct Velocity {
+    int vx;
+};
 
 int main(void)
 {
     Game game("game");
 
-    game.componentStorage.registerComponent<Id>();
-    game.componentStorage.registerComponent<int>();
+    game.componentStorage.registerComponent<Position>();
+    game.componentStorage.registerComponent<Velocity>();
 
-    game.componentStorage.buildEntity().withComponent(Id(42)).withComponent(666).build();
-    game.componentStorage.buildEntity().withComponent(Id(69)).build();
-
-    System s1(s1_f);
-
-
-    System s2 = [](Id id) { std::cerr << "Only id: " << id.id << std::endl; };
+    game.componentStorage.buildEntity()
+        .withComponent(Position{10})
+        .withComponent(Velocity{2})
+        .build();
+    game.componentStorage.buildEntity().withComponent(Position{4}).build();
 
     SystemStorage systems;
 
-    systems.addSystem(s1);
-    systems.addSystem(s2);
-    systems.runTick(game.componentStorage);
-    // System s3 = [](){};
-    // System s3 = 3;
+    systems.addSystem([](Position &position, const Velocity &velocity) {
+        position.x += velocity.vx;
+    });
+    systems.addSystem([](const Position &p) {
+        std::cout << "Position " << p.x << std::endl;
+    });
+
+    systems.runTick(game);
     return 0;
 }

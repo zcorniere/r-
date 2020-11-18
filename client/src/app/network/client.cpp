@@ -24,7 +24,10 @@ void network::Client::statePlay()
         // handle server game instruction
         if (message.head().code == UdpCode::Sprite) {
             protocol::udp::from_server::Sprite sprite;
-            std::memcpy(&sprite, message.body().data(), message.body().size());
+            if (sizeof(sprite) != message.body().size()) {
+                continue;
+            }
+            std::memcpy(&sprite, message.body().data(), sizeof(sprite));
             auto it = std::find_if(assets.begin(), assets.end(), [&](const auto &item){
                 if (item.type != Asset::Type::Texture)
                     return false;
@@ -36,11 +39,15 @@ void network::Client::statePlay()
             });
             if (it != assets.end()) {
                 it->sprite.setRotation(sprite.rot.x);
-                it->sprite.setPosition(sprite.pos.x, sprite.pos.y);
+                it->sprite.setPosition(sprite.pos.x + pos_offset_x , sprite.pos.y + pos_offset_y);
                 it->sprite.setScale(sprite.scale.x, sprite.scale.y);
-                sprites.push_back(it->sprite);
+                main_texture.draw(it->sprite);
+//                sprites.insert(sprites.begin(), it->sprite);
+//                if (sprites.size() > network::Client::max_sprites) {
+//                    sprites.pop_back();
+//                }
             } else
-                console->log("Error [Play]: Sprite specified not found");
+                console->log("Error [Play]: Sprite specified not found : id_asset : " + std::to_string(sprite.id_asset) + " id_tile + " + std::to_string(sprite.id_sprite));
         }
         if (message.head().code == UdpCode::Sound) {
             protocol::udp::from_server::Sound sound;
@@ -53,16 +60,22 @@ void network::Client::statePlay()
                 return true;
             });
             if (it != assets.end()) {
-                it->sound.setPitch(sound.pitch);
-                it->sound.setLoop(sound.isLooping);
-                it->sound.play();
+                if (it->sound.getStatus() != sf::SoundSource::Status::Playing) {
+                    it->sound.setPitch(sound.pitch);
+                    it->sound.setVolume(sound.volume * 100);
+                    it->sound.setLoop(sound.isLooping);
+                    it->sound.play();
+                }
+                console->log("playing sound " + std::to_string(sound.id));
             } else
                 console->log("Error [Play]: Sound specified not found");
         }
     }
+    main_texture.display();
+
     // send input
-    protocol::MessageToSend<UdpCode> message;
-    protocol::udp::from_client::Input body_input;
+    protocol::MessageToSend<UdpCode> message{};
+    protocol::udp::from_client::Input body_input{};
     auto mouse = Input::getMouse();
     auto keys = Input::getKeysQueue();
     body_input.pos = {static_cast<short>(mouse.x), static_cast<short>(mouse.y)};
@@ -86,7 +99,7 @@ void network::Client::statePlay()
 
 void network::Client::stateAskForAssets()
 {
-    protocol::MessageToSend<UdpCode> message;
+    protocol::MessageToSend<UdpCode> message{};
     message.head.code = protocol::udp::Code::AskAssetList;
     message.head.body_size = 0;
     udp->send(message);
@@ -111,7 +124,7 @@ void network::Client::stateWaitingForAssets()
                 std::memcpy(assetlist.list.data(), body.data(),assetlist.size * sizeof(assetlist.list.front()));
                 server_tcp_port = static_cast<short>(assetlist.port);
                 for (auto i = 0; i < assetlist.size; ++i)
-                    assets_ids_list.emplace_back(assetlist.list[i], false);
+                    assets_ids_list.emplace_back(static_cast<long>(assetlist.list[i]), false);
                 status = Status::DownloadAssets;
                 timeout_clock.restart();
                 if (console) console->log("Success [WaitingForAssets]");
@@ -156,7 +169,7 @@ void network::Client::stateDownload()
 
 void network::Client::stateReady()
 {
-    protocol::MessageToSend<UdpCode> message;
+    protocol::MessageToSend<UdpCode> message{};
     message.head.code = protocol::udp::Code::Ready;
     message.head.body_size = 0;
     udp->send(message);
@@ -230,7 +243,13 @@ void network::Client::connect(const std::string &new_udp_server_address)
     server_ip = host.value().first;
     server_udp_port = host.value().second;
     if (console) console->log( "try to connect to : " + server_ip + ":" + std::to_string(server_udp_port));
-    udp = std::make_unique<network::UdpSockMngr>(*console, server_ip, server_udp_port);
+    try {
+        udp = std::make_unique<network::UdpSockMngr>(*console, server_ip, server_udp_port);
+    } catch (std::exception) {
+        if (udp) udp.reset();
+        if (console) console->log("Connection failed");
+        return;
+    }
     if (udp)
         status = Status::AskForAssets;
     timeout_clock.restart();
@@ -238,6 +257,13 @@ void network::Client::connect(const std::string &new_udp_server_address)
 
 void network::Client::disconnect()
 {
+    if (udp) {
+        protocol::MessageToSend<UdpCode> msg;
+        msg.head.code = protocol::udp::Code::Disconnect;
+        msg.head.body_size = 0;
+        udp->send(msg);
+        if (console) console->log("Disconnection send to server");
+    }
     stopSockManagers();
     status = Status::NotConnected;
     timeout_clock.restart();
@@ -260,10 +286,10 @@ void network::Client::reset()
     assets_ids_list.clear();
 }
 
-std::vector<sf::Sprite> network::Client::getSprites()
-{
-    return std::move(sprites);
-}
+//std::vector<sf::Sprite> network::Client::getSprites()
+//{
+//    return sprites;
+//}
 
 void network::Client::stopSockManagers()
 {

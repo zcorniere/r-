@@ -14,11 +14,14 @@ add_library(r-type_engine STATIC
                             source/System.cpp
                             source/SystemStorage.cpp
 )
+target_link_libraries(r-type_engine CONAN_PKG::boost)
+
 
 add_executable(tests_StateMachine
                             tests/StateMachineTests.cpp
 )
 
+conan_target_link_libraries(tests_StateMachine)
 target_link_libraries(tests_StateMachine r-type_engine)
 
 
@@ -26,6 +29,7 @@ add_executable(tests_ComponentStorage
                         tests/ComponentStorageTests.cpp
 )
 
+conan_target_link_libraries(tests_ComponentStorage)
 target_link_libraries(tests_ComponentStorage r-type_engine)
 
 
@@ -33,4 +37,5 @@ add_executable(tests_System
                         tests/SystemTest.cpp
 )
 
+conan_target_link_libraries(tests_System)
 target_link_libraries(tests_System r-type_engine)
