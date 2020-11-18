@@ -43,6 +43,8 @@ void load_game(Game &game)
     game.componentStorage.registerComponent<PlayerBarracks>();
     game.componentStorage.registerComponent<BackgroundMusic>();
     game.componentStorage.registerComponent<WormHole>();
+    game.componentStorage.registerComponent<Paralyzed>();
+    game.componentStorage.registerComponent<Invulnerable>();
 
     /*
     ** SYSTEMS
@@ -76,10 +78,13 @@ void load_game(Game &game)
             velocity.y = controller.moovingDown * controller.getSpeed() +
                          controller.moovingUp * -1 * controller.getSpeed();
         });
+    game.systemStorage.addSystem(paralyzer);
+    game.systemStorage.addSystem(playership_paralyzer);
 
     // collisions
     std::function<void(Game &)> collision_system = collisions_update;
     game.systemStorage.addSystem(collision_system);
+    game.systemStorage.addSystem(invulnerability_applicator);
     game.systemStorage.addSystem(collision_damages);
     game.systemStorage.addSystem(collision_wormholes);
 

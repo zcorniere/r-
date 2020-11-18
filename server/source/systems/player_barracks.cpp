@@ -19,11 +19,15 @@
 #include "components/Speaker.hpp"
 #include "components/Destructible.hpp"
 #include "components/PlayerShipController.hpp"
+#include "components/Paralyzed.hpp"
+#include "components/Invulnerable.hpp"
+#include "components/Lifetime.hpp"
+
 #include <iostream>
 
 void player_barracks_filler(IInputModule &module, PlayerBarracks &barrack)
 {
-    if (!barrack.connectionsOpen)
+    if (!barrack.connectionsOpen || !barrack.active)
         return;
     for (short i = 0; i <= 3; i++) {
         if (!barrack.playerConnected[i] && module.isKeyPressed(i, Input::Z)) {
@@ -38,12 +42,14 @@ void player_barracks_ship_summoner(Game &instance)
     auto &barracks = instance.componentStorage.getComponents<PlayerBarracks>();
 
     for (auto &[id, barrack] : barracks) {
+        if (!barrack.active)
+            continue;
         for (short i = 0; i <= 3; i++) {
             if (barrack.playerConnected[i] && !barrack.playerSpawned[i] ||
         !barrack.playerAlive[i] && barrack.autoRespawn && barrack.playerConnected[i]) {
                 instance.componentStorage.buildEntity()
                     .withComponent(Sprite("player_ships", 2 + 10 * i))
-                    .withComponent(Transform(Dimensional(10, 225 + 135 * i), Dimensional(0, 0),
+                    .withComponent(Transform(Dimensional(-100, 225 + 135 * i), Dimensional(0.1, 0),
                     Dimensional(3, 3)))
                     .withComponent(PlayerShipController(i, 2.5))
                     .withComponent(Velocity(0, 0))
@@ -52,14 +58,35 @@ void player_barracks_ship_summoner(Game &instance)
                     .withComponent(Destructible(1, true))
                     .withComponent(DeathMontage("effects", {80, 81, 82, 83, 84}, 7))
                     .withComponent(ShootMontage("effects", {20, 21}, 7))
-                    .withComponent(RestrictionBox(0, 0, 2000, 1000))
+                    .withComponent(RestrictionBox(-100, 0, 2000, 1000))
                     .withComponent(WaveCannon())
                     .withComponent(DeathSpeaker("playership-explosion"))
                     .withComponent(ShootSpeaker("laser-burst", 0.1, 0.1))
+                    .withComponent(Paralyzed(500))
+                    .withComponent(Trajectory([](Transform &t){
+                        if (t.rotation.x != 0) {
+                            t.location.x++;
+                            if (t.location.x > 400)
+                                t.rotation.x = 0;
+                        }
+                    }))
+                    .withComponent(Invulnerable(700))
                     .build();
                 barrack.playerSpawned[i] = true;
                 barrack.playerAlive[i] = true;
-            }
+                instance.componentStorage.buildEntity()
+                    .withComponent(Sprite("player_ships", 1))
+                    .withComponent(AnimationLoop({
+                    {"effects", 0},
+                    {"effects", 1},
+                    {"effects", 2},
+                    {"effects", 3}
+                    }, 10))
+                    .withComponent(Transform(Dimensional(-165, 220 + 145 * i), {0, 0}, {2, 2}))
+                    .withComponent(Velocity({1, 0}))
+                    .withComponent(Lifetime(500))
+                    .build();
+                }
         }
     }
 }

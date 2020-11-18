@@ -49,24 +49,6 @@ void LevelState::onStart(Game &instance)
         .withComponent(PlayerBarracks(false, false, m_players))
         .build();
 
-    // Creating Player Ship
-    /*instance.componentStorage.buildEntity()
-        .withComponent(Sprite("player_ships", 2))
-        .withComponent(Transform(Dimensional(10, 10), Dimensional(0, 0),
-                                 Dimensional(3, 3)))
-        .withComponent(PlayerShipController(0, 2.5))
-        .withComponent(Velocity(0, 0))
-        .withComponent(GameObject::PlayerShip)
-        .withComponent(CollisionBox(30, 10, 0, 3, 10))
-        .withComponent(Destructible(1, true))
-        .withComponent(DeathMontage("effects", {80, 81, 82, 83, 84}, 7))
-        .withComponent(ShootMontage("effects", {20, 21}, 7))
-        .withComponent(RestrictionBox(0, 0, 1850, 1080))
-        .withComponent(WaveCannon())
-        .withComponent(DeathSpeaker("playership-explosion"))
-        .withComponent(ShootSpeaker("laser-burst", 0.1, 0.1))
-        .build();*/
-
     // Floor CollisionBox
     instance.componentStorage.buildEntity()
         .withComponent(Transform(Dimensional(0, 920), Dimensional(1, 1),

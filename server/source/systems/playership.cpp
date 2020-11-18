@@ -1,7 +1,9 @@
 #include "components/PlayerShipController.hpp"
 #include "components/Destructible.hpp"
 #include "components/Sprite.hpp"
+#include "components/Paralyzed.hpp"
 #include "Modules.hpp"
+#include <iostream>
 
 constexpr int TRANSITION_TICKS = 10;
 
@@ -45,4 +47,15 @@ void playership_ct_input_getter(IInputModule &input,
     controller.moovingUp = input.isKeyPressed(controller.getPlayerId(), Input::Up);
     controller.moovingDown = input.isKeyPressed(controller.getPlayerId(), Input::Down);
     controller.firing = input.isKeyPressed(controller.getPlayerId(), Input::Z);
+}
+
+void playership_paralyzer(PlayerShipController &controller, Paralyzed &paralyzed)
+{
+    if (paralyzed.ticks > 0) {
+        controller.moovingLeft = false;
+        controller.moovingRight = false;
+        controller.moovingUp = false;
+        controller.moovingDown = false;
+        controller.firing = false;
+    }
 }

@@ -9,6 +9,7 @@ struct PlayerBarracks {
     std::vector<bool> playerConnected = {false, false, false, false};
     std::vector<bool> playerSpawned = {false, false, false, false};
     std::vector<bool> playerAlive = {false, false, false, false};
+    bool active = true;
 };
 
 #endif

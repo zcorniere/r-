@@ -20,9 +20,12 @@
 #include "components/Speaker.hpp"
 #include "components/PlayerBarracks.hpp"
 #include "components/BackgroundMusic.hpp"
+#include "components/Paralyzed.hpp"
+#include "components/Invulnerable.hpp"
 
 // collisions
 void collisions_update(Game &instance);
+void invulnerability_applicator(CollisionBox &box, Invulnerable &invulnerable);
 void collision_damages(const CollisionBox &box, Destructible &destructible);
 void collision_wormholes(Game &instance);
 
@@ -34,6 +37,8 @@ void restriction_applicator(Transform &transform, const RestrictionBox &box);
 // playership
 void playership_ct_input_getter(IInputModule &input, PlayerShipController &controller, const Destructible &destructible);
 void playership_animations(PlayerShipController &controller, Sprite &sprite);
+void paralyzer(Paralyzed &paralyzed, Velocity &velocity);
+void playership_paralyzer(PlayerShipController &controller, Paralyzed &paralyzed);
 
 // player barracks
 void player_barracks_filler(IInputModule &module, PlayerBarracks &barrack);

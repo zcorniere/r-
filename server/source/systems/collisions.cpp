@@ -5,6 +5,7 @@
 #include "components/Destructible.hpp"
 #include "components/WormHole.hpp"
 #include "components/PlayerBarracks.hpp"
+#include "components/Invulnerable.hpp"
 #include "LevelState.hpp"
 #include <algorithm>
 #include <memory>
@@ -56,6 +57,14 @@ void collisions_update(Game &instance)
     }
 };
 
+void invulnerability_applicator(CollisionBox &box, Invulnerable &invulnerable)
+{
+    if (invulnerable.ticks > 0) {
+        box.collidingWith = {};
+        invulnerable.ticks--;
+    }
+}
+
 void collision_damages(const CollisionBox &box, Destructible &destructible)
 {
     if (box.collidingWith &&
@@ -77,12 +86,15 @@ void collision_wormholes(Game &instance)
         instance.componentStorage.getComponents<WormHole>(),
         instance.componentStorage.getComponents<CollisionBox>()
     );
-    auto barracks = instance.componentStorage.getComponents<PlayerBarracks>();
+    auto &barracks = instance.componentStorage.getComponents<PlayerBarracks>();
 
     for (auto &[id, params] : hole_params) {
         auto &[hole, box] = params;
         if (box.collidingWith && box.collidingWith.value() == GameObject::PlayerShip) {
-            std::unique_ptr<AState> level_state(new LevelState(barracks.at(hole.barracks_id).playerConnected));
+            auto &barrack = barracks.at(hole.barracks_id);
+            std::unique_ptr<AState> level_state(new LevelState(barrack.playerConnected));
+            barrack.active = false;
+            instance.componentStorage.destroyEntity(hole.barracks_id);
             instance.stateMachine.setState(std::move(level_state));
         }
     }
