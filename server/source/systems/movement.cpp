@@ -26,8 +26,13 @@ void restriction_applicator(Transform &transform, const RestrictionBox &box)
 
 void paralyzer(Paralyzed &paralyzed, Velocity &velocity)
 {
-    if (paralyzed.ticks > 0) {
+    if (paralyzed.delay > 0) {
+        paralyzed.delay--;
+        return;
+    }
+    if (paralyzed.eternal || paralyzed.ticks > 0) {
         velocity = {0, 0};
-        paralyzed.ticks--;
+        if (!paralyzed.eternal)
+            paralyzed.ticks--;
     }
 }

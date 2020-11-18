@@ -18,6 +18,7 @@
 #include "components/Speaker.hpp"
 #include "components/BackgroundMusic.hpp"
 #include "components/PlayerBarracks.hpp"
+#include "components/Paralyzed.hpp"
 #include "Enemies.hpp"
 #include "load_game.hpp"
 #include <iostream>
@@ -32,6 +33,8 @@ constexpr unsigned STAR_BUFFER_SIZE = 200;
 
 constexpr float SCROLLING_SPEED = 1;
 
+constexpr float SCROLLING_TICKS = (4028 * 4 - 1900) / SCROLLING_SPEED;
+
 LevelState::LevelState(std::vector<bool> players) : m_players(players), m_stars_ids(), AState()
 {}
 
@@ -43,6 +46,7 @@ void LevelState::onStart(Game &instance)
         .withComponent(Transform(Dimensional(10, 10), Dimensional(0, 0),
                                  Dimensional(4, 4)))
         .withComponent(Velocity(-1 * SCROLLING_SPEED, 0))
+        .withComponent(Paralyzed(0, SCROLLING_TICKS, true))
         .build();
 
     int barracks_id = instance.componentStorage.buildEntity()
@@ -72,6 +76,14 @@ void LevelState::onStart(Game &instance)
         .withComponent(Destructible{0})
         .build();
 
+    // Final Boss
+    instance.componentStorage.buildEntity()
+        .withComponent(Sprite("dobkeratops", 0))
+        .withComponent(Transform({3861 * 4, 20 * 4}, {0, 0}, {4, 4}))
+        .withComponent(Velocity(-1 * SCROLLING_SPEED, 0))
+        .withComponent(Paralyzed(0, SCROLLING_TICKS, true))
+        .build();
+
     // Playing music
     instance.componentStorage.buildEntity()
         .withComponent(BackgroundMusic{"stage-1", 0.7})
@@ -81,7 +93,7 @@ void LevelState::onStart(Game &instance)
     ** WALLS
     */
 
-    build_walls(instance, SCROLLING_SPEED);
+    build_walls(instance, SCROLLING_SPEED, SCROLLING_TICKS);
 }
 
 void LevelState::onPause(Game &instance)
