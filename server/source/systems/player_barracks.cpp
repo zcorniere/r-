@@ -24,6 +24,8 @@
 #include "components/Lifetime.hpp"
 
 #include <iostream>
+#include <cstdlib>
+#include <string>
 
 void player_barracks_filler(IInputModule &module, PlayerBarracks &barrack)
 {
@@ -40,6 +42,11 @@ void player_barracks_filler(IInputModule &module, PlayerBarracks &barrack)
 void player_barracks_ship_summoner(Game &instance)
 {
     auto &barracks = instance.componentStorage.getComponents<PlayerBarracks>();
+    unsigned god_duration = 700;
+
+    std::string god_mode((getenv("RTYPE_GOD_MODE"))? getenv("RTYPE_GOD_MODE") : "false");
+    if (god_mode == "true")
+        god_duration = 4294967295;
 
     for (auto &[id, barrack] : barracks) {
         if (!barrack.active)
@@ -70,7 +77,7 @@ void player_barracks_ship_summoner(Game &instance)
                                 t.rotation.x = 0;
                         }
                     }))
-                    .withComponent(Invulnerable(700))
+                    .withComponent(Invulnerable(god_duration))
                     .build();
                 barrack.playerSpawned[i] = true;
                 barrack.playerAlive[i] = true;
