@@ -21,6 +21,7 @@
 #include "components/Paralyzed.hpp"
 #include "components/DeathRattle.hpp"
 #include "components/Lifetime.hpp"
+#include "components/Invulnerable.hpp"
 #include "Enemies.hpp"
 #include "load_game.hpp"
 #include <iostream>
@@ -133,6 +134,7 @@ void LevelState::onStart(Game &instance)
         .withComponent(Destructible(1))
         .withComponent(DeathMontage("explosions", {0, 1, 2, 3, 4, 5}, 7))
         .withComponent(DeathSpeaker("enemy-explosion", 0.5, 0.5))
+        .withComponent(Invulnerable(SCROLLING_TICKS))
         .withComponent(DeathRattle([](Game &instance) {
             auto &musics = instance.componentStorage.getComponents<BackgroundMusic>();
             for (auto &[id, music] : musics) {
