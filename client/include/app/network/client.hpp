@@ -68,6 +68,7 @@ namespace network {
 //        [[nodiscard]] std::vector<sf::Sprite> getSprites();
     private:
         void stopSockManagers();
+        void displaySprite(const protocol::udp::from_server::Sprite &sprite);
     };
 }
 
