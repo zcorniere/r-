@@ -34,9 +34,8 @@ RUN dnf -y install cmake \
 RUN pip install conan
 RUN conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
 
-RUN mkdir -p /rtype/build
-COPY conanfile.txt /rtype/conanfile.txt
 WORKDIR /rtype/build
+COPY conanfile.txt ..
 RUN conan install .. --build=missing
 
 COPY . /rtype
