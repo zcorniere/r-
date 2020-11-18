@@ -52,6 +52,10 @@ namespace udp {
         transform::Position pos;
         transform::Scale scale;
     };
+    struct SpriteBatch {
+        std::size_t size;
+        std::array<Sprite, 100> array;
+    }
 
     struct Sound {
         uint64_t id;
