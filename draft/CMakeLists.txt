@@ -23,6 +23,7 @@ add_executable(r-type_local
                             ../server/source/LevelState.cpp
                             ../server/source/LobbyState.cpp
                             ../server/source/CreditsState.cpp
+                            ../server/source/GameOverState.cpp
                             ../server/source/GameServer.cpp
                             ../server/source/AssetsServer.cpp
                             ../server/source/Storage.cpp

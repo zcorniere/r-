@@ -1,5 +1,6 @@
 #include "Game.hpp"
 #include "LevelState.hpp"
+#include "GameOverState.hpp"
 #include "components/Sprite.hpp"
 #include "components/PlayerShipController.hpp"
 #include "components/Velocity.hpp"
@@ -248,6 +249,23 @@ void LevelState::onTick(Game &instance)
     while (m_stars_ids.size() > STAR_BUFFER_SIZE) {
         instance.componentStorage.destroyEntity(m_stars_ids.front());
         m_stars_ids.pop();
+    }
+
+    auto &barracks = instance.componentStorage.getComponents<PlayerBarracks>();
+    int livingPlayers = 0;
+
+    for (auto &[id, barrack] : barracks) {
+        if (!barrack.active)
+            continue;
+        for (int i = 0; i < 3; i++) {
+            if (barrack.playerAlive[i])
+            livingPlayers++;
+        }
+    }
+
+    if (livingPlayers == 0) {
+        std::unique_ptr<AState> state(new GameOverState);
+        instance.stateMachine.setState(std::move(state));
     }
 }
 
