@@ -57,8 +57,3 @@ void Game::setAudioModule(const std::string &name)
 {
     audioModule = dynamic_cast<IAudioModule &>(getModule(name));
 }
-
-void Game::setNetworkModule(const std::string &name)
-{
-    networkModule = dynamic_cast<INetworkModule &>(getModule(name));
-}

@@ -35,12 +35,10 @@ public:
     std::optional<std::reference_wrapper<IDisplayModule>> displayModule;
     std::optional<std::reference_wrapper<IInputModule>> inputModule;
     std::optional<std::reference_wrapper<IAudioModule>> audioModule;
-    std::optional<std::reference_wrapper<INetworkModule>> networkModule;
 // Specific modules sots setters
     void setDisplayModule(const std::string &name);
     void setInputModule(const std::string &name);
     void setAudioModule(const std::string &name);
-    void setNetworkModule(const std::string &name);
 };
 
 // Game loop tick delay (in milliseconds)

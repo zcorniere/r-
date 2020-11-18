@@ -115,11 +115,4 @@ class AudioError : public std::runtime_error
     using std::runtime_error::runtime_error;
 };
 
-class INetworkModule : public virtual IModule {
-public:
-    virtual long initInstance(unsigned maxPlayers) = 0;
-    //virtual std::optional<Instance> getInstance();
-    //TODO: Créer la classe instance et l'implémenter ici (voir l'UML)'
-};
-
 #endif

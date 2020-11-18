@@ -53,7 +53,6 @@ class GameServer:
                       Player>>
             list;
         std::deque<protocol::udp::Sprite> pending_sprite;
-        std::string path;
         unsigned port;
 };
 

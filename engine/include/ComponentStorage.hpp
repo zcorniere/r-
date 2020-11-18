@@ -127,7 +127,7 @@ private:
         template<typename T>
         EntityBuilder &withComponent(T component)
         {
-            m_dest.storeComponent<T>(component, m_id);
+            m_dest.storeComponent<std::decay_t<T>>(component, m_id);
             return *this;
         }
         template <typename... Variants>
@@ -135,9 +135,7 @@ private:
         {
             std::visit(
                 [this](auto &&component) {
-                    using T = std::decay_t<decltype(component)>;
-                    m_dest.storeComponent<T>(
-                        component, m_id);
+                    this->withComponent(component);
                 },
                 component);
             return *this;
@@ -146,7 +144,7 @@ private:
         EntityBuilder &withComponent(std::optional<Optional> component)
         {
             if (component) {
-                m_dest.storeComponent<Optional>(component.value(), m_id);
+                this->withComponent(component.value());
             }
             return *this;
         }

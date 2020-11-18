@@ -24,11 +24,6 @@ IAudioModule &getModule(Game &game)
 {
     return game.audioModule.value().get();
 }
-template <>
-INetworkModule &getModule(Game &game)
-{
-    return game.networkModule.value().get();
-}
 
 template <>
 Game &getModule(Game &game)
