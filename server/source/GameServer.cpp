@@ -30,13 +30,13 @@ void GameServer::update() {
         Message<RequestCode> rep(protocol::MAGIC_NB_1, protocol::MAGIC_NB_2);
         rep.head.code = protocol::udp::RequestCode::SpriteBatch;
         auto end_it = pending_sprite.end();
-        if (pending_sprite.size()) {
+        if (pending_sprite.size() > SpriteBatchMaxSize) {
             Snitch::warn("GAME_SERVER") << "More than " << SpriteBatchMaxSize << " pendign sprite" << Snitch::endl;
             end_it = pending_sprite.begin() + SpriteBatchMaxSize;
         }
         SpriteBatch b;
         b.size = pending_sprite.size();
-        std::copy(pending_sprite.begin(), end_it, b.array);
+        std::copy(pending_sprite.begin(), end_it, b.array.begin());
         rep.insert(b);
         for (auto &i: playes) {
             i->send(rep);
