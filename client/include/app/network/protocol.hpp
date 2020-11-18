@@ -123,6 +123,7 @@ namespace protocol {
             Ready = 5,          // from client
             Input = 6,          // from client
             Disconnect = 7,     // Both
+            SpriteBatch = 8,
         };
         namespace from_server {
             struct Sprite {
@@ -131,6 +132,10 @@ namespace protocol {
                 transform::Rotation rot;
                 transform::Position pos;
                 transform::Scale scale;
+            };
+            struct SpriteBatch {
+                std::size_t size;
+                std::array<Sprite, 255> array;
             };
             struct Sound {
                 uint64_t id;

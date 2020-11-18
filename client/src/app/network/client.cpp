@@ -10,6 +10,33 @@
 #include <utility>
 #include "app/network/client.hpp"
 
+void network::Client::displaySprite(const protocol::udp::from_server::Sprite &sprite)
+{
+    auto it = std::find_if(assets.begin(), assets.end(), [&](const auto &item) {
+        if (item.type != Asset::Type::Texture)
+            return false;
+        if (item.id_asset != sprite.id_asset)
+            return false;
+        if (item.id_tile != sprite.id_sprite)
+            return false;
+        return true;
+    });
+    if (it != assets.end()) {
+        it->sprite.setRotation(sprite.rot.x);
+        it->sprite.setPosition(sprite.pos.x + pos_offset_x,
+                               sprite.pos.y + pos_offset_y);
+        it->sprite.setScale(sprite.scale.x, sprite.scale.y);
+        main_texture.draw(it->sprite);
+        //                sprites.insert(sprites.begin(), it->sprite);
+        //                if (sprites.size() > network::Client::max_sprites) {
+        //                    sprites.pop_back();
+        //                }
+    } else
+        console->log("Error [Play]: Sprite specified not found : id_asset : " +
+                     std::to_string(sprite.id_asset) + " id_tile + " +
+                     std::to_string(sprite.id_sprite));
+}
+
 void network::Client::statePlay()
 {
     auto message_list = udp->receive();
@@ -28,26 +55,17 @@ void network::Client::statePlay()
                 continue;
             }
             std::memcpy(&sprite, message.body().data(), sizeof(sprite));
-            auto it = std::find_if(assets.begin(), assets.end(), [&](const auto &item){
-                if (item.type != Asset::Type::Texture)
-                    return false;
-                if (item.id_asset != sprite.id_asset)
-                    return false;
-                if (item.id_tile != sprite.id_sprite)
-                    return false;
-                return true;
-            });
-            if (it != assets.end()) {
-                it->sprite.setRotation(sprite.rot.x);
-                it->sprite.setPosition(sprite.pos.x + pos_offset_x , sprite.pos.y + pos_offset_y);
-                it->sprite.setScale(sprite.scale.x, sprite.scale.y);
-                main_texture.draw(it->sprite);
-//                sprites.insert(sprites.begin(), it->sprite);
-//                if (sprites.size() > network::Client::max_sprites) {
-//                    sprites.pop_back();
-//                }
-            } else
-                console->log("Error [Play]: Sprite specified not found : id_asset : " + std::to_string(sprite.id_asset) + " id_tile + " + std::to_string(sprite.id_sprite));
+            this->displaySprite(sprite);
+        }
+        if (message.head().code == UdpCode::SpriteBatch) {
+            protocol::udp::from_server::SpriteBatch batch;
+            if (sizeof(batch) != message.body().size()) {
+                continue;
+            }
+            std::memcpy(&batch, message.body().data(), sizeof(batch));
+            for (std::size_t i = 0; i < std::min(batch.array.size(), batch.size); i++) {
+                this->displaySprite(batch.array[i]);
+            }
         }
         if (message.head().code == UdpCode::Sound) {
             protocol::udp::from_server::Sound sound;

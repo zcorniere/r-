@@ -33,6 +33,7 @@ RUN dnf -y install cmake \
 
 RUN pip install conan
 RUN conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+RUN conan remote add epitech https://api.bintray.com/conan/epitech/public-conan
 
 WORKDIR /rtype/build
 COPY conanfile.txt ..
