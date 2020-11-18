@@ -13,21 +13,25 @@
 #include "components/Speaker.hpp"
 #include "components/BydoShooter.hpp"
 #include "components/PlayerScanner.hpp"
+#include "components/TurretSprite.hpp"
 #include <variant>
 #include <optional>
 
 struct Enemy {
     CollisionBox collision;
-    std::variant<Trajectory, PatternLoop> movement;
+    std::optional<std::variant<Trajectory, PatternLoop>> movement;
     std::variant<Sprite, AnimationLoop, OrientedSprite> animation;
     std::optional<BydoShooter> shooter;
     std::optional<PlayerScanner> scanner;
     int health;
     DeathMontage death_montage;
     DeathSpeaker death_sound;
+    std::optional<TurretSprite> turret = std::nullopt;
 
     static const Enemy BUG;
     static const Enemy PATA_PATA;
+    static const Enemy TURRET_UP;
+    static const Enemy TURRET_DOWN;
 
     void build(ComponentStorage::EntityBuilder &builder) const;
 };

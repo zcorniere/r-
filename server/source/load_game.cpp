@@ -46,6 +46,7 @@ void load_game(Game &game)
     game.componentStorage.registerComponent<WormHole>();
     game.componentStorage.registerComponent<Paralyzed>();
     game.componentStorage.registerComponent<Invulnerable>();
+    game.componentStorage.registerComponent<TurretSprite>();
 
     /*
     ** SYSTEMS
@@ -121,7 +122,9 @@ void load_game(Game &game)
     game.systemStorage.addSystem(player_scanner_detector_system);
     game.systemStorage.addSystem(bydo_shooter_apply_scanner);
 
+    // Enemies
     game.systemStorage.addSystem(run_enemy_group);
+    game.systemStorage.addSystem(rotate_turret);
 
     // audio
     game.systemStorage.addSystem(speaker_player);

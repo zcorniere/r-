@@ -79,6 +79,9 @@ void bydo_shooter_apply_scanner
 // Enemies
 void run_enemy_group(Game &game, EnemyGroup &group, Transform &transform,
                      Destructible &destructible);
+void rotate_turret(TurretSprite &turret, const OrientedSprite &orientation,
+                   const PlayerScanner &scanner, const Transform &transform,
+                   Sprite &sprite);
 
 // Audio
 void speaker_player(IAudioModule &module, Speaker &speaker);
