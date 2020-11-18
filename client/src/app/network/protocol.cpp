@@ -15,6 +15,7 @@ bool protocol::check_size(UdpCode type, uint32_t size) {
     if (type == UdpCode::Ready) return size == 0;
     if (type == UdpCode::Input) return size == sizeof(protocol::udp::from_client::Input);
     if (type == UdpCode::Disconnect) return size == 0;
+    if (type == UdpCode::SpriteBatch) return size == sizeof(protocol::udp::from_server::SpriteBatch);
     return false;
 }
 
