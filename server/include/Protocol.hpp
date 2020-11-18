@@ -16,13 +16,14 @@ constexpr std::pair<uint8_t, uint8_t> MagicPair = {MAGIC_NB_1, MAGIC_NB_2};
 
 namespace udp {
     enum class RequestCode: uint8_t {
-        Texture = 0x01,
+        Sprite = 0x01,
         Sound = 0x02,
         AssetsList = 0x03,
         AssetsAsk = 0x04,
         Ready = 0x05,
         Input = 0x06,
         Disconnect = 0x07,
+        SpriteBatch = 0x08,
     };
 
     struct AssetsList {
@@ -55,7 +56,7 @@ namespace udp {
     struct SpriteBatch {
         std::size_t size;
         std::array<Sprite, 100> array;
-    }
+    };
 
     struct Sound {
         uint64_t id;

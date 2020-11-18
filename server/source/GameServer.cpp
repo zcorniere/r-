@@ -29,7 +29,7 @@ void GameServer::update() {
         }
         for (const auto &i: pending_sprite) {
             Message<RequestCode> rep(protocol::MAGIC_NB_1, protocol::MAGIC_NB_2);
-            rep.head.code = protocol::udp::RequestCode::Texture;
+            rep.head.code = protocol::udp::RequestCode::Sprite;
             rep.insert(i);
             for (auto &i: playes) {
                 i->send(rep);
