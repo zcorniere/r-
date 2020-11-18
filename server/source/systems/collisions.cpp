@@ -65,12 +65,13 @@ void invulnerability_applicator(CollisionBox &box, Invulnerable &invulnerable)
     }
 }
 
-void collision_damages(const CollisionBox &box, Destructible &destructible)
+void collision_damages(CollisionBox &box, Destructible &destructible)
 {
     if (box.collidingWith &&
 std::find(box.ignoreList.begin(), box.ignoreList.end(), box.collidingWith.value())
 == box.ignoreList.end()) {
         destructible.health -= box.colliderRoughness;
+        box.collidingWith = {};
         if (destructible.health > 0)
             return;
         if (destructible.hasDeathMontage)

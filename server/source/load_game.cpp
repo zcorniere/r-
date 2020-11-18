@@ -1,6 +1,7 @@
 #include "load_game.hpp"
 #include "LevelState.hpp"
 #include "LobbyState.hpp"
+#include "Game.hpp"
 #include "components/PlayerControlled.hpp"
 #include "components/WormHole.hpp"
 #include "systems/rtype_systems.h"
@@ -47,6 +48,8 @@ void load_game(Game &game)
     game.componentStorage.registerComponent<Paralyzed>();
     game.componentStorage.registerComponent<Invulnerable>();
     game.componentStorage.registerComponent<TurretSprite>();
+    game.componentStorage.registerComponent<DeathRattle>();
+    game.componentStorage.registerComponent<BladeShooter>();
 
     /*
     ** SYSTEMS
@@ -64,9 +67,11 @@ void load_game(Game &game)
     // reaper
     std::function<void(Game &)> destructible_reaper_system =
         destructible_reaper;
+    game.systemStorage.addSystem(destructible_death_rattle_trigger);
     game.systemStorage.addSystem(destructible_reaper_system);
     game.systemStorage.addSystem(corpse_hider);
     std::function<void(Game &)> lifetime_reaper_system = lifetime_reaper;
+    game.systemStorage.addSystem(lifetime_death_rattle_trigger);
     game.systemStorage.addSystem(lifetime_reaper_system);
     game.systemStorage.addSystem(lifetime_ager);
 
@@ -121,6 +126,8 @@ void load_game(Game &game)
         player_scanner_detector;
     game.systemStorage.addSystem(player_scanner_detector_system);
     game.systemStorage.addSystem(bydo_shooter_apply_scanner);
+    game.systemStorage.addSystem(blade_shooter_projectile_summoner);
+    game.systemStorage.addSystem(blade_charger);
 
     // Enemies
     game.systemStorage.addSystem(run_enemy_group);
@@ -427,4 +434,41 @@ void build_walls(Game &instance, float scrolling_speed, float scrolling_ticks)
         .withComponent(GameObject::Wall)
         .withComponent(Velocity(-1 * scrolling_speed, 0)).withComponent(Paralyzed(0, scrolling_ticks, true))
         .build();
+}
+
+void build_many_explosions(Game &instance)
+{
+    instance.componentStorage.buildEntity()
+        .withComponent(Transform({1536, 114 * 4}, {0, 0}, {10, 10}))
+        .withComponent(Sprite("explosions", 0))
+        .withComponent(AnimationLoop({{
+    {"explosions", 0}, {"explosions", 1}, {"explosions", 2},
+    {"explosions", 3}, {"explosions", 4}, {"explosions", 5}
+        }, 10}))
+    .build();
+    instance.componentStorage.buildEntity()
+        .withComponent(Transform({1436, 114 * 2}, {0, 0}, {10, 10}))
+        .withComponent(Sprite("explosions", 0))
+        .withComponent(AnimationLoop({{
+    {"explosions", 0}, {"explosions", 1}, {"explosions", 2},
+    {"explosions", 3}, {"explosions", 4}, {"explosions", 5}
+        }, 10}))
+    .build();
+    instance.componentStorage.buildEntity()
+        .withComponent(Transform({1566, 114 * 5}, {0, 0}, {10, 10}))
+        .withComponent(Sprite("explosions", 0))
+        .withComponent(AnimationLoop({{
+    {"explosions", 0}, {"explosions", 1}, {"explosions", 2},
+    {"explosions", 3}, {"explosions", 4}, {"explosions", 5}
+        }, 10}))
+    .build();
+        instance.componentStorage.buildEntity()
+        .withComponent(Transform({1066, 50}, {0, 0}, {10, 10}))
+        .withComponent(Sprite("explosions", 0))
+        .withComponent(AnimationLoop({{
+    {"explosions", 0}, {"explosions", 1}, {"explosions", 2},
+    {"explosions", 3}, {"explosions", 4}, {"explosions", 5}
+        }, 10}))
+    .build();
+    instance.audioModule.value().get().playSound("enemy-explosion", 1, 0.5, true);
 }

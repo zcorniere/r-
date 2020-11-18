@@ -19,6 +19,8 @@
 #include "components/BackgroundMusic.hpp"
 #include "components/PlayerBarracks.hpp"
 #include "components/Paralyzed.hpp"
+#include "components/DeathRattle.hpp"
+#include "components/Lifetime.hpp"
 #include "Enemies.hpp"
 #include "load_game.hpp"
 #include <iostream>
@@ -81,6 +83,11 @@ void LevelState::onStart(Game &instance)
 
         }
 
+    // Playing music
+    instance.componentStorage.buildEntity()
+        .withComponent(BackgroundMusic{"stage-1", 0.7})
+        .build();
+
     // Final Boss
     instance.componentStorage.buildEntity()
         .withComponent(Sprite("dobkeratops", 0))
@@ -95,9 +102,52 @@ void LevelState::onStart(Game &instance)
         }, 13}))
         .build();
 
-    // Playing music
+    // Final Boss spitter
     instance.componentStorage.buildEntity()
-        .withComponent(BackgroundMusic{"stage-1", 0.7})
+        .withComponent(Sprite("dobkeratops", 10))
+        .withComponent(Transform({3933 * 4, 114 * 4}, {0, 0}, {4, 4}))
+        .withComponent(Velocity(-1 * SCROLLING_SPEED, 0))
+        .withComponent(Paralyzed(0, SCROLLING_TICKS, true))
+        .withComponent(GameObject::Enemy)
+        .withComponent(CollisionBox(32, 32, 0, 0, 1, {GameObject::Enemy}))
+        .withComponent(Destructible(1))
+        .withComponent(DeathMontage("explosions", {0, 1, 2, 3, 4, 5}, 7))
+        .withComponent(DeathSpeaker("enemy-explosion", 0.5, 0.5))
+        .withComponent(DeathRattle([](Game &instance) {
+            auto &musics = instance.componentStorage.getComponents<BackgroundMusic>();
+            for (auto &[id, music] : musics) {
+                music.volume = 0;
+                instance.componentStorage.destroyEntity(id);
+            }
+            instance.audioModule.value().get().stopSound("stage-1");
+            instance.audioModule.value().get().playSound("boss", 0.7, 1, true);
+            instance.componentStorage.buildEntity()
+                .withComponent(Sprite("dobkeratops", 15))
+                .withComponent(Transform({1536, 114 * 4}, {0, 0}, {4 , 4}))
+                .withComponent(AnimationLoop({{
+                {"dobkeratops", 11}, {"dobkeratops", 12}, {"dobkeratops", 13},
+                {"dobkeratops", 14}, {"dobkeratops", 15}, {"dobkeratops", 15}
+                }, 100}))
+                .withComponent(Lifetime(600))
+                .withComponent(DeathRattle([](Game &instance) {
+                    instance.componentStorage.buildEntity()
+                        .withComponent(Sprite("dobkeratops", 15))
+                        .withComponent(Transform({1536, 114 * 4}, {0, 0}, {4 , 4}))
+                        .withComponent(AnimationLoop({{
+                        {"dobkeratops", 15}, {"dobkeratops", 15}, {"dobkeratops", 16},
+                        {"dobkeratops", 17}
+                        }, 25}))
+                        .withComponent(BladeShooter(BydoShooter(87, 1)))
+                        .withComponent(GameObject::Enemy)
+                        .withComponent(CollisionBox(32, 32, 0, 0, 1, {GameObject::Enemy, GameObject::EnemyProjectile}))
+                        .withComponent(Destructible(200))
+                        .withComponent(DeathRattle([](Game &instance){
+                            build_many_explosions(instance);
+                        }))
+                        .build();
+                }))
+                .build();
+        }))
         .build();
     // Turrets
     auto place_ennemy = [&](const Enemy &enemy, Dimensional pos) {

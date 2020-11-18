@@ -18,4 +18,6 @@ struct BydoShooter {
     unsigned charging_ticks = 0;
 };
 
+struct BladeShooter : public BydoShooter {};
+
 #endif

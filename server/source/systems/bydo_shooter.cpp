@@ -30,6 +30,17 @@ void bydo_charger(BydoShooter &shooter)
     shooter.charging_ticks++;
 }
 
+void blade_charger(BladeShooter &shooter)
+{
+    if (shooter.status != BydoShooter::Status::Charging)
+        return;
+    if (shooter.charging_ticks >= shooter.fire_delay) {
+        shooter.status = BydoShooter::Status::Firing;
+        shooter.charging_ticks = 0;
+    }
+    shooter.charging_ticks++;
+}
+
 void bydo_shooter_projectile_summoner(Game &instance)
 {
     auto shooter_params = instance.componentStorage.join_components(
@@ -59,6 +70,49 @@ void bydo_shooter_projectile_summoner(Game &instance)
                     Dimensional(2, 2)
                 ))
                 .withComponent(CollisionBox(4, 4, 0, 0, 1, {GameObject::EnemyProjectile, GameObject::Enemy, GameObject::PlayerProjectile}))
+                .withComponent(Destructible(1))
+                .withComponent(Velocity({
+                    shooter.aim_direction.x * shooter.projectile_speed,
+                    (shooter.aim_direction.y + (1 - shooter.precision) * (rand() % 2 - 1))
+                    * shooter.projectile_speed
+                }))
+                .withComponent(GameObject::EnemyProjectile)
+                .withComponent(Lifetime(1000))
+                .build();
+            shooter.status = BydoShooter::Status::Charging;
+        }
+    }
+}
+
+void blade_shooter_projectile_summoner(Game &instance)
+{
+    auto shooter_params = instance.componentStorage.join_components(
+        instance.componentStorage.getComponents<BladeShooter>(),
+        instance.componentStorage.getComponents<Transform>()
+    );
+
+    for (auto &[id, param] : shooter_params) {
+        auto &[shooter, transform] = param;
+        if (shooter.status == BydoShooter::Status::Firing) {
+            if (rand() % 100 > shooter.fire_probability * 100)
+                continue;
+            instance.componentStorage.buildEntity()
+                .withComponent(Sprite("dobkeratops", 50))
+                .withComponent(AnimationLoop({
+                    Sprite("dobkeratops", 50),
+                    Sprite("dobkeratops", 50 + 1),
+                    Sprite("dobkeratops", 50 + 2),
+                    Sprite("dobkeratops", 50 + 3)
+                }, 10))
+                .withComponent(Transform(
+                    Dimensional(
+                        transform.location.x + BSP_OFFSET_X * transform.scale.x,
+                        transform.location.y + BSP_OFFSET_Y * transform.scale.y
+                    ),
+                    Dimensional(0, 0),
+                    Dimensional(4, 4)
+                ))
+                .withComponent(CollisionBox(22, 20, 0, 0, 1, {GameObject::EnemyProjectile, GameObject::Enemy, GameObject::PlayerProjectile}))
                 .withComponent(Destructible(1))
                 .withComponent(Velocity({
                     shooter.aim_direction.x * shooter.projectile_speed,

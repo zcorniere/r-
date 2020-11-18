@@ -22,11 +22,12 @@
 #include "components/BackgroundMusic.hpp"
 #include "components/Paralyzed.hpp"
 #include "components/Invulnerable.hpp"
+#include "components/DeathRattle.hpp"
 
 // collisions
 void collisions_update(Game &instance);
 void invulnerability_applicator(CollisionBox &box, Invulnerable &invulnerable);
-void collision_damages(const CollisionBox &box, Destructible &destructible);
+void collision_damages(CollisionBox &box, Destructible &destructible);
 void collision_wormholes(Game &instance);
 
 // movements
@@ -54,8 +55,10 @@ void select_oriented_sprite(Sprite &sprite, const Trajectory &trajectory,
 
 // reaper
 void corpse_hider(const Destructible &destructible, Sprite &sprite);
+void destructible_death_rattle_trigger(Game &instance);
 void destructible_reaper(Game &instance);
 void lifetime_ager(Lifetime &lifetime);
+void lifetime_death_rattle_trigger(Game &instance);
 void lifetime_reaper(Game &instance);
 
 // anim montage
@@ -72,6 +75,8 @@ void wave_cannon_montage_player(const WaveCannon &cannon, ShootMontage &montage)
 // bydo_shooter
 void bydo_shooter_projectile_summoner(Game &instance);
 void bydo_charger(BydoShooter &shooter);
+void blade_shooter_projectile_summoner(Game &instance);
+void blade_charger(BladeShooter &shooter);
 void player_scanner_detector(Game &instance);
 void bydo_shooter_apply_scanner
 (BydoShooter &shooter, const PlayerScanner &scanner, const Transform &transform);

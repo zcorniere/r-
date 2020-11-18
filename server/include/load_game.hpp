@@ -10,4 +10,6 @@ void load_game(Game &game);
 // Complex algorythm that create the collision boxes of the walls
 void build_walls(Game &instance, float scrolling_speed, float scrolling_ticks);
 
+void build_many_explosions(Game &instance);
+
 #endif // RTYPE_LOAD_GAME_H_
