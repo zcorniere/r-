@@ -21,9 +21,9 @@ OrientedSprite::OrientedSprite(std::string sprite,
                                std::array<unsigned, n> tile_ids)
     : tiles(), sprite(sprite)
 {
-    for (std::size_t i = 0; i < 16; i++) {
-        float start = orientationTable<16>[i];
-        float end = orientationTable<16>[(i + 1) % 16];
+    for (std::size_t i = 0; i < n; i++) {
+        float start = orientationTable<n>.at(i);
+        float end = orientationTable<n>.at((i + 1) % n);
         if (start > end) {
             this->tiles.push_back({start, end + 2 * pi, tile_ids[i]});
             this->tiles.push_back({start - 2 * pi, end, tile_ids[i]});
