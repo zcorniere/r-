@@ -40,7 +40,7 @@ RUN conan install .. --build=missing
 
 COPY . /rtype
 RUN cmake ..
-RUN make
+RUN make r-type_server
 
 FROM fedora:32 as runner
 
