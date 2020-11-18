@@ -6,14 +6,18 @@ void run_enemy_group(Game &game, EnemyGroup &group, Transform &transform,
                      Destructible &destructible)
 {
     if (group.enemies_spawned < group.number) {
-        group.time_elapsed++;
-        if (group.time_elapsed >= group.delay) {
-            group.time_elapsed = 0;
+        if (group.time_remaning == 0) {
+            if (group.random_interval == 0)
+                group.time_remaning = group.delay;
+            else
+                group.time_remaning = group.delay + std::rand() % group.random_interval;
             group.enemies_spawned++;
             game.componentStorage.buildEntity()
                 .withBuilder(group.enemy)
                 .withComponent(transform)
                 .build();
+        } else {
+            group.time_remaning--;
         }
     } else {
         destructible.status = Destructible::Status::Dead;
