@@ -64,7 +64,6 @@ package "Server" #DDDDDD {
         -MessageHeader<T> head
         -std::vector<std::byte> body
     }
-    Message --> IClient
     Message *-- MessageHeader
 
     interface IClient<T> {
@@ -97,8 +96,6 @@ package "Server" #DDDDDD {
         #msgAll(const Message<T> message, IClient<T> client_to_skip)
         #onMessage(Message<T>)
     }
-    IServer --> Message
-    IServer --> IClient
 
     abstract TcpServer<T> {
         __ public __
@@ -112,7 +109,6 @@ package "Server" #DDDDDD {
         -uint32_t base_id
     }
     IServer <|.. TcpServer
-    TcpServer --> Message
     TcpServer *-- MsgQueue
 
     class TcpClient<T> {
@@ -205,7 +201,6 @@ package "Server" #DDDDDD {
     GameServer *-- Player
     GameServer *-- AssetsServer
     GameServer *-- Storage
-    GameServer --> Message
 
     class AssetsServer {
     }
