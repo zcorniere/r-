@@ -99,6 +99,41 @@ void LevelState::onStart(Game &instance)
     instance.componentStorage.buildEntity()
         .withComponent(BackgroundMusic{"stage-1", 0.7})
         .build();
+    // Turrets
+    auto place_ennemy = [&](const Enemy &enemy, Dimensional pos) {
+        instance.componentStorage.buildEntity()
+            .withBuilder(enemy)
+            .withComponent(Velocity{-1 * SCROLLING_SPEED, 0})
+            .withComponent(
+                Transform{{pos.x * 4 + 3, pos.y * 4 + 2}, {0, 0}, {4, 4}})
+            .build();
+    };
+    // Group 1
+    place_ennemy(Enemy::TURRET_UP, {1881, 47});
+    place_ennemy(Enemy::TURRET_UP, {1852, 47});
+    place_ennemy(Enemy::TURRET_UP, {1821, 32});
+    place_ennemy(Enemy::TURRET_UP, {1788, 32});
+    place_ennemy(Enemy::TURRET_DOWN, {1881, 179});
+    place_ennemy(Enemy::TURRET_DOWN, {1852, 179});
+    place_ennemy(Enemy::TURRET_DOWN, {1821, 195});
+    place_ennemy(Enemy::TURRET_DOWN, {1788, 195});
+    // Group 2
+    place_ennemy(Enemy::TURRET_UP, {2491, 31});
+    place_ennemy(Enemy::TURRET_UP, {2523, 31});
+    place_ennemy(Enemy::TURRET_UP, {2553, 15});
+    place_ennemy(Enemy::TURRET_UP, {2585, 15});
+    place_ennemy(Enemy::TURRET_UP, {2617, 15});
+    place_ennemy(Enemy::TURRET_UP, {2650, 15});
+    place_ennemy(Enemy::TURRET_UP, {2681, 15});
+    place_ennemy(Enemy::TURRET_UP, {2714, 15});
+    // Group 3
+    place_ennemy(Enemy::TURRET_UP, {2810, 47});
+    place_ennemy(Enemy::TURRET_UP, {2842, 47});
+    // Group 4
+    place_ennemy(Enemy::TURRET_UP, {3162, 15});
+    place_ennemy(Enemy::TURRET_UP, {3194, 15});
+    place_ennemy(Enemy::TURRET_UP, {3226, 15});
+    place_ennemy(Enemy::TURRET_UP, {3258, 31});
 
     /*
     ** WALLS
