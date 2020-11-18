@@ -144,8 +144,8 @@ void load_game(Game &game)
     ** game related logic
     */
 
-    std::string skip_lobby(getenv("RTYPE_SKIP_LOBBY"));
-    if (skip_lobby == "true") {
+    const char *skip_lobby = getenv("RTYPE_SKIP_LOBBY");
+    if (skip_lobby && std::string(skip_lobby) == "true") {
         std::unique_ptr<AState> state(new LevelState({true, false, false, false}));
         game.stateMachine.setState(std::move(state));
     }
