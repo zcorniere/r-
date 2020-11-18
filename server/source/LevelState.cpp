@@ -30,7 +30,7 @@ constexpr int STAR_SPAWN_DELAY = 250;
 
 constexpr unsigned STAR_BUFFER_SIZE = 200;
 
-constexpr float SCROLLING_SPEED = 0.5;
+constexpr float SCROLLING_SPEED = 1;
 
 LevelState::LevelState(std::vector<bool> players) : m_players(players), m_stars_ids(), AState()
 {}
