@@ -9,11 +9,11 @@ endif()
 # Conan configuration
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
+conan_basic_setup(TARGETS)
 
 # Build the server and the client
 
-link_libraries(${CONAN_LIBS})
+# link_libraries(${CONAN_LIBS})
 add_subdirectory(engine)
 add_subdirectory(server)
 add_subdirectory(client)

@@ -32,3 +32,4 @@ add_executable(r-type_local
 )
 
 target_link_libraries(r-type_local r-type_engine)
+conan_target_link_libraries(r-type_local)

@@ -29,7 +29,7 @@ add_executable(r-type_server
                             ${systems}
 )
 
-target_link_libraries(r-type_server r-type_engine)
+target_link_libraries(r-type_server r-type_engine ${CMAKE_DL_LIBS})
 
 add_executable(test_oriented_sprite
   tests/src/test_oriented_sprite.cpp
