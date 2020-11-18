@@ -52,7 +52,9 @@ void GameServer::onMessage(Message<RequestCode> msg) {
             list.insert({msg.remote->getId(), {msg.remote, Player{}}});
         }
         switch (msg.head.code) {
-        case RequestCode::Disconnect: msg.remote->disconnect(); break;
+        case RequestCode::Disconnect:
+            list.erase(msg.remote->getId());
+        break;
         case RequestCode::Ready:
             list.at(msg.remote->getId()).second.ready = true;
             Snitch::debug() << "Client " << msg.remote->getId() << " is ready" << Snitch::endl;

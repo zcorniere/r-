@@ -26,8 +26,8 @@ class Client: public IClient<T> {
         {};
         virtual ~Client() { this->disconnect(); };
         virtual void disconnect()final {
-            if (this->isConnected())
-                boost::asio::post(context, [this]() { socket.close(); });
+            //if (this->isConnected())
+            //    boost::asio::post(context, [this]() { socket.close(); });
         }
         virtual void send(const Message<T> &msg)final {
             boost::asio::post(context,

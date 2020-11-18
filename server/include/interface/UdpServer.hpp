@@ -91,7 +91,6 @@ class Server: public IServer<T> {
             addToMsgQueue();
         }
         void addToMsgQueue() {
-            // Snitch::debug("UDP_SERVER") << tmp << Snitch::endl;
             auto tmp_ptr = std::make_shared<boost::asio::ip::udp::endpoint>(tmp_end);
             if (!client_list.contains(*(tmp_ptr))) {
                 client_list.insert({*(tmp_ptr), std::make_shared<Client<T>>(asio_context, tmp_ptr, asio_acceptor)});
