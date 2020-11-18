@@ -31,7 +31,7 @@ constexpr int STAR_SPAWN_DELAY = 250;
 
 constexpr unsigned STAR_BUFFER_SIZE = 200;
 
-constexpr float SCROLLING_SPEED = 1;
+constexpr float SCROLLING_SPEED = 50;
 
 constexpr float SCROLLING_TICKS = (4028 * 4 - 1900) / SCROLLING_SPEED;
 
@@ -61,20 +61,25 @@ void LevelState::onStart(Game &instance)
         .withComponent(CollisionBox(2000, 60, 0, 0, 1000))
         .build();
 
-    // Bugs Enemies
-    instance.componentStorage.buildEntity()
-        .withBuilder(Enemy::BUG)
-        .withComponent(Transform({2000, 400}, {0, 0}, {3, 3}))
-        .withComponent(BydoShooter())
-        .withComponent(PlayerScanner(2000))
-        .build();
+    std::string no_enemies((getenv("RTYPE_NO_ENEMIES"))? getenv("RTYPE_NO_ENEMIES") : "false");
 
-    // Example Enemy group
-    instance.componentStorage.buildEntity()
-        .withComponent(EnemyGroup{Enemy::PATA_PATA, 10, 60})
-        .withComponent(Transform({2000, 400}, {0, 0}, {3, 3}))
-        .withComponent(Destructible{0})
-        .build();
+    if (no_enemies != "true") {
+        // Bugs Enemies
+        instance.componentStorage.buildEntity()
+            .withBuilder(Enemy::BUG)
+            .withComponent(Transform({2000, 400}, {0, 0}, {3, 3}))
+            .withComponent(BydoShooter())
+            .withComponent(PlayerScanner(2000))
+            .build();
+
+        // Example Enemy group
+        instance.componentStorage.buildEntity()
+            .withComponent(EnemyGroup{Enemy::PATA_PATA, 10, 60})
+            .withComponent(Transform({2000, 400}, {0, 0}, {3, 3}))
+            .withComponent(Destructible{0})
+            .build();
+
+        }
 
     // Final Boss
     instance.componentStorage.buildEntity()
@@ -82,6 +87,12 @@ void LevelState::onStart(Game &instance)
         .withComponent(Transform({3861 * 4, 20 * 4}, {0, 0}, {4, 4}))
         .withComponent(Velocity(-1 * SCROLLING_SPEED, 0))
         .withComponent(Paralyzed(0, SCROLLING_TICKS, true))
+        .withComponent(AnimationLoop({{
+        {"dobkeratops", 2}, {"dobkeratops", 2}, {"dobkeratops", 2}, {"dobkeratops", 2},
+        {"dobkeratops", 2}, {"dobkeratops", 2}, {"dobkeratops", 2}, {"dobkeratops", 2},
+        {"dobkeratops", 1}, {"dobkeratops", 0}, {"dobkeratops", 0}, {"dobkeratops", 1},
+        {"dobkeratops", 0}, {"dobkeratops", 1}, {"dobkeratops", 0}, {"dobkeratops", 0}
+        }, 13}))
         .build();
 
     // Playing music
