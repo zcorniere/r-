@@ -53,7 +53,7 @@ namespace udp {
         transform::Position pos;
         transform::Scale scale;
     };
-    constexpr short SpriteBatchMaxSize = 100;
+    constexpr short SpriteBatchMaxSize = 255;
     struct SpriteBatch {
         std::size_t size;
         std::array<Sprite, SpriteBatchMaxSize> array;

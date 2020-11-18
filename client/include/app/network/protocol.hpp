@@ -135,7 +135,7 @@ namespace protocol {
             };
             struct SpriteBatch {
                 std::size_t size;
-                std::array<Sprite, 100> array;
+                std::array<Sprite, 255> array;
             };
             struct Sound {
                 uint64_t id;
