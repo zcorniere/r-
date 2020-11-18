@@ -115,7 +115,7 @@ class Server: public IServer<T> {
         boost::asio::ip::udp::endpoint tmp_end;
 
         boost::asio::ip::udp::socket asio_acceptor;
-        uint32_t base_id = 1;
+        uint32_t base_id = 0;
         std::array<std::byte, 65535> buffer;
 };
 
