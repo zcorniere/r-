@@ -66,22 +66,31 @@ void LevelState::onStart(Game &instance)
     std::string no_enemies((getenv("RTYPE_NO_ENEMIES"))? getenv("RTYPE_NO_ENEMIES") : "false");
 
     if (no_enemies != "true") {
-        // Bugs Enemies
-        instance.componentStorage.buildEntity()
-            .withBuilder(Enemy::BUG)
-            .withComponent(Transform({2000, 400}, {0, 0}, {3, 3}))
-            .withComponent(BydoShooter())
-            .withComponent(PlayerScanner(2000))
-            .build();
 
-        // Example Enemy group
+        // Random Pata Pata group
         instance.componentStorage.buildEntity()
-            .withComponent(EnemyGroup{Enemy::PATA_PATA, 10, 60})
-            .withComponent(Transform({2000, 400}, {0, 0}, {3, 3}))
+            .withComponent(EnemyGroup{Enemy::PATA_PATA, 12, 300, 50})
+            .withComponent(Transform({1800, 100}, {0, 0}, {3, 3}))
+            .withComponent(PatternLoop{{Pattern{{0, 10}, 69}, Pattern{{0, -10}, 69}}})
+            .withComponent(Velocity{0,0})
+            .withComponent(CollisionBox{20, 20,0, 0, 1, {GameObject::Enemy, GameObject::EnemyProjectile, GameObject::Wall}})
             .withComponent(Destructible{0})
             .build();
 
-        }
+        // Bugs groups
+        auto create_bug_group = [&](unsigned number, unsigned wait){
+        instance.componentStorage.buildEntity()
+            .withComponent(EnemyGroup{Enemy::BUG, number, 80, 0, 0, wait})
+            // .withComponent(Transform({600*4+3, 66*4+2}, {0, 0}, {3, 3}))
+            .withComponent(Transform({1800, 200}, {0, 0}, {3, 3}))
+            // .withComponent(Velocity{-1 * SCROLLING_SPEED, 0})
+            .withComponent(Destructible{0})
+            // .withComponent(CollisionBox{20, 20, 0, 0, 1, {GameObject::Enemy, GameObject::EnemyProjectile, GameObject::Wall}})
+            .build();
+        };
+        create_bug_group(6, 200);
+        create_bug_group(6, 2000);
+        create_bug_group(8, 3500);
 
     // Playing music
     instance.componentStorage.buildEntity()
@@ -89,18 +98,29 @@ void LevelState::onStart(Game &instance)
         .build();
 
     // Final Boss
-    instance.componentStorage.buildEntity()
-        .withComponent(Sprite("dobkeratops", 0))
-        .withComponent(Transform({3861 * 4, 20 * 4}, {0, 0}, {4, 4}))
-        .withComponent(Velocity(-1 * SCROLLING_SPEED, 0))
-        .withComponent(Paralyzed(0, SCROLLING_TICKS, true))
-        .withComponent(AnimationLoop({{
-        {"dobkeratops", 2}, {"dobkeratops", 2}, {"dobkeratops", 2}, {"dobkeratops", 2},
-        {"dobkeratops", 2}, {"dobkeratops", 2}, {"dobkeratops", 2}, {"dobkeratops", 2},
-        {"dobkeratops", 1}, {"dobkeratops", 0}, {"dobkeratops", 0}, {"dobkeratops", 1},
-        {"dobkeratops", 0}, {"dobkeratops", 1}, {"dobkeratops", 0}, {"dobkeratops", 0}
-        }, 13}))
-        .build();
+        instance.componentStorage.buildEntity()
+            .withComponent(Sprite("dobkeratops", 0))
+            .withComponent(Transform({3861 * 4, 20 * 4}, {0, 0}, {4, 4}))
+            .withComponent(Velocity(-1 * SCROLLING_SPEED, 0))
+            .withComponent(Paralyzed(0, SCROLLING_TICKS, true))
+            .withComponent(AnimationLoop({{{"dobkeratops", 2},
+                                           {"dobkeratops", 2},
+                                           {"dobkeratops", 2},
+                                           {"dobkeratops", 2},
+                                           {"dobkeratops", 2},
+                                           {"dobkeratops", 2},
+                                           {"dobkeratops", 2},
+                                           {"dobkeratops", 2},
+                                           {"dobkeratops", 1},
+                                           {"dobkeratops", 0},
+                                           {"dobkeratops", 0},
+                                           {"dobkeratops", 1},
+                                           {"dobkeratops", 0},
+                                           {"dobkeratops", 1},
+                                           {"dobkeratops", 0},
+                                           {"dobkeratops", 0}},
+                                          13}))
+            .build();
 
     // Final Boss spitter
     instance.componentStorage.buildEntity()
@@ -149,42 +169,47 @@ void LevelState::onStart(Game &instance)
                 .build();
         }))
         .build();
-    // Turrets
-    auto place_ennemy = [&](const Enemy &enemy, Dimensional pos) {
+        // Playing music
         instance.componentStorage.buildEntity()
-            .withBuilder(enemy)
-            .withComponent(Velocity{-1 * SCROLLING_SPEED, 0})
-            .withComponent(
-                Transform{{pos.x * 4 + 3, pos.y * 4 + 2}, {0, 0}, {4, 4}})
+            .withComponent(BackgroundMusic{"stage-1", 0.7})
             .build();
-    };
-    // Group 1
-    place_ennemy(Enemy::TURRET_UP, {1881, 47});
-    place_ennemy(Enemy::TURRET_UP, {1852, 47});
-    place_ennemy(Enemy::TURRET_UP, {1821, 32});
-    place_ennemy(Enemy::TURRET_UP, {1788, 32});
-    place_ennemy(Enemy::TURRET_DOWN, {1881, 179});
-    place_ennemy(Enemy::TURRET_DOWN, {1852, 179});
-    place_ennemy(Enemy::TURRET_DOWN, {1821, 195});
-    place_ennemy(Enemy::TURRET_DOWN, {1788, 195});
-    // Group 2
-    place_ennemy(Enemy::TURRET_UP, {2491, 31});
-    place_ennemy(Enemy::TURRET_UP, {2523, 31});
-    place_ennemy(Enemy::TURRET_UP, {2553, 15});
-    place_ennemy(Enemy::TURRET_UP, {2585, 15});
-    place_ennemy(Enemy::TURRET_UP, {2617, 15});
-    place_ennemy(Enemy::TURRET_UP, {2650, 15});
-    place_ennemy(Enemy::TURRET_UP, {2681, 15});
-    place_ennemy(Enemy::TURRET_UP, {2714, 15});
-    // Group 3
-    place_ennemy(Enemy::TURRET_UP, {2810, 47});
-    place_ennemy(Enemy::TURRET_UP, {2842, 47});
-    // Group 4
-    place_ennemy(Enemy::TURRET_UP, {3162, 15});
-    place_ennemy(Enemy::TURRET_UP, {3194, 15});
-    place_ennemy(Enemy::TURRET_UP, {3226, 15});
-    place_ennemy(Enemy::TURRET_UP, {3258, 31});
 
+        // Turrets
+        auto place_ennemy = [&](const Enemy &enemy, Dimensional pos) {
+            instance.componentStorage.buildEntity()
+                .withBuilder(enemy)
+                .withComponent(Velocity{-1 * SCROLLING_SPEED, 0})
+                .withComponent(
+                    Transform{{pos.x * 4 + 3, pos.y * 4 + 2}, {0, 0}, {4, 4}})
+                .build();
+        };
+        // Group 1
+        place_ennemy(Enemy::TURRET_UP, {1881, 47});
+        place_ennemy(Enemy::TURRET_UP, {1852, 47});
+        place_ennemy(Enemy::TURRET_UP, {1821, 32});
+        place_ennemy(Enemy::TURRET_UP, {1788, 32});
+        place_ennemy(Enemy::TURRET_DOWN, {1881, 179});
+        place_ennemy(Enemy::TURRET_DOWN, {1852, 179});
+        place_ennemy(Enemy::TURRET_DOWN, {1821, 195});
+        place_ennemy(Enemy::TURRET_DOWN, {1788, 195});
+        // Group 2
+        place_ennemy(Enemy::TURRET_UP, {2491, 31});
+        place_ennemy(Enemy::TURRET_UP, {2523, 31});
+        place_ennemy(Enemy::TURRET_UP, {2553, 15});
+        place_ennemy(Enemy::TURRET_UP, {2585, 15});
+        place_ennemy(Enemy::TURRET_UP, {2617, 15});
+        place_ennemy(Enemy::TURRET_UP, {2650, 15});
+        place_ennemy(Enemy::TURRET_UP, {2681, 15});
+        place_ennemy(Enemy::TURRET_UP, {2714, 15});
+        // Group 3
+        place_ennemy(Enemy::TURRET_UP, {2810, 47});
+        place_ennemy(Enemy::TURRET_UP, {2842, 47});
+        // Group 4
+        place_ennemy(Enemy::TURRET_UP, {3162, 15});
+        place_ennemy(Enemy::TURRET_UP, {3194, 15});
+        place_ennemy(Enemy::TURRET_UP, {3226, 15});
+        place_ennemy(Enemy::TURRET_UP, {3258, 31});
+    }
     /*
     ** WALLS
     */
