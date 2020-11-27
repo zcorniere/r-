@@ -26,6 +26,8 @@ static std::filesystem::path getAssetsPath()
     auto bin_path = getFullPath();
     auto asset_path = bin_path;
     while (true) {
+        if (std::filesystem::exists(asset_path / "assets"))
+            return asset_path / "assets";
         if (std::filesystem::exists(asset_path / "client" / "assets"))
             return asset_path / "client" / "assets";
         if (std::filesystem::exists(asset_path / "share" / "r-type_client" / "assets"))
