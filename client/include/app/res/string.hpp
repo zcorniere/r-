@@ -14,8 +14,9 @@
 /**
  * Set default string
  */
-using String = EnString;
 
-#define STRING(key) (std::string(String().get(key).value()))
+inline const EnString STRINGS = EnString();
+
+#define STRING(key) (std::string(STRINGS.get(key).value()))
 
 #endif

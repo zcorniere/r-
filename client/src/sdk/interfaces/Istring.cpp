@@ -7,7 +7,7 @@
 
 #include "sdk/interfaces/Istring.hpp"
 
-std::optional<std::string_view> Istring::get(const std::string &key)
+std::optional<std::string_view> Istring::get(const std::string &key) const
 {
     auto item = list.find(key);
     if (item == list.end())

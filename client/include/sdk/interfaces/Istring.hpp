@@ -17,7 +17,7 @@ class Istring {
 protected:
     std::map<std::string, const std::string> list;
 public:
-    [[nodiscard]] std::optional<std::string_view> get(const std::string &key);
+    [[nodiscard]] std::optional<std::string_view> get(const std::string &key) const;
     Istring &operator+=(const Istring &rhs);
 };
 
