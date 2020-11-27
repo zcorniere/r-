@@ -1,0 +1,9 @@
+[Desktop Entry]
+
+Version=1.0
+
+Categories=Game;
+Type=Application
+Name=R-Type Client
+Exec=r-type_client
+Icon=rtype
