@@ -20,6 +20,10 @@ add_executable(r-type_client ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
 add_library(r-type_client_sdk STATIC)
 add_library(r-type_client_app STATIC)
 
+install(TARGETS r-type_client RUNTIME)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/assets/
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/r-type_client/assets)
+
 target_include_directories(r-type_client PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         )
@@ -75,15 +79,6 @@ target_link_libraries(r-type_client_app
 target_link_libraries(r-type_client
         r-type_client_app
 )
-
-# Linking assets client folder
-if (WIN32)
-    add_custom_command(TARGET r-type_client POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/assets ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/assets)
-else()
-    ADD_CUSTOM_TARGET(assets ALL
-    COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/assets ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/assets)
-endif()
 
 # Warning handling
 set(MSVC_FLAGS /w)
