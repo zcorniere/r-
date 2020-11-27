@@ -1,0 +1,7 @@
+version: "3.0"
+services:
+  rtype_server:
+    build: .
+    ports:
+      - "25555:25555/udp"
+      - "25556:25556"

@@ -48,4 +48,6 @@ FROM fedora:32 as runner
 COPY --from=builder /rtype/build/bin/r-type_server /r-type_server
 COPY --from=builder /rtype/server/assets /draft/assets
 
+EXPOSE 25555
+
 CMD /r-type_server
