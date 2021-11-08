@@ -8,8 +8,7 @@ Conan, cmake, make, gcc 10
 
 ``` sh
 pip install conan
-conan remote add epitech https://api.bintray.com/conan/epitech/public-conan
-conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+conan remote add bincrafters  https://bincrafters.jfrog.io/artifactory/api/conan/public-conan
 ```
 
 ## Building

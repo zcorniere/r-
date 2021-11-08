@@ -27,3 +27,4 @@ doc
 # Run scripts
 run.bat
 run.sh
+.ccls-cache

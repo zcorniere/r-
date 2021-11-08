@@ -1,9 +1,9 @@
 [requires]
 zlib/1.2.11@conan/stable
-bzip2/1.0.6@conan/stable
-boost/1.74.0
+bzip2/1.0.8@conan/stable
+boost/1.77.0
 sfml/2.5.1@bincrafters/stable
-openal/1.19.1 # let see https://github.com/conan-io/conan-center-index/pull/3167
+openal/1.21.1 # let see https://github.com/conan-io/conan-center-index/pull/3167
 
 [options]
 sfml:graphics=True
