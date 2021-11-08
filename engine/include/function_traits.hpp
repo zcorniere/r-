@@ -1,6 +1,7 @@
 #ifndef RTYPE_LAMBDA_TRAITS_H_
 #define RTYPE_LAMBDA_TRAITS_H_
 
+#include <cstddef>
 #include <tuple>
 
 // Thanks to https://stackoverflow.com/questions/7943525/
